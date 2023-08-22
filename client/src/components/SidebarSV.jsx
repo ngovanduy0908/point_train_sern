@@ -10,33 +10,33 @@ import {
   ListItemText,
   Typography,
   useTheme,
-} from '@mui/material';
+} from "@mui/material";
 
-import ApartmentOutlinedIcon from '@mui/icons-material/ApartmentOutlined';
+import ApartmentOutlinedIcon from "@mui/icons-material/ApartmentOutlined";
 
-import BorderColorIcon from '@mui/icons-material/BorderColor';
-import PreviewIcon from '@mui/icons-material/Preview';
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import PreviewIcon from "@mui/icons-material/Preview";
 
-import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import FlexBetween from './FlexBetween';
-import { ChevronLeft, ChevronRightOutlined } from '@mui/icons-material';
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import FlexBetween from "./FlexBetween";
+import { ChevronLeft, ChevronRightOutlined } from "@mui/icons-material";
 
 const navItemsSV = [
   {
-    text: 'Overview',
+    text: "Overview",
     icon: <ApartmentOutlinedIcon />,
-    path: 'home',
+    path: "home",
   },
   {
-    text: 'Chấm Điểm Rèn Luyện',
+    text: "Chấm Điểm Rèn Luyện",
     icon: <BorderColorIcon />,
-    path: 'chamdiemrenluyen',
+    path: "chamdiemrenluyen",
   },
   {
-    text: 'Xem Điểm Rèn Luyện',
+    text: "Xem Điểm Rèn Luyện",
     icon: <PreviewIcon />,
-    path: 'xemdiemrenluyen',
+    path: "xemdiemrenluyen",
   },
 ];
 
@@ -50,7 +50,7 @@ const SidebarSV = ({
   const { pathname } = useLocation();
   // console.log(user);
   // console.log(pathname);
-  const [active, setActive] = useState('');
+  const [active, setActive] = useState("");
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -59,7 +59,7 @@ const SidebarSV = ({
   }, [pathname]);
 
   return (
-    <Box component="nav">
+    <Box component="nav" className="z-0">
       {isSidebarOpen && (
         <Drawer
           open={isSidebarOpen}
@@ -68,11 +68,11 @@ const SidebarSV = ({
           anchor="left"
           sx={{
             width: drawerWidth,
-            '& .MuiDrawer-paper': {
+            "& .MuiDrawer-paper": {
               color: theme.palette.secondary[200],
               backgroundColor: theme.palette.background.alt,
-              boxSixing: 'border-box',
-              borderWidth: isNonMobile ? 0 : '2px',
+              boxSixing: "border-box",
+              borderWidth: isNonMobile ? 0 : "2px",
               width: drawerWidth,
             },
           }}
@@ -104,7 +104,7 @@ const SidebarSV = ({
                       sx={{
                         backgroundColor: active.includes(path)
                           ? theme.palette.secondary[300]
-                          : 'transparent',
+                          : "transparent",
                         color: active.includes(path)
                           ? theme.palette.primary[600]
                           : theme.palette.secondary[100],
@@ -112,7 +112,7 @@ const SidebarSV = ({
                     >
                       <ListItemIcon
                         sx={{
-                          ml: '1rem',
+                          ml: "1rem",
                           color: active.includes(path)
                             ? theme.palette.primary[600]
                             : theme.palette.secondary[200],
@@ -122,7 +122,7 @@ const SidebarSV = ({
                       </ListItemIcon>
                       <ListItemText primary={text} />
                       {active === path && (
-                        <ChevronRightOutlined sx={{ ml: 'auto' }} />
+                        <ChevronRightOutlined sx={{ ml: "auto" }} />
                       )}
                     </ListItemButton>
                   </ListItem>

@@ -1,69 +1,39 @@
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import axios from "axios";
 import Header from "components/Header";
 import { getUserInLocalStorage } from "context/getCurrentUser";
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import { disableListInput } from "./main.js";
 import "../../assets/css/grid.css";
 import "./phieu.css";
-import ModalV1 from "components/modal/ModalV1";
-import Modal from "components/modal/Modal";
 const DOMAIN = process.env.REACT_APP_DOMAIN;
-const Mark = () => {
-  // console.log("DOMAIN: ", DOMAIN);
+const AfterMark = () => {
   const currentUser = getUserInLocalStorage();
+  disableListInput();
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
   const maHK = pathname.split("/")[2];
-  //   console.log(maHK);
   const [studentData, setStudentData] = useState([]);
   const [data, setData] = useState([]);
   const [pointCitizenMediumData, setCitizenMediumPointData] = useState({});
   const [pointStudentData, setPointStudentData] = useState({});
-  const [openModalProof, setOpenModalProof] = useState(false);
 
-  // console.log("pointStudentData: ", pointStudentData);
   const [values, setValues] = useState({
     // muc 1
-    svDiemTBHK: pointCitizenMediumData.svDiemTBHK
-      ? pointCitizenMediumData.svDiemTBHK
-      : 0,
-    svNCKH1: pointCitizenMediumData.svNCKH1
-      ? pointCitizenMediumData.svNCKH1
-      : 0,
-    svNCKH2: pointCitizenMediumData.svNCKH2
-      ? pointCitizenMediumData.svNCKH2
-      : 0,
-    svNCKH3: pointCitizenMediumData.svNCKH3
-      ? pointCitizenMediumData.svNCKH3
-      : 0,
-    svOlympic1: pointCitizenMediumData.svOlympic1
-      ? pointCitizenMediumData.svOlympic1
-      : 0,
-    svOlympic2: pointCitizenMediumData.svOlympic2
-      ? pointCitizenMediumData.svOlympic2
-      : 0,
-    svOlympic3: pointCitizenMediumData.svOlympic3
-      ? pointCitizenMediumData.svOlympic3
-      : 0,
-    svOlympic4: pointCitizenMediumData.svOlympic4
-      ? pointCitizenMediumData.svOlympic4
-      : 0,
-    svNoRegulation: pointCitizenMediumData.svNoRegulation
-      ? pointCitizenMediumData.svNoRegulation
-      : 0,
-    svOnTime: pointCitizenMediumData.svOnTime
-      ? pointCitizenMediumData.svOnTime
-      : 0,
-    svAbandon: pointCitizenMediumData.svAbandon
-      ? pointCitizenMediumData.svAbandon
-      : 0,
-    svUnTrueTime: pointCitizenMediumData.svUnTrueTime
-      ? pointCitizenMediumData.svUnTrueTime
-      : 0,
+    svDiemTBHK: 0,
+    svNCKH1: 0,
+    svNCKH2: 0,
+    svNCKH3: 0,
+    svOlympic1: 0,
+    svOlympic2: 0,
+    svOlympic3: 0,
+    svOlympic4: 0,
+    svNoRegulation: 0,
+    svOnTime: 0,
+    svAbandon: 0,
+    svUnTrueTime: 0,
 
     // muc 2
     svRightRule: 0,
@@ -92,113 +62,6 @@ const Mark = () => {
     svBonus: 0,
     svIrresponsibleMonitor: 0,
   });
-  const [checkboxState, setCheckboxState] = useState({
-    svNoRegulation: false,
-    svOnTime: false,
-    svRightRule: false,
-    svNoFullStudy: false,
-    svNoPayFee: false,
-    svFullActive: false,
-    svPositiveStudy: false,
-    svPositiveLove: false,
-    svWarn: false,
-    svNoProtect: false,
-    svMonitor: false,
-    svBonus: false,
-  });
-
-  // console.log(values);
-  const checkExisPoint = async () => {
-    try {
-      const getStudentPoint = await axios.get(
-        `${DOMAIN}/points/get_point_student/${maHK}/${currentUser.maSv}`,
-        {
-          withCredentials: true,
-        }
-      );
-      // console.log("getStudentPoint.data: ", getStudentPoint.data);
-      if (getStudentPoint.data) {
-        setPointStudentData(getStudentPoint.data);
-        // return
-        // navigate(`/chamdiemrenluyen/${maHK}/after_mark`);
-        setValues((prev) => ({
-          ...prev,
-          // muc 1
-          svDiemTBHK: getStudentPoint.data.svDiemTBHK,
-          svNCKH1: getStudentPoint.data.svNCKH1,
-          svNCKH2: getStudentPoint.data.svNCKH2,
-          svNCKH3: getStudentPoint.data.svNCKH3,
-          svOlympic1: getStudentPoint.data.svOlympic1,
-          svOlympic2: getStudentPoint.data.svOlympic2,
-          svOlympic3: getStudentPoint.data.svOlympic3,
-          svOlympic4: getStudentPoint.data.svOlympic4,
-          svNoRegulation: getStudentPoint.data.svNoRegulation,
-          svOnTime: getStudentPoint.data.svOnTime,
-          svAbandon: getStudentPoint.data.svAbandon,
-          svUnTrueTime: getStudentPoint.data.svUnTrueTime,
-
-          // muc 2
-          svRightRule: getStudentPoint.data.svRightRule,
-          svCitizen: getStudentPoint.data.svCitizen,
-          svNoFullStudy: getStudentPoint.data.svNoFullStudy,
-          svNoCard: getStudentPoint.data.svNoCard,
-          svNoAtivities: getStudentPoint.data.svNoAtivities,
-          svNoPayFee: getStudentPoint.data.svNoPayFee,
-
-          // muc 3
-          svFullActive: getStudentPoint.data.svFullActive,
-          svAchievementCity: getStudentPoint.data.svAchievementCity,
-          svAchievementSchool: getStudentPoint.data.svAchievementSchool,
-          svAdvise: getStudentPoint.data.svAdvise,
-          svIrresponsible: getStudentPoint.data.svIrresponsible,
-          svNoCultural: getStudentPoint.data.svNoCultural,
-
-          // muc 4
-          svPositiveStudy: getStudentPoint.data.svPositiveStudy,
-          svPositiveLove: getStudentPoint.data.svPositiveLove,
-          svWarn: getStudentPoint.data.svWarn,
-          svNoProtect: getStudentPoint.data.svNoProtect,
-
-          // muc 5
-          svMonitor: getStudentPoint.data.svMonitor,
-          svBonus: getStudentPoint.data.svBonus,
-          svIrresponsibleMonitor: getStudentPoint.data.svIrresponsibleMonitor,
-        }));
-
-        setCheckboxState((prev) => ({
-          ...prev,
-          svNoRegulation:
-            getStudentPoint.data.svNoRegulation === 3 ? true : false,
-          svOnTime: getStudentPoint.data.svOnTime === 2 ? true : false,
-          svRightRule: getStudentPoint.data.svRightRule === 10 ? true : false,
-          svNoFullStudy:
-            getStudentPoint.data.svNoFullStudy === -10 ? true : false,
-          svNoPayFee: getStudentPoint.data.svNoPayFee === -10 ? true : false,
-          svFullActive: getStudentPoint.data.svFullActive === 13 ? true : false,
-          svPositiveStudy:
-            getStudentPoint.data.svPositiveStudy === 10 ? true : false,
-          svPositiveLove:
-            getStudentPoint.data.svPositiveLove === 5 ? true : false,
-          svWarn: getStudentPoint.data.svWarn === -5 ? true : false,
-          svNoProtect: getStudentPoint.data.svNoProtect === -20 ? true : false,
-          // svMonitor: getStudentPoint.data.svMonitor === 7 ? true : false,
-          svBonus: getStudentPoint.data.svBonus === 3 ? true : false,
-        }));
-      }
-    } catch (error) {
-      console.log(error.response.data);
-    }
-  };
-
-  useEffect(() => {
-    checkExisPoint();
-
-    getSv();
-    getPointCitizenMediumSv();
-  }, []);
-
-  // console.log("values: ", values);
-  // console.log("checkboxState: ", checkboxState);
 
   const getSv = async () => {
     try {
@@ -228,7 +91,24 @@ const Mark = () => {
       console.log(error.response.data);
     }
   };
-
+  const getPointStudentOneSv = async () => {
+    try {
+      const getStudentPoint = await axios.get(
+        `${DOMAIN}/points/get_point_student/${maHK}/${currentUser.maSv}`,
+        {
+          withCredentials: true,
+        }
+      );
+      setPointStudentData(getStudentPoint.data);
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+  useEffect(() => {
+    getSv();
+    getPointCitizenMediumSv();
+    getPointStudentOneSv();
+  }, []);
   useEffect(() => {
     const changeValueTBHK =
       pointCitizenMediumData.point_average >= 3.6
@@ -241,17 +121,13 @@ const Mark = () => {
         ? 12
         : pointCitizenMediumData.point_average >= 1.5
         ? 10
-        : pointCitizenMediumData.point_average >= 1.0
-        ? 8
-        : 0;
+        : 8;
     const changeValueCitizen =
       pointCitizenMediumData.point >= 90
         ? 15
         : pointCitizenMediumData.point >= 65
         ? 10
-        : pointCitizenMediumData.point >= 50
-        ? 5
-        : 0;
+        : 5;
     const changeSvMonitor = [3, 5, 6].includes(studentData[0]?.role_id)
       ? 7
       : [7, 8, 9].includes(studentData[0]?.role_id)
@@ -266,45 +142,45 @@ const Mark = () => {
   }, [pointCitizenMediumData, studentData]);
 
   const sum1 =
-    parseInt(values.svDiemTBHK) +
-    parseInt(values.svNCKH1) +
-    parseInt(values.svNCKH2) +
-    parseInt(values.svNCKH3) +
-    parseInt(values.svOlympic1) +
-    parseInt(values.svOlympic2) +
-    parseInt(values.svOlympic3) +
-    parseInt(values.svOlympic4) +
-    parseInt(values.svNoRegulation) +
-    parseInt(values.svOnTime) +
-    parseInt(values.svAbandon) +
-    parseInt(values.svUnTrueTime);
+    parseInt(pointStudentData.svDiemTBHK) +
+    parseInt(pointStudentData.svNCKH1) +
+    parseInt(pointStudentData.svNCKH2) +
+    parseInt(pointStudentData.svNCKH3) +
+    parseInt(pointStudentData.svOlympic1) +
+    parseInt(pointStudentData.svOlympic2) +
+    parseInt(pointStudentData.svOlympic3) +
+    parseInt(pointStudentData.svOlympic4) +
+    parseInt(pointStudentData.svNoRegulation) +
+    parseInt(pointStudentData.svOnTime) +
+    parseInt(pointStudentData.svAbandon) +
+    parseInt(pointStudentData.svUnTrueTime);
 
   const sum2 =
-    parseInt(values.svRightRule) +
-    parseInt(values.svCitizen) +
-    parseInt(values.svNoFullStudy) +
-    parseInt(values.svNoCard) +
-    parseInt(values.svNoAtivities) +
-    parseInt(values.svNoPayFee);
+    parseInt(pointStudentData.svRightRule) +
+    parseInt(pointStudentData.svCitizen) +
+    parseInt(pointStudentData.svNoFullStudy) +
+    parseInt(pointStudentData.svNoCard) +
+    parseInt(pointStudentData.svNoAtivities) +
+    parseInt(pointStudentData.svNoPayFee);
 
   const sum3 =
-    parseInt(values.svFullActive) +
-    parseInt(values.svAchievementCity) +
-    parseInt(values.svAchievementSchool) +
-    parseInt(values.svAdvise) +
-    parseInt(values.svIrresponsible) +
-    parseInt(values.svNoCultural);
+    parseInt(pointStudentData.svFullActive) +
+    parseInt(pointStudentData.svAchievementCity) +
+    parseInt(pointStudentData.svAchievementSchool) +
+    parseInt(pointStudentData.svAdvise) +
+    parseInt(pointStudentData.svIrresponsible) +
+    parseInt(pointStudentData.svNoCultural);
 
   const sum4 =
-    parseInt(values.svPositiveStudy) +
-    parseInt(values.svPositiveLove) +
-    parseInt(values.svWarn) +
-    parseInt(values.svNoProtect);
+    parseInt(pointStudentData.svPositiveStudy) +
+    parseInt(pointStudentData.svPositiveLove) +
+    parseInt(pointStudentData.svWarn) +
+    parseInt(pointStudentData.svNoProtect);
 
   const sum5 =
-    parseInt(values.svMonitor) +
-    parseInt(values.svBonus) +
-    parseInt(values.svIrresponsibleMonitor);
+    parseInt(pointStudentData.svMonitor) +
+    parseInt(pointStudentData.svBonus) +
+    parseInt(pointStudentData.svIrresponsibleMonitor);
 
   const [sum, setSum] = useState(sum1 + sum2 + sum3 + sum4 + sum5);
 
@@ -321,10 +197,6 @@ const Mark = () => {
       ...prev,
       [name]: checked ? value : 0,
     }));
-    setCheckboxState((prev) => ({
-      ...prev,
-      [name]: checked,
-    }));
   };
 
   const handleChangeSelect = (e) => {
@@ -339,62 +211,61 @@ const Mark = () => {
     const { name, value } = e.target;
     setValues((prevValues) => ({
       ...prevValues,
-      [name]: value ? value : 0,
+      [name]: value,
     }));
   };
   useEffect(() => {
     const sum1 =
-      parseInt(values.svDiemTBHK) +
-      parseInt(values.svNCKH1) +
-      parseInt(values.svNCKH2) +
-      parseInt(values.svNCKH3) +
-      parseInt(values.svOlympic1) +
-      parseInt(values.svOlympic2) +
-      parseInt(values.svOlympic3) +
-      parseInt(values.svOlympic4) +
-      parseInt(values.svNoRegulation) +
-      parseInt(values.svOnTime) +
-      parseInt(values.svAbandon) +
-      parseInt(values.svUnTrueTime);
+      parseInt(pointStudentData.svDiemTBHK) +
+      parseInt(pointStudentData.svNCKH1) +
+      parseInt(pointStudentData.svNCKH2) +
+      parseInt(pointStudentData.svNCKH3) +
+      parseInt(pointStudentData.svOlympic1) +
+      parseInt(pointStudentData.svOlympic2) +
+      parseInt(pointStudentData.svOlympic3) +
+      parseInt(pointStudentData.svOlympic4) +
+      parseInt(pointStudentData.svNoRegulation) +
+      parseInt(pointStudentData.svOnTime) +
+      parseInt(pointStudentData.svAbandon) +
+      parseInt(pointStudentData.svUnTrueTime);
     setSumOne(sum1);
 
     const sum2 =
-      parseInt(values.svRightRule) +
-      parseInt(values.svCitizen) +
-      parseInt(values.svNoFullStudy) +
-      parseInt(values.svNoCard) +
-      parseInt(values.svNoAtivities) +
-      parseInt(values.svNoPayFee);
+      parseInt(pointStudentData.svRightRule) +
+      parseInt(pointStudentData.svCitizen) +
+      parseInt(pointStudentData.svNoFullStudy) +
+      parseInt(pointStudentData.svNoCard) +
+      parseInt(pointStudentData.svNoAtivities) +
+      parseInt(pointStudentData.svNoPayFee);
 
     setSumTwo(sum2);
 
     const sum3 =
-      parseInt(values.svFullActive) +
-      parseInt(values.svAchievementCity) +
-      parseInt(values.svAchievementSchool) +
-      parseInt(values.svAdvise) +
-      parseInt(values.svIrresponsible) +
-      parseInt(values.svNoCultural);
+      parseInt(pointStudentData.svFullActive) +
+      parseInt(pointStudentData.svAchievementCity) +
+      parseInt(pointStudentData.svAchievementSchool) +
+      parseInt(pointStudentData.svAdvise) +
+      parseInt(pointStudentData.svIrresponsible) +
+      parseInt(pointStudentData.svNoCultural);
     setSumThree(sum3);
 
     const sum4 =
-      parseInt(values.svPositiveStudy) +
-      parseInt(values.svPositiveLove) +
-      parseInt(values.svWarn) +
-      parseInt(values.svNoProtect);
+      parseInt(pointStudentData.svPositiveStudy) +
+      parseInt(pointStudentData.svPositiveLove) +
+      parseInt(pointStudentData.svWarn) +
+      parseInt(pointStudentData.svNoProtect);
     setSumFour(sum4);
 
     const sum5 =
-      parseInt(values.svMonitor) +
-      parseInt(values.svBonus) +
-      parseInt(values.svIrresponsibleMonitor);
+      parseInt(pointStudentData.svMonitor) +
+      parseInt(pointStudentData.svBonus) +
+      parseInt(pointStudentData.svIrresponsibleMonitor);
     setSumFive(sum5);
 
     const sum = sum1 + sum2 + sum3 + sum4 + sum5;
     setSum(sum);
-    // console.log("thay doi");
-  }, [values]);
-
+  }, [pointStudentData]);
+  console.log("pointStudentData: ", pointStudentData);
   /*
 Ở đây, ta dùng destructuring để lấy ra các giá trị của name, checked và value của input element. 
 Sau đó, ta sử dụng setValues để cập nhật giá trị của values với name của checkbox hiện tại và giá trị của value nếu checkbox được checked, hoặc 0 nếu checkbox không được checked.
@@ -403,26 +274,14 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
   */
 
   const handleSubmit = async () => {
-    const data = {
-      ...values,
-      sum: sum,
-    };
+    // const data = {
+    //   ...values,
+    //   sum: sum,
+    // };
     try {
-      await axios.post(
-        `http://localhost:8800/api/points/insert_or_update/${maHK}/${currentUser.maSv}`,
-        data,
-        {
-          withCredentials: true,
-        }
-      );
-      toast.success("Cham Diem Ren Luyen Thanh Cong", {
-        autoClose: 2000,
-      });
-      navigate(`/chamdiemrenluyen/${maHK}/after_mark`);
+      navigate(`/chamdiemrenluyen/${maHK}`);
+      //   debugger;
     } catch (error) {
-      toast.success("Cham Diem Ren Luyen That Bai", {
-        autoClose: 2000,
-      });
       console.log(error.message);
     }
   };
@@ -430,21 +289,8 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
   return (
     <Box m="1.5rem 2.5rem">
       <Header
-        subtitle={`Diem CDSV: ${
-          pointCitizenMediumData?.point
-            ? pointCitizenMediumData?.point
-            : "Chua Co"
-        } - Diem TBHK: ${
-          pointCitizenMediumData?.point_average
-            ? pointCitizenMediumData?.point_average
-            : "Chua Co"
-        }`}
+        subtitle={`Diem CDSV: ${pointCitizenMediumData?.point} - Diem TBHK: ${pointCitizenMediumData?.point_average}`}
       />
-      {/* <BasicModal /> */}
-      <button onClick={() => setOpenModalProof(true)}>Open</button>
-      <Modal open={openModalProof} setOpen={setOpenModalProof}>
-        <p className="bg-red-500">Content</p>
-      </Modal>
       <Box
         sx={{
           padding: "25px",
@@ -512,16 +358,11 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                     Nội dung đánh giá
                   </th>
                   <th>Điểm do sinh viên tự đánh giá</th>
-                  {/* <th className="textCenter" style={{ width: '10%' }}>
-                    Điểm do lớp đánh giá
-                  </th>
-                  <th class="textCenter" style={{ width: '10%' }}>
-                    Điểm do hội đồng Khoa đánh giá
-                  </th> */}
                 </tr>
               </thead>
 
               {/* body table */}
+
               <tbody>
                 <tr>
                   <td colSpan="2">
@@ -574,7 +415,6 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       value={values.svDiemTBHK}
                       readOnly
-                      // onChange={handleChangeValue}
                     />
                   </td>
                 </tr>
@@ -602,7 +442,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       min="0"
                       max="8"
-                      value={values.svNCKH1}
+                      value={pointStudentData.svNCKH1}
                       onChange={handleChangeInput}
                     />
                   </td>
@@ -618,10 +458,9 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       type="number"
                       name="svNCKH2"
                       id=""
-                      // value="<?= $svNCKH2 ?>"
                       min="0"
                       max="6"
-                      value={values.svNCKH2}
+                      value={pointStudentData.svNCKH2}
                       onChange={handleChangeInput}
                     />
                   </td>
@@ -636,10 +475,9 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       type="number"
                       name="svNCKH3"
                       id=""
-                      // value="<?= $svNCKH3 ?>"
                       min="0"
                       max="6"
-                      value={values.svNCKH3}
+                      value={pointStudentData.svNCKH3}
                       onChange={handleChangeInput}
                     />
                   </td>
@@ -655,10 +493,9 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       type="number"
                       name="svOlympic1"
                       id=""
-                      // value="<?= $svOlympic1 ?>"
                       min="0"
                       max="10"
-                      value={values.svOlympic1}
+                      value={pointStudentData.svOlympic1}
                       onChange={handleChangeInput}
                     />
                   </td>
@@ -674,10 +511,9 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       type="number"
                       name="svOlympic2"
                       id=""
-                      // value="<?= $svOlympic2 ?>"
                       min="0"
                       max="6"
-                      value={values.svOlympic2}
+                      value={pointStudentData.svOlympic2}
                       onChange={handleChangeInput}
                     />
                   </td>
@@ -693,10 +529,9 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       type="number"
                       name="svOlympic3"
                       id=""
-                      // value="<?= $svOlympic3 ?>"
                       min="0"
                       max="5"
-                      value={values.svOlympic3}
+                      value={pointStudentData.svOlympic3}
                       onChange={handleChangeInput}
                     />
                   </td>
@@ -712,10 +547,9 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       type="number"
                       name="svOlympic4"
                       id=""
-                      // value="<?= $svOlympic4 ?>"
                       min="0"
                       max="2"
-                      value={values.svOlympic4}
+                      value={pointStudentData.svOlympic4}
                       onChange={handleChangeInput}
                     />
                   </td>
@@ -739,29 +573,27 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       value="3"
                       onChange={handleChangeValue}
-                      // checked={1 === 1 ? true : false}
-                      checked={checkboxState.svNoRegulation}
+                      checked={pointStudentData.svNoRegulation === 3}
                     />
                   </td>
                 </tr>
-                {pointStudentData && (
-                  <tr>
-                    <td width="70%">
-                      - Đi học đầy đủ, đúng giờ:
-                      ………………….......................…………....(+2đ)
-                    </td>
-                    <td>
-                      <input
-                        type="checkbox"
-                        name="svOnTime"
-                        id=""
-                        value="2"
-                        onChange={handleChangeValue}
-                        checked={checkboxState.svOnTime}
-                      />
-                    </td>
-                  </tr>
-                )}
+
+                <tr>
+                  <td width="70%">
+                    - Đi học đầy đủ, đúng giờ:
+                    ………………….......................…………....(+2đ)
+                  </td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      name="svOnTime"
+                      id=""
+                      value="2"
+                      onChange={handleChangeValue}
+                      checked={pointStudentData.svOnTime === 2}
+                    />
+                  </td>
+                </tr>
 
                 <tr>
                   <td colSpan="2">
@@ -791,7 +623,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       min="-15"
                       max="0"
-                      value={values.svAbandon}
+                      value={pointStudentData.svAbandon}
                       onChange={handleChangeInput}
                     />
                   </td>
@@ -807,8 +639,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       name="svUnTrueTime"
                       id="svUnTrueTime"
                       onChange={handleChangeSelect}
-                      value={values.svUnTrueTime}
-                      className="select"
+                      value={pointStudentData.svUnTrueTime}
                     >
                       {Array.from({ length: 6 }, (_, index) => (
                         <option key={index} value={index * -2}>
@@ -882,6 +713,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       value="10"
                       onChange={handleChangeValue}
+                      checked={pointStudentData.svRightRule === 10}
                     />
                   </td>
                 </tr>
@@ -906,7 +738,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       type="number"
                       name="svCitizen"
                       id=""
-                      value={values.svCitizen}
+                      value={pointStudentData.svCitizen}
                       readOnly
                       // onChange={handleChangeValue}
                     />
@@ -989,6 +821,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       value="-10"
                       onChange={handleChangeValue}
+                      checked={pointStudentData.svNoFullStudy === -10}
                     />
                   </td>
                 </tr>
@@ -1002,18 +835,14 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                     <select
                       name="svNoCard"
                       id="svNoCard"
-                      value={values.svNoCard}
+                      value={pointStudentData.svNoCard}
                       onChange={handleChangeSelect}
-                      className="select"
                     >
-                      {Array.from({ length: 6 }, (_, index) => {
-                        // console.log("here: ", typeof values.svNoCard);
-                        return (
-                          <option key={index} value={index * -5}>
-                            {index}
-                          </option>
-                        );
-                      })}
+                      {Array.from({ length: 6 }, (_, index) => (
+                        <option key={index} value={index * -5}>
+                          {index}
+                        </option>
+                      ))}
                     </select>
                   </td>
                 </tr>
@@ -1028,12 +857,11 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                     <select
                       name="svNoAtivities"
                       id="svNoAtivities"
-                      value={values.svNoAtivities}
+                      value={pointStudentData.svNoAtivities}
                       onChange={handleChangeSelect}
-                      className="select"
                     >
                       {Array.from({ length: 6 }, (_, index) => (
-                        <option key={index} value={index}>
+                        <option key={index} value={index * -5}>
                           {index}
                         </option>
                       ))}
@@ -1052,6 +880,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       name="svNoPayFee"
                       value="-10"
                       onChange={handleChangeValue}
+                      checked={pointStudentData.svNoPayFee === -10}
                     />
                   </td>
                 </tr>
@@ -1113,6 +942,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       value="13"
                       onChange={handleChangeValue}
+                      checked={pointStudentData.svFullActive === 13}
                     />
                   </td>
                 </tr>
@@ -1137,7 +967,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       min="0"
                       max="3"
-                      value={values.svAchievementSchool}
+                      value={pointStudentData.svAchievementSchool}
                       onChange={handleChangeInput}
                     />
                   </td>
@@ -1153,7 +983,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       type="number"
                       name="svAchievementCity"
                       id=""
-                      value={values.svAchievementCity}
+                      value={pointStudentData.svAchievementCity}
                       min="0"
                       max="5"
                       onChange={handleChangeInput}
@@ -1170,12 +1000,11 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                     <select
                       name="svAdvise"
                       id="svAdvise"
-                      value={values.svAdvise}
+                      value={pointStudentData.svAdvise}
                       onChange={handleChangeSelect}
-                      className="select"
                     >
                       {Array.from({ length: 6 }, (_, index) => (
-                        <option key={index} value={index}>
+                        <option key={index} value={index * 2}>
                           {index}
                         </option>
                       ))}
@@ -1202,12 +1031,11 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                     <select
                       name="svIrresponsible"
                       id="svIrresponsible"
-                      value={values.svIrresponsible}
+                      value={pointStudentData.svIrresponsible}
                       onChange={handleChangeSelect}
-                      className="select"
                     >
                       {Array.from({ length: 6 }, (_, index) => (
-                        <option key={index} value={index}>
+                        <option key={index} value={index * -5}>
                           {index}
                         </option>
                       ))}
@@ -1224,12 +1052,11 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                     <select
                       name="svNoCultural"
                       id="svNoCultural"
-                      value={values.svNoCultural}
+                      value={pointStudentData.svNoCultural}
                       onChange={handleChangeSelect}
-                      className="select"
                     >
                       {Array.from({ length: 6 }, (_, index) => (
-                        <option key={index} value={index}>
+                        <option key={index} value={index * -5}>
                           {index}
                         </option>
                       ))}
@@ -1292,6 +1119,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       value="10"
                       onChange={handleChangeValue}
+                      checked={pointStudentData.svPositiveStudy === 10}
                     />
                   </td>
                 </tr>
@@ -1310,6 +1138,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       value="5"
                       onChange={handleChangeValue}
+                      checked={pointStudentData.svPositiveLove === 5}
                     />
                   </td>
                 </tr>
@@ -1336,6 +1165,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       value="-5"
                       onChange={handleChangeValue}
+                      checked={pointStudentData.svWarn === -5}
                     />
                   </td>
                 </tr>
@@ -1352,6 +1182,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       value="-20"
                       onChange={handleChangeValue}
+                      checked={pointStudentData.svNoProtect === -20}
                     />
                   </td>
                 </tr>
@@ -1416,10 +1247,9 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       type="radio"
                       name="svMonitor"
                       id=""
-                      checked={values?.svMonitor === 7}
+                      checked={pointStudentData?.svMonitor === 7}
                       value="7"
-                      // onChange={handleChangeValue}
-                      readOnly
+                      onChange={handleChangeValue}
                     />
                   </td>
                 </tr>
@@ -1435,9 +1265,13 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       name="svMonitor"
                       id=""
                       value="5"
-                      checked={values?.svMonitor === 5}
-                      // onChange={handleChangeValue}
-                      readOnly
+                      checked={pointStudentData?.svMonitor === 5}
+                      onChange={handleChangeValue}
+
+                      // <?php
+                      //     // echo ($svMonitor == '5') ? "checked" :  "" ;
+                      //     echo (in_array($role_name, $arr_level_two)) ? "checked" : "" ;
+                      // ?>
                     />
                   </td>
                 </tr>
@@ -1453,6 +1287,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       value="3"
                       onChange={handleChangeValue}
+                      checked={pointStudentData.svBonus === 3}
                     />
                   </td>
                 </tr>
@@ -1477,9 +1312,8 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                     <select
                       name="svIrresponsibleMonitor"
                       id="svIrresponsibleMonitor"
-                      value={values.svIrresponsibleMonitor}
+                      value={pointStudentData.svIrresponsibleMonitor}
                       onChange={handleChangeSelect}
-                      className="select"
                     >
                       {/* <?php
                                             for ($i = 0; $i <= 5; $i++) {
@@ -1520,7 +1354,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
 
                 <tr class="sum_all">
                   <td>
-                    <h5 style={{ color: "red", width: "70px" }}>Tổng: </h5>
+                    <h3 style={{ color: "red", width: "70px" }}>Tổng: </h3>
                   </td>
                   <td>
                     <input type="number" class="sum_mark-student" value={sum} />
@@ -1528,9 +1362,9 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                 </tr>
               </tbody>
             </table>
-            <button
+            <Button
               type="button"
-              className="btn btn-success btn_save bg-[#19d1ca]"
+              class="btn btn-success btn_save"
               style={{
                 position: "fixed",
                 bottom: 0,
@@ -1538,8 +1372,8 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
               }}
               onClick={handleSubmit}
             >
-              Lưu
-            </button>
+              Sửa
+            </Button>
           </form>
         </div>
       </Box>
@@ -1547,4 +1381,4 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
   );
 };
 
-export default Mark;
+export default AfterMark;

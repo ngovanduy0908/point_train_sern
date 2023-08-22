@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import Header from '../Header';
-import MaterialReactTable from 'material-react-table';
-import '../admin/admin.css';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import Header from "../Header";
+import MaterialReactTable from "material-react-table";
+import "../admin/admin.css";
 import {
   Box,
   Button,
@@ -13,13 +13,13 @@ import {
   Stack,
   TextField,
   Tooltip,
-} from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
-import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
+} from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
+import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
 
-import axios from 'axios';
-import { getUserInLocalStorage } from 'context/getCurrentUser';
-import FormDialog from './Dialog';
+import axios from "axios";
+import { getUserInLocalStorage } from "context/getCurrentUser";
+import FormDialog from "./Dialog";
 
 const QuanLyThoiGian = () => {
   // const theme = useTheme();
@@ -39,7 +39,7 @@ const QuanLyThoiGian = () => {
   useEffect(() => {
     getAllDeadline();
   }, []);
-  // useEffect(() => {
+
   const getAllDeadline = async () => {
     try {
       const allDeadline = await axios.get(
@@ -53,9 +53,7 @@ const QuanLyThoiGian = () => {
       console.log(error.response.data);
     }
   };
-  // }, []);
 
-  // console.log(tableData);
   const handleCreateNewRow = async (values) => {
     console.log(values);
     try {
@@ -77,10 +75,6 @@ const QuanLyThoiGian = () => {
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
       tableData[row.index] = values;
-      // console.log(row);
-      console.log(values);
-      // const maKhoa = row.original.maKhoa;
-      // console.log(maKhoa);
       axios.put(
         `http://localhost:8800/api/departments/${values.maKhoa}`,
         values,
@@ -88,7 +82,6 @@ const QuanLyThoiGian = () => {
           withCredentials: true,
         }
       );
-      //send/receive api updates here, then refetch or update local table data for re-render
       setTableData([...tableData]);
       exitEditingMode(); //required to exit editing mode and close modal
     }
@@ -125,9 +118,9 @@ const QuanLyThoiGian = () => {
         helperText: validationErrors[cell.id],
         onBlur: (event) => {
           const isValid =
-            cell.column.id === 'email'
+            cell.column.id === "email"
               ? validateEmail(event.target.value)
-              : cell.column.id === 'age'
+              : cell.column.id === "age"
               ? validateAge(+event.target.value)
               : validateRequired(event.target.value);
           if (!isValid) {
@@ -152,24 +145,24 @@ const QuanLyThoiGian = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'start_time_student',
-        header: 'Thoi Gian Sinh Vien Bat Dau Cham',
+        accessorKey: "start_time_student",
+        header: "Thoi Gian Sinh Vien Bat Dau Cham",
         enableColumnOrdering: false,
         enableEditing: false, //disable editing on this column
         enableSorting: false,
         size: 80,
       },
       {
-        accessorKey: 'end_time_student',
-        header: 'Thoi Gian Sinh Vien Ket Thuc Cham',
+        accessorKey: "end_time_student",
+        header: "Thoi Gian Sinh Vien Ket Thuc Cham",
         size: 140,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
         }),
       },
       {
-        accessorKey: 'end_time_monitor',
-        header: 'Thoi Gian Lop Truong Ket Thuc Cham',
+        accessorKey: "end_time_monitor",
+        header: "Thoi Gian Lop Truong Ket Thuc Cham",
         size: 140,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
@@ -185,9 +178,9 @@ const QuanLyThoiGian = () => {
       <Box mt="40px">
         <MaterialReactTable
           displayColumnDefOptions={{
-            'mrt-row-actions': {
+            "mrt-row-actions": {
               muiTableHeadCellProps: {
-                align: 'center',
+                align: "center",
               },
               size: 120,
             },
@@ -201,14 +194,11 @@ const QuanLyThoiGian = () => {
           onEditingRowCancel={handleCancelRowEdits}
           renderRowActions={({ row, table }) => (
             <Box
-              sx={{ display: 'flex', gap: '1rem' }}
+              sx={{ display: "flex", gap: "1rem" }}
               onClick={() => console.log(row)}
             >
               <Tooltip arrow placement="left" title="Edit">
-                <IconButton
-                  // onClick={() => table.setEditingRow(row)}
-                  onClick={handleClickOpen}
-                >
+                <IconButton onClick={handleClickOpen}>
                   <Edit />
                 </IconButton>
               </Tooltip>
@@ -264,13 +254,12 @@ export const CreateNewAccountModal = ({
 }) => {
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
-      acc[column.accessorKey ?? ''] = '';
+      acc[column.accessorKey ?? ""] = "";
       return acc;
     }, {})
   );
 
   const handleSubmit = () => {
-    //put your validation logic here
     onSubmit(values);
     onClose();
   };
@@ -282,9 +271,9 @@ export const CreateNewAccountModal = ({
         <form onSubmit={(e) => e.preventDefault()}>
           <Stack
             sx={{
-              width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
+              width: "100%",
+              minWidth: { xs: "300px", sm: "360px", md: "400px" },
+              gap: "1.5rem",
             }}
           >
             {columns.map((column) => (
@@ -305,7 +294,7 @@ export const CreateNewAccountModal = ({
         </form>
         {err && err}
       </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
+      <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
           Cancel
         </Button>

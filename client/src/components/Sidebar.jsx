@@ -10,36 +10,36 @@ import {
   ListItemText,
   Typography,
   useTheme,
-} from '@mui/material';
+} from "@mui/material";
 
-import ApartmentOutlinedIcon from '@mui/icons-material/ApartmentOutlined';
-import SchoolOutlinedIcon from '@mui/icons-material/SchoolOutlined';
-import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
-import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import FlexBetween from './FlexBetween';
-import { ChevronLeft, ChevronRightOutlined } from '@mui/icons-material';
+import ApartmentOutlinedIcon from "@mui/icons-material/ApartmentOutlined";
+import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
+import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import FlexBetween from "./FlexBetween";
+import { ChevronLeft, ChevronRightOutlined } from "@mui/icons-material";
 
 const navItems = [
   {
-    text: 'Overview',
+    text: "Overview",
     icon: <ApartmentOutlinedIcon />,
-    path: 'overview',
+    path: "overview",
   },
   {
-    text: 'Quản lý khoa',
+    text: "Quản lý khoa",
     icon: <ApartmentOutlinedIcon />,
-    path: 'quanlykhoa',
+    path: "quanlykhoa",
   },
   {
-    text: 'Quản lý khóa học',
+    text: "Quản lý khóa học",
     icon: <SchoolOutlinedIcon />,
-    path: 'quanlykhoahoc',
+    path: "quanlykhoahoc",
   },
   {
-    text: 'Quản lý học kì',
+    text: "Quản lý học kì",
     icon: <AssignmentOutlinedIcon />,
-    path: 'quanlyhocki',
+    path: "quanlyhocki",
   },
 ];
 
@@ -52,7 +52,7 @@ const Sidebar = ({
 }) => {
   const { pathname } = useLocation();
   // console.log(pathname);
-  const [active, setActive] = useState('overview');
+  const [active, setActive] = useState("overview");
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -61,7 +61,7 @@ const Sidebar = ({
   }, [pathname]);
 
   return (
-    <Box component="nav">
+    <Box component="nav" className="z-0">
       {isSidebarOpen && (
         <Drawer
           open={isSidebarOpen}
@@ -70,11 +70,11 @@ const Sidebar = ({
           anchor="left"
           sx={{
             width: drawerWidth,
-            '& .MuiDrawer-paper': {
+            "& .MuiDrawer-paper": {
               color: theme.palette.secondary[200],
               backgroundColor: theme.palette.background.alt,
-              boxSixing: 'border-box',
-              borderWidth: isNonMobile ? 0 : '2px',
+              boxSixing: "border-box",
+              borderWidth: isNonMobile ? 0 : "2px",
               width: drawerWidth,
             },
           }}
@@ -109,7 +109,7 @@ const Sidebar = ({
                         backgroundColor:
                           active === path
                             ? theme.palette.secondary[300]
-                            : 'transparent',
+                            : "transparent",
                         color:
                           active === path
                             ? theme.palette.primary[600]
@@ -118,7 +118,7 @@ const Sidebar = ({
                     >
                       <ListItemIcon
                         sx={{
-                          ml: '1rem',
+                          ml: "1rem",
                           color:
                             active === path
                               ? theme.palette.primary[600]
@@ -129,7 +129,7 @@ const Sidebar = ({
                       </ListItemIcon>
                       <ListItemText primary={text} />
                       {active === path && (
-                        <ChevronRightOutlined sx={{ ml: 'auto' }} />
+                        <ChevronRightOutlined sx={{ ml: "auto" }} />
                       )}
                     </ListItemButton>
                   </ListItem>

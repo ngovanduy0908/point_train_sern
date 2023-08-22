@@ -12,6 +12,7 @@ import deadlineRouter from './routes/deadlines.js';
 import studentRouter from './routes/students.js';
 import pointCitizenRouter from './routes/point_citizens.js';
 import pointMediumRouter from './routes/point_mediums.js';
+import pointMarkRouter from './routes/points.js';
 
 import multer from 'multer';
 import xlsx from 'xlsx';
@@ -41,6 +42,7 @@ app.use('/api/deadlines', deadlineRouter);
 app.use('/api/students', studentRouter);
 app.use('/api/point_citizen', pointCitizenRouter);
 app.use('/api/point_medium', pointMediumRouter);
+app.use('/api/points', pointMarkRouter);
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

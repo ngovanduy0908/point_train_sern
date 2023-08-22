@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { createContext, useEffect, useState } from 'react';
+import axios from "axios";
+import { createContext, useEffect, useState } from "react";
 // import dotenv from 'dotenv';
 // dotenv.config();
 
@@ -8,12 +8,12 @@ export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(
-    JSON.parse(localStorage.getItem('user')) || null
+    JSON.parse(localStorage.getItem("user")) || null
   );
 
   const login = async (inputs) => {
     const res = await axios.post(
-      'http://localhost:8800/api/auth/login',
+      "http://localhost:8800/api/auth/login",
       inputs,
       {
         withCredentials: true,
@@ -24,7 +24,7 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    localStorage.setItem('user', JSON.stringify(currentUser));
+    localStorage.setItem("user", JSON.stringify(currentUser));
   }, [currentUser]);
 
   return (

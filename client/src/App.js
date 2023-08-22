@@ -1,41 +1,41 @@
-import './App.scss';
+import "./App.scss";
 
-import { AuthContext } from './context/authContext';
-import Login from './pages/login/Login';
-import ChangeInfoOne from './pages/login/ChangeInfoOne';
+import { AuthContext } from "./context/authContext";
+import Login from "./pages/login/Login";
+import ChangeInfoOne from "./pages/login/ChangeInfoOne";
 
 // import Khoa from './pages/khoa/Khoa';
-import { useContext, useMemo } from 'react';
+import { useContext, useMemo } from "react";
 
-import SV from './pages/sv/SV';
-import { themeSettings } from './theme.js';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { createTheme } from '@mui/material';
+import SV from "./pages/sv/SV";
+import { themeSettings } from "./theme.js";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { createTheme } from "@mui/material";
 
-import LayoutAdmin from './components/layout/LayoutAdmin';
-import LayoutKhoa from './components/layout/LayoutKhoa';
-import LayoutGV from './components/layout/LayoutGV';
-import LayoutLT from './components/layout/LayoutLT';
+import LayoutAdmin from "./components/layout/LayoutAdmin";
+import LayoutKhoa from "./components/layout/LayoutKhoa";
+import LayoutGV from "./components/layout/LayoutGV";
+import LayoutLT from "./components/layout/LayoutLT";
 
-import LayoutSV from './components/layout/LayoutSV';
+import LayoutSV from "./components/layout/LayoutSV";
 
-import QuanLyKhoa from './components/admin/QuanLyKhoa';
-import QuanLyKhoaHoc from './components/admin/QuanLyKhoaHoc';
-import QuanLyHocKi from './components/admin/QuanLyHocKi';
-import Overview from './components/admin/Overview';
-import QuanLyGiaoVien from './components/department/QuanLyGiaoVien';
-import QuanLyLopHoc from './components/department/QuanLyLopHoc';
-import ThongKeDRL from './components/department/ThongKeDRL';
-import QuanLyThoiGian from 'components/teacher/QuanLyThoiGian';
-import QuanLyLopChuNhiem from 'components/teacher/QuanLyLopChuNhiem';
-import QuanLyHocSinh from 'components/teacher/QuanLyHocSinh';
-import QuanLyDiemCDSV from 'components/teacher/QuanLyDiemCDSV';
-import QuanLyDiemTBHK from 'components/teacher/QuanLyDiemTBHK';
-import LT from 'pages/lt/LT';
-import PhieuChamDiem from 'components/student/PhieuChamDiem';
-import Mark from 'components/student/Mark';
-
+import QuanLyKhoa from "./components/admin/QuanLyKhoa";
+import QuanLyKhoaHoc from "./components/admin/QuanLyKhoaHoc";
+import QuanLyHocKi from "./components/admin/QuanLyHocKi";
+import Overview from "./components/admin/Overview";
+import QuanLyGiaoVien from "./components/department/QuanLyGiaoVien";
+import QuanLyLopHoc from "./components/department/QuanLyLopHoc";
+import ThongKeDRL from "./components/department/ThongKeDRL";
+import QuanLyThoiGian from "components/teacher/QuanLyThoiGian";
+import QuanLyLopChuNhiem from "components/teacher/QuanLyLopChuNhiem";
+import QuanLyHocSinh from "components/teacher/QuanLyHocSinh";
+import QuanLyDiemCDSV from "components/teacher/QuanLyDiemCDSV";
+import QuanLyDiemTBHK from "components/teacher/QuanLyDiemTBHK";
+import LT from "pages/lt/LT";
+import PhieuChamDiem from "components/student/PhieuChamDiem";
+import Mark from "components/student/Mark";
+import AfterMark from "components/student/AfterMark";
 function App() {
   const mode = useSelector((state) => state.global.mode);
 
@@ -47,7 +47,7 @@ function App() {
     var mk = currentUser.mk;
   }
   const setupRoute = () => {
-    if (tk === 'humg881966') {
+    if (tk === "humg881966") {
       return (
         <BrowserRouter>
           <Routes>
@@ -64,7 +64,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       );
-    } else if (tk.includes('humg')) {
+    } else if (tk.includes("humg")) {
       return (
         <BrowserRouter>
           <Routes>
@@ -81,7 +81,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       );
-    } else if (tk.includes('-')) {
+    } else if (tk.includes("-")) {
       return (
         <BrowserRouter>
           <Routes>
@@ -91,7 +91,7 @@ function App() {
               <Route
                 path="/"
                 element={
-                  mk === '12356@' ? (
+                  mk === "12356@" ? (
                     <Navigate to="/change-info" />
                   ) : (
                     <Navigate to="/overview" />
@@ -137,10 +137,20 @@ function App() {
                 <Route
                   path="/"
                   element={
-                    mk === '123456' ? <Navigate to="/change-info" /> : <LT />
+                    mk === "123456" ? (
+                      <Navigate to="/change-info" />
+                    ) : (
+                      <Navigate to="/home" replace />
+                    )
                   }
                 />
-                <Route path="/" element={<LT />} />
+                <Route path="/home" element={<LT />} />
+                <Route path="/chamdiemrenluyen" element={<PhieuChamDiem />} />
+                <Route
+                  path="/chamdiemrenluyen/:maHK/after_mark"
+                  element={<AfterMark />}
+                />
+                <Route path="/chamdiemrenluyen/:maHK" element={<Mark />} />
               </Route>
             ) : (
               <Route
@@ -149,7 +159,7 @@ function App() {
                 <Route
                   path="/"
                   element={
-                    mk === '123456' ? (
+                    mk === "123456" ? (
                       <Navigate to="/change-info" />
                     ) : (
                       <Navigate to="/home" replace />
@@ -158,6 +168,10 @@ function App() {
                 />
                 <Route path="/home" element={<SV />} />
                 <Route path="/chamdiemrenluyen" element={<PhieuChamDiem />} />
+                <Route
+                  path="/chamdiemrenluyen/:maHK/after_mark"
+                  element={<AfterMark />}
+                />
                 <Route path="/chamdiemrenluyen/:maHK" element={<Mark />} />
               </Route>
             )}

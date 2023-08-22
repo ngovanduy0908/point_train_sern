@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
 
 import {
   Button,
@@ -8,15 +8,15 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-} from '@mui/material';
+} from "@mui/material";
 
 export default function FormDialog({ open, handleClose, data, currentUser }) {
   const { start_time_student, end_time_student, end_time_monitor } = data;
   const [startTimeStudent, setStartTimeStudent] = useState(
-    start_time_student || ''
+    start_time_student || ""
   );
-  const [endTimeStudent, setEndTimeStudent] = useState(end_time_student || '');
-  const [endTimeMonitor, setEndTimeMonitor] = useState(end_time_monitor || '');
+  const [endTimeStudent, setEndTimeStudent] = useState(end_time_student || "");
+  const [endTimeMonitor, setEndTimeMonitor] = useState(end_time_monitor || "");
   const handleSubmit = async () => {
     try {
       const values = {
@@ -31,7 +31,7 @@ export default function FormDialog({ open, handleClose, data, currentUser }) {
           withCredentials: true,
         }
       );
-      window.location.href = 'http://localhost:3000/quanlythoigian';
+      window.location.href = "http://localhost:3000/quanlythoigian";
     } catch (error) {
       console.log(error.message);
     }
@@ -41,7 +41,7 @@ export default function FormDialog({ open, handleClose, data, currentUser }) {
   return (
     <div
       style={{
-        width: '35%',
+        width: "35%",
       }}
     >
       <Dialog
@@ -51,7 +51,7 @@ export default function FormDialog({ open, handleClose, data, currentUser }) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {start_time_student ? 'Update user' : 'Create new user'}
+          {start_time_student ? "Update deadline" : "Create new deadline"}
         </DialogTitle>
         <DialogContent>
           <form onSubmit={(e) => e.preventDefault()}>
@@ -79,7 +79,7 @@ export default function FormDialog({ open, handleClose, data, currentUser }) {
               name="end_time_monitor"
               value={endTimeMonitor}
               onChange={(e) => setEndTimeMonitor(e.target.value)}
-              placeholder="Thoi Gian Lop Truong Duyet"
+              label="Thoi Gian Lop Truong Duyet"
               variant="outlined"
               margin="dense"
               fullWidth
@@ -96,7 +96,7 @@ export default function FormDialog({ open, handleClose, data, currentUser }) {
             onClick={() => handleSubmit()}
             variant="contained"
           >
-            {start_time_student ? 'Luu' : 'Submit'}
+            {start_time_student ? "Luu" : "Submit"}
           </Button>
         </DialogActions>
       </Dialog>

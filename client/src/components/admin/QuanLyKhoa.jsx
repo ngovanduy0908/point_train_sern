@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import Header from '../Header';
-import MaterialReactTable from 'material-react-table';
-import './admin.css';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import Header from "../Header";
+import MaterialReactTable from "material-react-table";
+import "./admin.css";
 import {
   Box,
   Button,
@@ -13,10 +13,10 @@ import {
   Stack,
   TextField,
   Tooltip,
-} from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
+} from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
 
-import axios from 'axios';
+import axios from "axios";
 
 const QuanLyKhoa = () => {
   // const theme = useTheme();
@@ -30,7 +30,7 @@ const QuanLyKhoa = () => {
     const getAllDepartment = async () => {
       try {
         const allDepartment = await axios.get(
-          'http://localhost:8800/api/departments',
+          "http://localhost:8800/api/departments",
           {
             withCredentials: true,
           }
@@ -47,16 +47,12 @@ const QuanLyKhoa = () => {
   const handleCreateNewRow = async (values) => {
     // console.log(values);
     try {
-      const res = await axios.post(
-        'http://localhost:8800/api/departments',
-        values,
-        {
-          withCredentials: true,
-        }
-      );
+      await axios.post("http://localhost:8800/api/departments", values, {
+        withCredentials: true,
+      });
       tableData.push(values);
       setTableData([...tableData]);
-      console.log(res.data);
+      // console.log(res.data);
     } catch (error) {
       setErr(error.response.data);
     }
@@ -90,7 +86,7 @@ const QuanLyKhoa = () => {
     async (row) => {
       if (
         !window.confirm(
-          `Are you sure you want to delete ${row.getValue('name')}`
+          `Are you sure you want to delete ${row.getValue("name")}`
         )
       ) {
         return;
@@ -116,9 +112,9 @@ const QuanLyKhoa = () => {
         helperText: validationErrors[cell.id],
         onBlur: (event) => {
           const isValid =
-            cell.column.id === 'email'
+            cell.column.id === "email"
               ? validateEmail(event.target.value)
-              : cell.column.id === 'age'
+              : cell.column.id === "age"
               ? validateAge(+event.target.value)
               : validateRequired(event.target.value);
           if (!isValid) {
@@ -143,32 +139,32 @@ const QuanLyKhoa = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'maKhoa',
-        header: 'Mã Khoa',
+        accessorKey: "maKhoa",
+        header: "Mã Khoa",
         enableColumnOrdering: false,
         enableEditing: false, //disable editing on this column
         enableSorting: false,
         size: 80,
       },
       {
-        accessorKey: 'name',
-        header: 'Ten',
+        accessorKey: "name",
+        header: "Ten",
         size: 140,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
         }),
       },
       {
-        accessorKey: 'account',
-        header: 'Tai Khoan',
+        accessorKey: "account",
+        header: "Tai Khoan",
         size: 140,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
         }),
       },
       {
-        accessorKey: 'password',
-        header: 'Password',
+        accessorKey: "password",
+        header: "Password",
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
         }),
@@ -183,9 +179,9 @@ const QuanLyKhoa = () => {
       <Box mt="40px">
         <MaterialReactTable
           displayColumnDefOptions={{
-            'mrt-row-actions': {
+            "mrt-row-actions": {
               muiTableHeadCellProps: {
-                align: 'center',
+                align: "center",
               },
               size: 120,
             },
@@ -198,7 +194,7 @@ const QuanLyKhoa = () => {
           onEditingRowSave={handleSaveRowEdits}
           onEditingRowCancel={handleCancelRowEdits}
           renderRowActions={({ row, table }) => (
-            <Box sx={{ display: 'flex', gap: '1rem' }}>
+            <Box sx={{ display: "flex", gap: "1rem" }}>
               <Tooltip arrow placement="left" title="Edit">
                 <IconButton onClick={() => table.setEditingRow(row)}>
                   <Edit />
@@ -243,7 +239,7 @@ export const CreateNewAccountModal = ({
 }) => {
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
-      acc[column.accessorKey ?? ''] = '';
+      acc[column.accessorKey ?? ""] = "";
       return acc;
     }, {})
   );
@@ -261,9 +257,9 @@ export const CreateNewAccountModal = ({
         <form onSubmit={(e) => e.preventDefault()}>
           <Stack
             sx={{
-              width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
+              width: "100%",
+              minWidth: { xs: "300px", sm: "360px", md: "400px" },
+              gap: "1.5rem",
             }}
           >
             {columns.map((column) => (
@@ -280,7 +276,7 @@ export const CreateNewAccountModal = ({
         </form>
         {err && err}
       </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
+      <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
           Cancel
         </Button>
