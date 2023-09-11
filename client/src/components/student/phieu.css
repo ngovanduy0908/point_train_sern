@@ -94,3 +94,11 @@ td {
 .table-bordered thead th {
   border-bottom-width: 2px;
 }
+
+.a:hover .b {
+  display: block;
+}
+
+.b {
+  display: none;
+}

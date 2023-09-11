@@ -343,7 +343,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
         {/* body */}
         <div className="container__content">
           <form onSubmit={(e) => e.preventDefault()}>
-            <table className="table table-bordered">
+            <table className="table table-bordered" id="export-docx">
               {/* header table */}
               <thead>
                 <tr>

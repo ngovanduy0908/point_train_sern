@@ -36,6 +36,11 @@ import LT from "pages/lt/LT";
 import PhieuChamDiem from "components/student/PhieuChamDiem";
 import Mark from "components/student/Mark";
 import AfterMark from "components/student/AfterMark";
+import TestChart from "components/monitor/TestChart";
+import ChartDetail from "pages/chart/ChartDetail";
+import Luckysheet from "components/Luckysheet";
+import FormWord from "components/monitor/FormWord";
+import GenerateDocument from "components/monitor/GenerateDocument ";
 function App() {
   const mode = useSelector((state) => state.global.mode);
 
@@ -146,6 +151,7 @@ function App() {
                 />
                 <Route path="/home" element={<LT />} />
                 <Route path="/chamdiemrenluyen" element={<PhieuChamDiem />} />
+
                 <Route
                   path="/chamdiemrenluyen/:maHK/after_mark"
                   element={<AfterMark />}
@@ -175,19 +181,23 @@ function App() {
                 <Route path="/chamdiemrenluyen/:maHK" element={<Mark />} />
               </Route>
             )}
-            {/* <Route
+            <Route
               element={<LayoutSV currentUser={currentUser} theme={theme} />}
             >
               <Route
                 path="/"
                 element={
-                  mk === '123456' ? <Navigate to="/change-info" /> : <SV />
+                  mk === "123456" ? <Navigate to="/change-info" /> : <SV />
                 }
               />
               <Route path="/" element={<SV />} />
-            </Route> */}
+            </Route>
             <Route path="/change-info" element={<ChangeInfoOne />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/chart" element={<TestChart />} />
+            <Route path="/chart/detail" element={<ChartDetail />} />
+            <Route path="/excel" element={<Luckysheet />} />
+            <Route path="/word" element={<GenerateDocument />} />
           </Routes>
         </BrowserRouter>
       );
@@ -203,6 +213,9 @@ function App() {
           <Routes>
             <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/chart" element={<TestChart />} />
+            <Route path="/chart/detail" element={<ChartDetail />} />
+            <Route path="/excel" element={<Luckysheet />} />
           </Routes>
         </BrowserRouter>
       )}

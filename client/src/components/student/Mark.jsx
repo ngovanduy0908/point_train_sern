@@ -2,21 +2,21 @@ import { Box } from "@mui/material";
 import axios from "axios";
 import Header from "components/Header";
 import { getUserInLocalStorage } from "context/getCurrentUser";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import "../../assets/css/grid.css";
 import "./phieu.css";
-import ModalV1 from "components/modal/ModalV1";
 import Modal from "components/modal/Modal";
+import UploadProofStudent from "./UploadProofStudent";
 const DOMAIN = process.env.REACT_APP_DOMAIN;
 const Mark = () => {
   // console.log("DOMAIN: ", DOMAIN);
   const currentUser = getUserInLocalStorage();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-
   const maHK = pathname.split("/")[2];
   //   console.log(maHK);
   const [studentData, setStudentData] = useState([]);
@@ -441,9 +441,17 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
         }`}
       />
       {/* <BasicModal /> */}
-      <button onClick={() => setOpenModalProof(true)}>Open</button>
-      <Modal open={openModalProof} setOpen={setOpenModalProof}>
-        <p className="bg-red-500">Content</p>
+      <button onClick={() => setOpenModalProof(true)} className="mb-2">
+        Nhập/Xem Minh Chứng
+      </button>
+      <Modal
+        open={openModalProof}
+        setOpen={setOpenModalProof}
+        classNameChildren={"w-[800px]"}
+        displayButtonOk={false}
+        displayButtonCancel={false}
+      >
+        <UploadProofStudent maHK={maHK} maSv={currentUser.maSv} />
       </Modal>
       <Box
         sx={{

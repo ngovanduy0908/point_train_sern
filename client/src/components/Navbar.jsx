@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   LightModeOutlined,
   DarkModeOutlined,
   Menu as MenuIcon,
   SettingsOutlined,
   ArrowDropDownOutlined,
-} from '@mui/icons-material';
-import LanguageIcon from '@mui/icons-material/Language';
-import FlexBetween from 'components/FlexBetween';
-import { useDispatch } from 'react-redux';
-import { setMode } from 'state';
+} from "@mui/icons-material";
+import LanguageIcon from "@mui/icons-material/Language";
+import FlexBetween from "components/FlexBetween";
+import { useDispatch } from "react-redux";
+import { setMode } from "state";
 import {
   AppBar,
   Box,
@@ -20,9 +20,9 @@ import {
   Toolbar,
   Typography,
   useTheme,
-} from '@mui/material';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+} from "@mui/material";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
   const navigate = useNavigate();
@@ -37,20 +37,20 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
   };
 
   const handleLogout = async () => {
-    await axios.post('http://localhost:8800/api/auth/logout');
-    localStorage.removeItem('user');
-    navigate('/login');
+    await axios.post("http://localhost:8800/api/auth/logout");
+    localStorage.removeItem("user");
+    navigate("/login");
   };
 
   return (
     <AppBar
       sx={{
-        position: 'static',
-        background: 'none',
-        boxShadow: 'none',
+        position: "static",
+        background: "none",
+        boxShadow: "none",
       }}
     >
-      <Toolbar sx={{ justifyContent: 'space-between' }}>
+      <Toolbar sx={{ justifyContent: "space-between" }}>
         {/* left side */}
         <FlexBetween>
           <IconButton onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
@@ -72,12 +72,12 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
               href="/"
               sx={{
                 mr: 2,
-                display: { xs: 'none', md: 'flex' },
-                fontFamily: 'monospace',
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
                 fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'inherit',
-                textDecoration: 'none',
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
               }}
             >
               HUMG
@@ -87,26 +87,26 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
         {/* right side */}
         <FlexBetween gap="1.5rem">
           <IconButton onClick={() => dispatch(setMode())}>
-            {theme.palette.mode === 'dark' ? (
-              <DarkModeOutlined sx={{ fontSize: '25px' }} />
+            {theme.palette.mode === "dark" ? (
+              <DarkModeOutlined sx={{ fontSize: "25px" }} />
             ) : (
-              <LightModeOutlined sx={{ fontSize: '25px' }} />
+              <LightModeOutlined sx={{ fontSize: "25px" }} />
             )}
           </IconButton>
 
           <IconButton>
-            <SettingsOutlined sx={{ fontSize: '25px' }} />
+            <SettingsOutlined sx={{ fontSize: "25px" }} />
           </IconButton>
 
           <FlexBetween>
             <Button
               onClick={handleClick}
               sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                textTransform: 'none',
-                gap: '1rem',
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                textTransform: "none",
+                gap: "1rem",
               }}
             >
               <Box
@@ -116,7 +116,7 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
                 height="32px"
                 width="32px"
                 borderRadius="50%"
-                sx={{ objectFit: 'cover' }}
+                sx={{ objectFit: "cover" }}
               />
 
               <Box textAlign="left">
@@ -125,32 +125,32 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
                   fontSize="0.85rem"
                   sx={{ color: theme.palette.secondary[100] }}
                 >
-                  {user.name ? user.name : 'Admin'}
+                  {user.name ? user.name : "Admin"}
                 </Typography>
                 <Typography
                   fontSize="0.75rem"
                   sx={{ color: theme.palette.secondary[200] }}
                 >
-                  {user.role_name ? user.role_name : 'Admin HUMG'}
+                  {user.role_name ? user.role_name : "Admin HUMG"}
                 </Typography>
               </Box>
 
               <ArrowDropDownOutlined
-                sx={{ color: theme.palette.secondary[300], fontSize: '25px' }}
+                sx={{ color: theme.palette.secondary[300], fontSize: "25px" }}
               />
             </Button>
             <Menu
               anchorEl={anchorEl}
               open={isOpen}
               onClose={handleClose}
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
               {user.role_id === 1 ? (
-                <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+                <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
               ) : (
                 <Box>
-                  <MenuItem onClick={handleLogout}>Thay doi thong tin</MenuItem>
-                  <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+                  <MenuItem onClick={handleLogout}>Thay đổi thông tin</MenuItem>
+                  <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
                 </Box>
               )}
             </Menu>

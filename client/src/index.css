@@ -274,3 +274,7 @@ input {
 .select {
   color: #000;
 }
+
+.highcharts-credits {
+  display: none !important;
+}

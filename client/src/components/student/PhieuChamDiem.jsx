@@ -6,20 +6,20 @@ import {
   MenuItem,
   Select,
   Stack,
-} from '@mui/material';
-import axios from 'axios';
-import Header from 'components/Header';
-import { getUserInLocalStorage } from 'context/getCurrentUser';
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+} from "@mui/material";
+import axios from "axios";
+import Header from "components/Header";
+import { getUserInLocalStorage } from "context/getCurrentUser";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const PhieuChamDiem = () => {
   const currentUser = getUserInLocalStorage();
   const location = useLocation();
 
   const searchParams = new URLSearchParams(location.search);
-  const maHK = searchParams.get('maHK');
-  const [value, setValue] = useState(maHK || '');
+  const maHK = searchParams.get("maHK");
+  const [value, setValue] = useState(maHK || "");
   const [semesterData, setSemesterData] = useState([]);
 
   // console.log(maHK);
@@ -54,22 +54,22 @@ const PhieuChamDiem = () => {
   };
   return (
     <Box m="1.5rem 2.5rem">
-      <Box sx={{ display: 'flex', gap: '30px' }}>
+      <Box sx={{ display: "flex", gap: "30px" }}>
         <Header
-          title="Cham Diem Ren Luyen"
-          subtitle="Vui Long Chon HK truoc khi Cham."
+          title="Chọn Học Kì"
+          subtitle="Vui Lòng Chọn Học Kì Trước Khi Thao Tác"
         />
       </Box>
       <Box mt="40px">
         <form
           onSubmit={(e) => e.preventDefault()}
-          style={{ borderRadius: '20px', width: '40%', margin: 'auto' }}
+          style={{ borderRadius: "20px", width: "40%", margin: "auto" }}
         >
           <Stack
             sx={{
-              width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
+              width: "100%",
+              minWidth: { xs: "300px", sm: "360px", md: "400px" },
+              gap: "1.5rem",
             }}
           >
             <FormControl fullWidth required={true}>
@@ -94,7 +94,7 @@ const PhieuChamDiem = () => {
             color="secondary"
             onClick={handleSubmit}
             variant="contained"
-            sx={{ mt: '10px' }}
+            sx={{ mt: "10px" }}
           >
             Chon
           </Button>

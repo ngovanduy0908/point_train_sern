@@ -52,10 +52,10 @@ export default function Modal({
               <Dialog.Panel
                 className={`${
                   classNameChildren ? classNameChildren : " w-[500px]"
-                } max-h-[700px] overflow-y-auto m-auto relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg`}
+                } max-h-[700px] overflow-y-auto m-auto relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all `}
               >
                 <div className="bg-white px-4 pb-4 pt-2 sm:p-6 sm:pb-4">
-                  <div className="sm:flex sm:items-start">
+                  <div className="">
                     <div className="text-center sm:ml-4 sm:mt-0 sm:text-left">
                       {title && (
                         <Dialog.Title
@@ -79,7 +79,7 @@ export default function Modal({
                     displayButtonOk || displayButtonCancel
                       ? "flex justify-around"
                       : "hidden"
-                  } bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6`}
+                  } bg-gray-50 px-4 py-3 `}
                 >
                   {displayButtonOk && (
                     <button

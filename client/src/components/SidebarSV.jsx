@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
 import { ChevronLeft, ChevronRightOutlined } from "@mui/icons-material";
+import CountDown from "./countdown/CountDown";
 
 const navItemsSV = [
   {
@@ -128,7 +129,7 @@ const SidebarSV = ({
                   </ListItem>
                 );
               })}
-              ... countdown
+              <CountDown />
             </List>
           </Box>
         </Drawer>
