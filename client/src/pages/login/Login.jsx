@@ -1,24 +1,24 @@
-import React, { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './login.css';
-import Header from '../../components/header/Header';
-import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
-import Footer from '../../components/footer/Footer';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./login.css";
+import Header from "../../components/header/Header";
+import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
+import Footer from "../../components/footer/Footer";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Container from "@mui/material/Container";
 // import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 // import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import { AuthContext } from '../../context/authContext';
-const pages = ['TRANG WEB ĐÀO TẠO', 'TRANG WEB CNTT', 'TRANG WEB HUMG'];
+import MenuItem from "@mui/material/MenuItem";
+import AdbIcon from "@mui/icons-material/Adb";
+import { AuthContext } from "../../context/authContext";
+const pages = ["TRANG WEB ĐÀO TẠO", "TRANG WEB CNTT", "TRANG WEB HUMG"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -32,11 +32,11 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static" sx={{ marginTop: '20px' }}>
+    <AppBar position="static" sx={{ marginTop: "20px" }}>
       <div className="container navbar_header">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+            <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
             <Typography
               variant="h6"
               noWrap
@@ -44,18 +44,18 @@ function ResponsiveAppBar() {
               href="/"
               sx={{
                 mr: 2,
-                display: { xs: 'none', md: 'flex' },
-                fontFamily: 'monospace',
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
                 fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'inherit',
-                textDecoration: 'none',
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
               }}
             >
               LOGO
             </Typography>
 
-            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
               <IconButton
                 size="large"
                 aria-label="account of current user"
@@ -70,18 +70,18 @@ function ResponsiveAppBar() {
                 id="menu-appbar"
                 anchorEl={anchorElNav}
                 anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
+                  vertical: "bottom",
+                  horizontal: "left",
                 }}
                 keepMounted
                 transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'left',
+                  vertical: "top",
+                  horizontal: "left",
                 }}
                 open={Boolean(anchorElNav)}
                 onClose={handleCloseNavMenu}
                 sx={{
-                  display: { xs: 'block', md: 'none' },
+                  display: { xs: "block", md: "none" },
                 }}
               >
                 {pages.map((page) => (
@@ -91,7 +91,7 @@ function ResponsiveAppBar() {
                 ))}
               </Menu>
             </Box>
-            <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+            <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
             <Typography
               variant="h5"
               noWrap
@@ -99,23 +99,23 @@ function ResponsiveAppBar() {
               href=""
               sx={{
                 mr: 2,
-                display: { xs: 'flex', md: 'none' },
+                display: { xs: "flex", md: "none" },
                 flexGrow: 1,
-                fontFamily: 'monospace',
+                fontFamily: "monospace",
                 fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'inherit',
-                textDecoration: 'none',
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
               }}
             >
               LOGO
             </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map((page) => (
                 <Button
                   key={page}
                   onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
+                  sx={{ my: 2, color: "white", display: "block" }}
                 >
                   {page}
                 </Button>
@@ -130,8 +130,8 @@ function ResponsiveAppBar() {
 
 const Login = () => {
   const [inputs, setInputs] = useState({
-    tk: '',
-    mk: '',
+    tk: "",
+    mk: "",
   });
   const [err, setErr] = useState(null);
 
@@ -146,7 +146,7 @@ const Login = () => {
     e.preventDefault();
     try {
       await login(inputs);
-      navigate('/');
+      navigate("/");
     } catch (err) {
       setErr(err.response.data);
     }
@@ -157,8 +157,8 @@ const Login = () => {
       <Header />
       <ResponsiveAppBar
         sx={{
-          '.css-19fc6iy-MuiPaper-root-MuiAppBar-root': {
-            backgroundColor: '#21bbe5',
+          ".css-19fc6iy-MuiPaper-root-MuiAppBar-root": {
+            backgroundColor: "#21bbe5",
           },
         }}
       />
@@ -226,23 +226,23 @@ const Login = () => {
                   id="signIn"
                   onClick={() => {
                     const container =
-                      document.getElementById('container_login');
-                    container.classList.remove('right-panel-active');
+                      document.getElementById("container_login");
+                    container.classList.remove("right-panel-active");
                   }}
                 >
                   Đăng nhập
                 </button>
               </div>
               <div class="overlay-panel overlay-right">
-                <h1>Hello, Friend!</h1>
+                <h1>Xin Chào!</h1>
                 <p>Nhập email để lấy lại mật khẩu tại</p>
                 <button
                   class="ghost"
                   id="signUp"
                   onClick={() => {
                     const container =
-                      document.getElementById('container_login');
-                    container.classList.add('right-panel-active');
+                      document.getElementById("container_login");
+                    container.classList.add("right-panel-active");
                   }}
                 >
                   Quên mật khẩu

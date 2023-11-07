@@ -1,6 +1,7 @@
 import React from "react";
 import { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { useTheme } from "@mui/material";
 
 export default function Modal({
   title,
@@ -17,6 +18,7 @@ export default function Modal({
   borderTitle = true,
 }) {
   const cancelButtonRef = useRef(null);
+  const theme = useTheme();
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -54,15 +56,24 @@ export default function Modal({
                   classNameChildren ? classNameChildren : " w-[500px]"
                 } max-h-[700px] overflow-y-auto m-auto relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all `}
               >
-                <div className="bg-white px-4 pb-4 pt-2 sm:p-6 sm:pb-4">
+                <div
+                  style={{
+                    background: `${theme.palette.background.alt}`,
+                    color: `${theme.palette.secondary[100]}`,
+                  }}
+                  className="px-4 pb-4 pt-2 sm:p-6 sm:pb-4"
+                >
                   <div className="">
                     <div className="text-center sm:ml-4 sm:mt-0 sm:text-left">
                       {title && (
                         <Dialog.Title
                           as="h3"
-                          className={`text-base font-semibold leading-6 text-gray-900 ${
+                          className={`text-base font-semibold leading-6  ${
                             borderTitle ? " border-2" : "text-[24px]"
                           } mb-2 text-[18px]`}
+                          style={{
+                            color: `${theme.palette.secondary[100]}`,
+                          }}
                         >
                           {title}
                         </Dialog.Title>
@@ -71,9 +82,7 @@ export default function Modal({
                     </div>
                   </div>
                 </div>
-                {/* {(displayButtonOk || displayButtonCancel) && (
-                  
-                )} */}
+
                 <div
                   className={`${
                     displayButtonOk || displayButtonCancel

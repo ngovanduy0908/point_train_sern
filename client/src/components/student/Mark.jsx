@@ -5,12 +5,11 @@ import { getUserInLocalStorage } from "context/getCurrentUser";
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
-// import 'bootstrap/dist/css/bootstrap.min.css';
 import "../../assets/css/grid.css";
 import "./phieu.css";
 import Modal from "components/modal/Modal";
 import UploadProofStudent from "./UploadProofStudent";
+import Input from "components/input/Input";
 const DOMAIN = process.env.REACT_APP_DOMAIN;
 const Mark = () => {
   // console.log("DOMAIN: ", DOMAIN);
@@ -18,6 +17,7 @@ const Mark = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const maHK = pathname.split("/")[2];
+  const maSv = currentUser.maSv;
   //   console.log(maHK);
   const [studentData, setStudentData] = useState([]);
   const [data, setData] = useState([]);
@@ -415,7 +415,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
           withCredentials: true,
         }
       );
-      toast.success("Cham Diem Ren Luyen Thanh Cong", {
+      toast.success("Chấm điểm rèn luyện thành công", {
         autoClose: 2000,
       });
       navigate(`/chamdiemrenluyen/${maHK}/after_mark`);
@@ -426,18 +426,84 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
       console.log(error.message);
     }
   };
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [handleChangeFile, setHandleChangeFile] = useState(false);
+  const [chooseFiles, setChooseFiles] = useState([]);
+
+  const handleUpload = async () => {
+    // TODO khi file change thì mới call api upload img
+    let file_img = null;
+    let choose_file = chooseFiles;
+    // console.log("choose_file: ", choose_file);
+    if (handleChangeFile) {
+      try {
+        console.log("change file: ", selectedFiles);
+        // console.log("change file v1: ", selectedFiles);
+
+        const formData = new FormData();
+        selectedFiles.forEach((file) => {
+          formData.append("images", file);
+        });
+        await axios.post(`${DOMAIN}/upload`, formData).then(async (res) => {
+          file_img = res.data.join(",");
+          choose_file = [...chooseFiles, file_img];
+          const values = {
+            name_image: choose_file.length ? choose_file.join(",") : "",
+            maSv: maSv,
+          };
+          console.log("values: ", choose_file);
+          await axios
+            .post(
+              `${DOMAIN}/proof_mark/create_or_update_proof/${maHK}`,
+              values,
+              {
+                withCredentials: true,
+              }
+            )
+            .then(async (res) => {
+              toast.success(res.data);
+            });
+        });
+      } catch (error) {
+        console.error("Upload error:", error);
+      }
+    } else {
+      try {
+        const values = {
+          name_image: chooseFiles.length ? chooseFiles.join(",") : "",
+          maSv: maSv,
+        };
+        console.log("values moi: ", values);
+        await axios
+          .post(`${DOMAIN}/proof_mark/create_or_update_proof/${maHK}`, values, {
+            withCredentials: true,
+          })
+          .then(async (res) => {
+            toast.success(res.data);
+          });
+      } catch (error) {
+        console.error("Upload error:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (openModalProof === false) {
+      setHandleChangeFile(false);
+    }
+  }, [openModalProof]);
 
   return (
     <Box m="1.5rem 2.5rem">
       <Header
-        subtitle={`Diem CDSV: ${
+        subtitle={`Điểm tuần công dân sinh viên: ${
           pointCitizenMediumData?.point
             ? pointCitizenMediumData?.point
-            : "Chua Co"
-        } - Diem TBHK: ${
+            : "Chưa có"
+        } - Điểm trung bình học kì: ${
           pointCitizenMediumData?.point_average
             ? pointCitizenMediumData?.point_average
-            : "Chua Co"
+            : "Chưa có"
         }`}
       />
       {/* <BasicModal /> */}
@@ -450,8 +516,19 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
         classNameChildren={"w-[800px]"}
         displayButtonOk={false}
         displayButtonCancel={false}
+        title="Upload Minh Chứng"
       >
-        <UploadProofStudent maHK={maHK} maSv={currentUser.maSv} />
+        <UploadProofStudent
+          maHK={maHK}
+          maSv={currentUser.maSv}
+          selectedFiles={selectedFiles}
+          setSelectedFiles={setSelectedFiles}
+          handleChangeFile={handleChangeFile}
+          setHandleChangeFile={setHandleChangeFile}
+          chooseFiles={chooseFiles}
+          setChooseFiles={setChooseFiles}
+          handleUpload={handleUpload}
+        />
       </Modal>
       <Box
         sx={{
@@ -622,15 +699,14 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                     ………..... (+6đ)
                   </td>
                   <td>
-                    <input
+                    <Input
                       type="number"
                       name="svNCKH2"
                       id=""
-                      // value="<?= $svNCKH2 ?>"
                       min="0"
                       max="6"
                       value={values.svNCKH2}
-                      onChange={handleChangeInput}
+                      handleChangeInput={handleChangeInput}
                     />
                   </td>
                 </tr>
@@ -890,6 +966,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       value="10"
                       onChange={handleChangeValue}
+                      checked={checkboxState.svRightRule}
                     />
                   </td>
                 </tr>
@@ -997,6 +1074,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       value="-10"
                       onChange={handleChangeValue}
+                      checked={checkboxState.svNoFullStudy}
                     />
                   </td>
                 </tr>
@@ -1041,7 +1119,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       className="select"
                     >
                       {Array.from({ length: 6 }, (_, index) => (
-                        <option key={index} value={index}>
+                        <option key={index} value={index * -5}>
                           {index}
                         </option>
                       ))}
@@ -1060,6 +1138,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       name="svNoPayFee"
                       value="-10"
                       onChange={handleChangeValue}
+                      checked={checkboxState.svNoPayFee}
                     />
                   </td>
                 </tr>
@@ -1121,6 +1200,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       value="13"
                       onChange={handleChangeValue}
+                      checked={checkboxState.svFullActive}
                     />
                   </td>
                 </tr>
@@ -1183,7 +1263,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       className="select"
                     >
                       {Array.from({ length: 6 }, (_, index) => (
-                        <option key={index} value={index}>
+                        <option key={index} value={index * 2}>
                           {index}
                         </option>
                       ))}
@@ -1215,7 +1295,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       className="select"
                     >
                       {Array.from({ length: 6 }, (_, index) => (
-                        <option key={index} value={index}>
+                        <option key={index} value={index * -5}>
                           {index}
                         </option>
                       ))}
@@ -1237,7 +1317,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       className="select"
                     >
                       {Array.from({ length: 6 }, (_, index) => (
-                        <option key={index} value={index}>
+                        <option key={index} value={index * -5}>
                           {index}
                         </option>
                       ))}
@@ -1300,6 +1380,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       value="10"
                       onChange={handleChangeValue}
+                      checked={checkboxState.svPositiveStudy}
                     />
                   </td>
                 </tr>
@@ -1318,6 +1399,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       value="5"
                       onChange={handleChangeValue}
+                      checked={checkboxState.svPositiveLove}
                     />
                   </td>
                 </tr>
@@ -1344,6 +1426,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       value="-5"
                       onChange={handleChangeValue}
+                      checked={checkboxState.svWarn}
                     />
                   </td>
                 </tr>
@@ -1360,6 +1443,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       value="-20"
                       onChange={handleChangeValue}
+                      checked={checkboxState.svNoProtect}
                     />
                   </td>
                 </tr>
@@ -1461,6 +1545,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id=""
                       value="3"
                       onChange={handleChangeValue}
+                      checked={checkboxState.svBonus}
                     />
                   </td>
                 </tr>

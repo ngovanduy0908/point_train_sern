@@ -129,7 +129,7 @@ const SidebarSV = ({
                   </ListItem>
                 );
               })}
-              <CountDown />
+              {user && <CountDown user={user} />}
             </List>
           </Box>
         </Drawer>

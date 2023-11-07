@@ -99,6 +99,7 @@ const AfterMark = () => {
           withCredentials: true,
         }
       );
+      console.log("getStudentPoint: ", getStudentPoint.data);
       setPointStudentData(getStudentPoint.data);
     } catch (error) {
       console.log(error.response.data);
@@ -121,7 +122,10 @@ const AfterMark = () => {
         ? 12
         : pointCitizenMediumData.point_average >= 1.5
         ? 10
-        : 8;
+        : pointCitizenMediumData.point_average >= 1.0
+        ? 8
+        : 0;
+
     const changeValueCitizen =
       pointCitizenMediumData.point >= 90
         ? 15
@@ -289,7 +293,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
   return (
     <Box m="1.5rem 2.5rem">
       <Header
-        subtitle={`Diem CDSV: ${pointCitizenMediumData?.point} - Diem TBHK: ${pointCitizenMediumData?.point_average}`}
+        subtitle={`Điểm tuần công dân sinh viên: ${pointCitizenMediumData?.point} - Điểm trung bình học kì: ${pointCitizenMediumData?.point_average}`}
       />
       <Box
         sx={{
@@ -640,6 +644,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id="svUnTrueTime"
                       onChange={handleChangeSelect}
                       value={pointStudentData.svUnTrueTime}
+                      className="select"
                     >
                       {Array.from({ length: 6 }, (_, index) => (
                         <option key={index} value={index * -2}>
@@ -837,6 +842,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id="svNoCard"
                       value={pointStudentData.svNoCard}
                       onChange={handleChangeSelect}
+                      className="select"
                     >
                       {Array.from({ length: 6 }, (_, index) => (
                         <option key={index} value={index * -5}>
@@ -859,6 +865,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id="svNoAtivities"
                       value={pointStudentData.svNoAtivities}
                       onChange={handleChangeSelect}
+                      className="select"
                     >
                       {Array.from({ length: 6 }, (_, index) => (
                         <option key={index} value={index * -5}>
@@ -1002,6 +1009,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id="svAdvise"
                       value={pointStudentData.svAdvise}
                       onChange={handleChangeSelect}
+                      className="select"
                     >
                       {Array.from({ length: 6 }, (_, index) => (
                         <option key={index} value={index * 2}>
@@ -1033,6 +1041,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id="svIrresponsible"
                       value={pointStudentData.svIrresponsible}
                       onChange={handleChangeSelect}
+                      className="select"
                     >
                       {Array.from({ length: 6 }, (_, index) => (
                         <option key={index} value={index * -5}>
@@ -1054,6 +1063,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id="svNoCultural"
                       value={pointStudentData.svNoCultural}
                       onChange={handleChangeSelect}
+                      className="select"
                     >
                       {Array.from({ length: 6 }, (_, index) => (
                         <option key={index} value={index * -5}>
@@ -1314,20 +1324,8 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       id="svIrresponsibleMonitor"
                       value={pointStudentData.svIrresponsibleMonitor}
                       onChange={handleChangeSelect}
+                      className="select"
                     >
-                      {/* <?php
-                                            for ($i = 0; $i <= 5; $i++) {
-                                                if ($svIrresponsibleMonitor == ($i * (-5))) {
-                                                    echo '
-                                                            <option selected value="' . ($i * (-5)) . '">' . ($i) . '</option>           
-                                                        ';
-                                                } else {
-                                                    echo '
-                                                            <option value="' . ($i * (-5)) . '">' . ($i) . '</option>           
-                                                        ';
-                                                }
-                                            }
-                                            ?> */}
                       {Array.from({ length: 6 }, (_, index) => (
                         <option key={index} value={index * -5}>
                           {index}

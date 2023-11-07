@@ -60,7 +60,8 @@ const BarChart = ({
     series: seriesData,
   };
   const linkUrl =
-    "https://tsddbwptfwiyathksqae.supabase.co/storage/v1/object/public/images/basic_usage%20(4).docx";
+    "https://tsddbwptfwiyathksqae.supabase.co/storage/v1/object/public/images/loops.docx";
+
   // console.log("seriesData: ", seriesData);
   // console.log("listCategoriesXAxis: ", listCategoriesXAxis);
   // seriesData.data.map((item, idx) => {
@@ -87,6 +88,7 @@ const BarChart = ({
     <>
       {/* <ReactHighcharts config={config} />; */}
       {/* <HighchartsReact highcharts={Highcharts} options={options} /> */}
+
       <Chart options={options} linkUrl={linkUrl} data={transformedData} />
     </>
   );

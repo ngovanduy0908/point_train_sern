@@ -40,6 +40,19 @@ export const getPointStudentByMa = (req, res) => {
   });
 };
 
+export const getPointMonitorByMa = (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not authenticated");
+  const maHK = req.query.maHK;
+  const maSv = req.query.maSv;
+  const q = `select * from point_monitor where maHK='${maHK}' and maSv='${maSv}'`;
+  db.query(q, (err, data) => {
+    if (err) return res.status(500).json(err);
+
+    return res.status(200).json(...data);
+  });
+};
+
 export const insertOrUpdatePointStudent = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not authenticated");
@@ -182,5 +195,160 @@ export const insertOrUpdatePointStudent = (req, res) => {
         });
       });
     }
+  });
+};
+
+export const insertOrUpdatePointStudentMonitor = (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not authenticated");
+  // console.log("xuong day: ", req.body);
+  const maSv = req.query.maSv;
+  const maHK = req.query.maHK;
+  const values = req.body;
+  console.log("values.ltDiemTBHK: ", values.ltDiemTBHK);
+  const checkExisPointMonitor = `select maSv from point_monitor where maSv = '${maSv}' and maHK = '${maHK}'`;
+  db.query(checkExisPointMonitor, (err, data) => {
+    if (err) return res.status(500).json(err);
+    if (data.length) {
+      const q = `
+      update point_monitor set
+                            ltDiemTBHK = '${values.ltDiemTBHK}',
+                            ltNCKH1  = '${values.ltNCKH1}',
+                            ltNCKH2 = '${values.ltNCKH2}',
+                            ltNCKH3 = '${values.ltNCKH3}',
+                            ltOlympic1 = '${values.ltOlympic1}',
+                            ltOlympic2 = '${values.ltOlympic2}',
+                            ltOlympic3 = '${values.ltOlympic3}',
+                            ltOlympic4 = '${values.ltOlympic4}',
+                            ltNoRegulation = '${values.ltNoRegulation}',
+                            ltOnTime = '${values.ltOnTime}',
+                            ltAbandon = '${values.ltAbandon}',
+                            ltUnTrueTime = '${values.ltUnTrueTime}',
+                            ltRightRule = '${values.ltRightRule}',
+                            ltCitizen = '${values.ltCitizen}',
+                            ltNoFullStudy = '${values.ltNoFullStudy}',
+                            ltNoCard = '${values.ltNoCard}',
+                            ltNoAtivities = '${values.ltNoAtivities}',
+                            ltNoPayFee = '${values.ltNoPayFee}',
+                            ltFullActive = '${values.ltFullActive}',
+                            ltAchievementSchool = '${values.ltAchievementSchool}',
+                            ltAchievementCity = '${values.ltAchievementCity}',
+                            ltAdvise = '${values.ltAdvise}',
+                            ltIrresponsible = '${values.ltIrresponsible}',
+                            ltNoCultural = '${values.ltNoCultural}',
+                            ltPositiveStudy = '${values.ltPositiveStudy}',
+                            ltPositiveLove = '${values.ltPositiveLove}',
+                            ltWarn = '${values.ltWarn}',
+                            ltNoProtect = '${values.ltNoProtect}',
+                            ltMonitor = '${values.ltMonitor}',
+                            ltBonus = '${values.ltBonus}',
+                            ltIrresponsibleMonitor = '${values.ltIrresponsibleMonitor}'
+                            where maSv = '${maSv}' and maHK = '${maHK}'`;
+      const q1 = `update point set point_monitor = '${values.sum}', status = 1 where maSv = '${maSv}' and maHK = '${maHK}'`;
+      db.query(q, (err, data) => {
+        if (err) return res.status(500).json(err);
+
+        db.query(q1, (err, data) => {
+          if (err) return res.status(500).json(err);
+
+          return res.status(200).json("Lớp trưởng cập nhật điểm thành công");
+        });
+      });
+    } else {
+      console.log("vao day nua");
+      const q = `
+      INSERT INTO point_monitor 
+                                (maSv, 
+                                ltDiemTBHK, 
+                                ltCitizen, 
+                                ltMonitor, 
+                                ltNCKH1, 
+                                ltNCKH2, 
+                                ltNCKH3, 
+                                ltOlympic1, 
+                                ltOlympic2, 
+                                ltOlympic3, 
+                                ltOlympic4, 
+                                ltNoRegulation, 
+                                ltOnTime, 
+                                ltAbandon, 
+                                ltUnTrueTime, 
+                                ltNoFullStudy, 
+                                ltNoCard, 
+                                ltNoAtivities, 
+                                ltNoPayFee, 
+                                ltFullActive, 
+                                ltAchievementSchool, 
+                                ltAchievementCity, 
+                                ltAdvise, 
+                                ltIrresponsible, 
+                                ltNoCultural, 
+                                ltPositiveStudy, 
+                                ltPositiveLove, 
+                                ltWarn, 
+                                ltNoProtect, 
+                                ltBonus, 
+                                ltIrresponsibleMonitor, 
+                                maHK, 
+                                ltRightRule)
+                            VALUES 
+                                ('${maSv}', 
+                                '${values.ltDiemTBHK}', 
+                                '${values.ltCitizen}', 
+                                '${values.ltMonitor}', 
+                                '${values.ltNCKH1}', 
+                                '${values.ltNCKH2}', 
+                                '${values.ltNCKH3}', 
+                                '${values.ltOlympic1}', 
+                                '${values.ltOlympic2}', 
+                                '${values.ltOlympic3}', 
+                                '${values.ltOlympic4}', 
+                                '${values.ltNoRegulation}', 
+                                '${values.ltOnTime}', 
+                                '${values.ltAbandon}', 
+                                '${values.ltUnTrueTime}', 
+                                '${values.ltNoFullStudy}', 
+                                '${values.ltNoCard}', 
+                                '${values.ltNoAtivities}', 
+                                '${values.ltNoPayFee}', 
+                                '${values.ltFullActive}', 
+                                '${values.ltAchievementSchool}', 
+                                '${values.ltAchievementCity}', 
+                                '${values.ltAdvise}', 
+                                '${values.ltIrresponsible}', 
+                                '${values.ltNoCultural}', 
+                                '${values.ltPositiveStudy}', 
+                                '${values.ltPositiveLove}', 
+                                '${values.ltWarn}', 
+                                '${values.ltNoProtect}', 
+                                '${values.ltBonus}', 
+                                '${values.ltIrresponsibleMonitor}', 
+                                '${maHK}', 
+                                '${values.ltRightRule}')`;
+      const q1 = `update point set point_monitor = '${values.sum}', status = 1 where maSv = '${maSv}' and maHK = '${maHK}'`;
+
+      db.query(q, (err, data) => {
+        if (err) return res.status(500).json(err);
+
+        db.query(q1, (err, data) => {
+          if (err) return res.status(500).json(err);
+
+          return res.status(200).json("Lớp trưởng duyệt thành công");
+        });
+      });
+    }
+  });
+};
+
+export const getPointStudentByMaLopAndMaHK = (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not authenticated");
+  const maHK = req.query.maHK;
+  const maLop = req.query.maLop;
+  const query = `select students.*, point.* from students, point where students.maSv = point.maSv and maHK='${maHK}' and maLop='${maLop}'`;
+  db.query(query, (err, data) => {
+    if (err) return res.status(500).json(err);
+
+    return res.status(200).json(data);
   });
 };

@@ -9,7 +9,7 @@ function loadFile(url, callback) {
 }
 
 const GenerateDocument = ({ linkUrl, dataValue }) => {
-  // console.log("datavalue: ", typeof dataValue);
+  console.log("datavalue: ", dataValue);
   const generateDocument = () => {
     loadFile(linkUrl, function (error, content) {
       if (error) {
@@ -20,12 +20,26 @@ const GenerateDocument = ({ linkUrl, dataValue }) => {
         paragraphLoop: true,
         linebreaks: true,
       });
-      doc.setData({
-        data: dataValue,
-      });
+      // doc.setData({
+      //   data: dataValue,
+      // });
       try {
         // render the document (replace all occurrences of {first_name} by John, {last_name} by Doe, ...)
-        doc.render();
+        doc.render({
+          title: "Default title",
+          products: [
+            {
+              title: "Duk",
+              name: "DukSoftware",
+              reference: "DS0",
+            },
+            {
+              title: "Tingerloo",
+              name: "Tingerlee",
+              reference: "T00",
+            },
+          ],
+        });
       } catch (error) {
         // The error thrown here contains additional information when logged with JSON.stringify (it contains a properties object containing all suberrors).
         function replaceErrors(key, value) {

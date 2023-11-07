@@ -34,6 +34,7 @@ export const getProofStudent = async (req, res, next) => {
   const querySelect = `select * from student_proof_mark where maSv = '${maSv}' and maHK = '${maHK}'`;
   db.query(querySelect, (err, data) => {
     if (err) return res.status(500).json(err);
+
     return res.status(200).json(data);
   });
 };
@@ -45,25 +46,28 @@ export const exportFileExcel = (req, res) => {
 
   // console.log(req.body);
   // Tạo một instance của XlsxTemplate và tải mẫu Excel
-  const template = new XlsxTemplate(templateData);
+  // const template = new XlsxTemplate(templateData);
+  // console.log("template: ", template);
   // console.log(req.body);
   // Định nghĩa dữ liệu bạn muốn điền vào mẫu Excel
   const values = {
+    tong_so_hn_tt: 50,
     data: req.body,
   };
+  console.log("value:", values);
 
   // Thực hiện việc điền dữ liệu vào mẫu
-  const sheetNumber = 1;
-  template.substitute(sheetNumber, values);
+  // const sheetNumber = 1;
+  // template.substitute(sheetNumber, values);
 
-  // Tạo dữ liệu Excel đã điền
-  const outputData = template.generate();
-  // Xác định tên tệp Excel đầu ra
-  const outputFilePath =
-    "D:\\Learn ReactJs\\reactjs\\train_me_now\\client\\public\\upload\\output.xlsx";
+  // // Tạo dữ liệu Excel đã điền
+  // const outputData = template.generate();
+  // console.log("outputData: ", outputData);
+  // // Xác định tên tệp Excel đầu ra
+  // const outputFilePath = "output.xlsx";
 
-  // Ghi tệp Excel đã điền vào đường dẫn trên máy chủ
-  fs.writeFileSync(outputFilePath, outputData, "binary");
+  // // Ghi tệp Excel đã điền vào đường dẫn trên máy chủ
+  // fs.writeFileSync(outputFilePath, outputData, "binary");
 };
 // Trả về tệp Excel đã tạo cho phía máy khách
 // res.setHeader(

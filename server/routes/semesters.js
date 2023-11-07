@@ -1,4 +1,4 @@
-import express from 'express';
+import express from "express";
 import {
   //   addCourse,
   getAllListSemester,
@@ -6,18 +6,19 @@ import {
   addSemester,
   deleteSemester,
   getSemesterOpen,
+  editSemester,
   //   editCourse,
   //   deleteCourse,
-} from '../controllers/semester.js';
+} from "../controllers/semester.js";
 
 const router = express.Router();
 
-router.get('/', getAllListSemester);
-router.get('/get_semester_open', getSemesterOpen);
+router.get("/", getAllListSemester);
+router.get("/get_semester_open", getSemesterOpen);
 
-router.put('/:maHK/:status', changeSemester);
-router.post('/', addSemester);
-// router.put('/:maKhoaHoc', editCourse);
-router.delete('/:maHK', deleteSemester);
+router.put("/:maHK/:status", changeSemester);
+router.post("/", addSemester);
+router.put("/:maHK", editSemester);
+router.delete("/:maHK", deleteSemester);
 
 export default router;

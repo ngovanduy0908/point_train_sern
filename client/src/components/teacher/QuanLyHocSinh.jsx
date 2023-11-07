@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import Header from '../Header';
-import MaterialReactTable from 'material-react-table';
-import '../admin/admin.css';
-import { getUserInLocalStorage } from '../../context/getCurrentUser.js';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import Header from "../Header";
+import MaterialReactTable from "material-react-table";
+import "../admin/admin.css";
+import { getUserInLocalStorage } from "../../context/getCurrentUser.js";
 import {
   Box,
   Button,
@@ -18,15 +18,15 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-} from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
+} from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
 
-import axios from 'axios';
-import { useLocation, useNavigate } from 'react-router-dom';
+import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const QuanLyHocSinh = () => {
   const { pathname } = useLocation();
-  const maLop = pathname.split('/')[2];
+  const maLop = pathname.split("/")[2];
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [createUploadFileStudent, setCreateUploadFileStudent] = useState(false);
   const [createUploadPointStudent, setCreateUploadPointStudent] =
@@ -123,7 +123,7 @@ const QuanLyHocSinh = () => {
     async (row) => {
       if (
         !window.confirm(
-          `Are you sure you want to delete ${row.getValue('name')}`
+          `Are you sure you want to delete ${row.getValue("name")}`
         )
       ) {
         return;
@@ -169,9 +169,9 @@ const QuanLyHocSinh = () => {
         helperText: validationErrors[cell.id],
         onBlur: (event) => {
           const isValid =
-            cell.column.id === 'email'
+            cell.column.id === "email"
               ? validateEmail(event.target.value)
-              : cell.column.id === 'age'
+              : cell.column.id === "age"
               ? validateAge(+event.target.value)
               : validateRequired(event.target.value);
           if (!isValid) {
@@ -196,24 +196,24 @@ const QuanLyHocSinh = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'maSv',
-        header: 'Ma Sinh Vien',
+        accessorKey: "maSv",
+        header: "Mã Sinh Viên",
         enableColumnOrdering: false,
         // enableEditing: false, //disable editing on this column
         enableSorting: false,
         size: 80,
       },
       {
-        accessorKey: 'name',
-        header: 'Ho Va Ten',
+        accessorKey: "name",
+        header: "Họ Và Tên",
         size: 140,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
         }),
       },
       {
-        accessorKey: 'role_id',
-        header: 'Chuc Vu',
+        accessorKey: "role_id",
+        header: "Chức Vụ",
         size: 140,
         enableEditing: false,
         Cell: ({ cell, row }) => (
@@ -245,14 +245,14 @@ const QuanLyHocSinh = () => {
     <Box m="1.5rem 2.5rem">
       <Header
         title={currentUser.name}
-        subtitle={`Danh sách Diem CDSV Lop ${classData[0]?.class_name}`}
+        subtitle={`Danh Sách Sinh Viên Lớp ${classData[0]?.class_name}`}
       />
       <Box mt="40px">
         <MaterialReactTable
           displayColumnDefOptions={{
-            'mrt-row-actions': {
+            "mrt-row-actions": {
               muiTableHeadCellProps: {
-                align: 'center',
+                align: "center",
               },
               size: 120,
             },
@@ -265,7 +265,7 @@ const QuanLyHocSinh = () => {
           onEditingRowSave={handleSaveRowEdits}
           onEditingRowCancel={handleCancelRowEdits}
           renderRowActions={({ row, table }) => (
-            <Box sx={{ display: 'flex', gap: '1rem' }}>
+            <Box sx={{ display: "flex", gap: "1rem" }}>
               <Tooltip arrow placement="left" title="Edit">
                 <IconButton onClick={() => table.setEditingRow(row)}>
                   <Edit />
@@ -352,8 +352,8 @@ const QuanLyHocSinh = () => {
 
 export const CreateNewAccountModal = ({ err, open, onClose, onSubmit }) => {
   const [values, setValues] = useState({
-    maSv: '',
-    name: '',
+    maSv: "",
+    name: "",
   });
 
   const handleChange = (e) => {
@@ -378,9 +378,9 @@ export const CreateNewAccountModal = ({ err, open, onClose, onSubmit }) => {
         <form onSubmit={(e) => e.preventDefault()}>
           <Stack
             sx={{
-              width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
+              width: "100%",
+              minWidth: { xs: "300px", sm: "360px", md: "400px" },
+              gap: "1.5rem",
             }}
           >
             <TextField label="Ma SV" name="maSv" onChange={handleChange} />
@@ -430,7 +430,7 @@ export const CreateNewAccountModal = ({ err, open, onClose, onSubmit }) => {
         </form>
         {err && err}
       </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
+      <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
           Cancel
         </Button>
@@ -455,7 +455,7 @@ export const CreateUploadFileSV = ({ err, open, onClose, maLop }) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append("file", file);
     // console.log(formData);
     try {
       axios.post(
@@ -492,7 +492,7 @@ export const CreateUploadFileSV = ({ err, open, onClose, maLop }) => {
         </form>
         {err && err}
       </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
+      <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
           Cancel
         </Button>
@@ -511,7 +511,7 @@ export const CreateChooseSemesterModel = ({
   maLop,
   semesterData,
 }) => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   const navigate = useNavigate();
   const handleChange = async (e) => {
     setValue(e.target.value);
@@ -538,9 +538,9 @@ export const CreateChooseSemesterModel = ({
         <form onSubmit={(e) => e.preventDefault()}>
           <Stack
             sx={{
-              width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
+              width: "100%",
+              minWidth: { xs: "300px", sm: "360px", md: "400px" },
+              gap: "1.5rem",
             }}
           >
             <FormControl fullWidth required={true}>
@@ -564,7 +564,7 @@ export const CreateChooseSemesterModel = ({
         </form>
         {err && err}
       </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
+      <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
           Cancel
         </Button>
@@ -583,7 +583,7 @@ export const CreateChooseSemesterTwoModel = ({
   maLop,
   semesterData,
 }) => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   const navigate = useNavigate();
   const handleChange = async (e) => {
     setValue(e.target.value);
@@ -610,9 +610,9 @@ export const CreateChooseSemesterTwoModel = ({
         <form onSubmit={(e) => e.preventDefault()}>
           <Stack
             sx={{
-              width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
+              width: "100%",
+              minWidth: { xs: "300px", sm: "360px", md: "400px" },
+              gap: "1.5rem",
             }}
           >
             <FormControl fullWidth required={true}>
@@ -636,7 +636,7 @@ export const CreateChooseSemesterTwoModel = ({
         </form>
         {err && err}
       </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
+      <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
           Cancel
         </Button>

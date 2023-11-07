@@ -1,13 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import Header from '../Header';
-import MaterialReactTable from 'material-react-table';
-import '../admin/admin.css';
-import { Box, IconButton } from '@mui/material';
+import React, { useEffect, useMemo, useState } from "react";
+import Header from "../Header";
+import MaterialReactTable from "material-react-table";
+import "../admin/admin.css";
+import { Box, IconButton } from "@mui/material";
 
-import axios from 'axios';
-import { getUserInLocalStorage } from 'context/getCurrentUser';
-import ForwardIcon from '@mui/icons-material/Forward';
-import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import { getUserInLocalStorage } from "context/getCurrentUser";
+import ForwardIcon from "@mui/icons-material/Forward";
+import { useNavigate } from "react-router-dom";
 const QuanLyLopChuNhiem = () => {
   // const theme = useTheme();
   const currentUser = getUserInLocalStorage();
@@ -38,26 +38,26 @@ const QuanLyLopChuNhiem = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'maLop',
-        header: 'Ma Lop',
+        accessorKey: "maLop",
+        header: "Mã Lớp",
         enableColumnOrdering: false,
         enableEditing: false, //disable editing on this column
         enableSorting: false,
         size: 80,
       },
       {
-        accessorKey: 'class_name',
-        header: 'Ten Lop',
+        accessorKey: "class_name",
+        header: "Tên Lớp",
         size: 140,
       },
       {
-        accessorKey: 'name_course',
-        header: 'Ten Khóa Học',
+        accessorKey: "name_course",
+        header: "Tên Khóa Học",
         size: 140,
       },
       {
-        accessorKey: 'siso',
-        header: 'Tong So Sinh Vien',
+        accessorKey: "siso",
+        header: "Tổng Số Sinh Viên",
         size: 140,
       },
     ],
@@ -66,13 +66,13 @@ const QuanLyLopChuNhiem = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title={currentUser.name} subtitle="Danh sách Lop Chu Nhiem" />
+      <Header title={currentUser.name} subtitle="Danh Sách Lớp Chủ Nhiệm" />
       <Box mt="40px">
         <MaterialReactTable
           displayColumnDefOptions={{
-            'mrt-row-actions': {
+            "mrt-row-actions": {
               muiTableHeadCellProps: {
-                align: 'center',
+                align: "center",
               },
               size: 120,
             },
@@ -84,7 +84,7 @@ const QuanLyLopChuNhiem = () => {
           enableEditing
           renderRowActions={({ row, table }) => (
             <Box
-              sx={{ display: 'flex', gap: '1rem' }}
+              sx={{ display: "flex", gap: "1rem" }}
               onClick={() =>
                 navigate(`/quanlylopchunhiem/${row.original.maLop}`)
               }

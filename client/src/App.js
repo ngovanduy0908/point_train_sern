@@ -41,6 +41,8 @@ import ChartDetail from "pages/chart/ChartDetail";
 import Luckysheet from "components/Luckysheet";
 import FormWord from "components/monitor/FormWord";
 import GenerateDocument from "components/monitor/GenerateDocument ";
+import XetDiemRenLuyen from "pages/lt/XetDiemRenLuyen";
+import DanhSachDRLSinhVien from "pages/lt/DanhSachDRLSinhVien";
 function App() {
   const mode = useSelector((state) => state.global.mode);
 
@@ -150,6 +152,12 @@ function App() {
                   }
                 />
                 <Route path="/home" element={<LT />} />
+                <Route path="/xetdiemrenluyen" element={<XetDiemRenLuyen />} />
+                <Route
+                  path="/xetdiemrenluyen/:maHK"
+                  element={<DanhSachDRLSinhVien />}
+                />
+
                 <Route path="/chamdiemrenluyen" element={<PhieuChamDiem />} />
 
                 <Route

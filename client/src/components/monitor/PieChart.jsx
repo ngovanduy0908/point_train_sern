@@ -36,7 +36,9 @@ const PieChart = ({ data, textTitle }) => {
       itemMarginTop: 10,
       itemMarginBottom: 10,
       labelFormatter: function () {
-        return this.name + ": " + formatNumberWithCommas(this.value);
+        return (
+          this.name + ": <b>" + formatNumberWithCommas(this.value) + "</b>"
+        );
       },
     },
     series: [

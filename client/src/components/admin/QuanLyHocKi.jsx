@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import Header from '../Header';
-import MaterialReactTable from 'material-react-table';
-import './admin.css';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import Header from "../Header";
+import MaterialReactTable from "material-react-table";
+import "./admin.css";
 import {
   Box,
   Button,
@@ -13,11 +13,11 @@ import {
   Stack,
   TextField,
   Tooltip,
-} from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
+} from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
 
-import axios from 'axios';
-
+import axios from "axios";
+const DOMAIN = process.env.REACT_APP_DOMAIN;
 const QuanLyHocKi = () => {
   // const theme = useTheme();
   // const status=[0, 1];
@@ -30,7 +30,7 @@ const QuanLyHocKi = () => {
     const getAllDepartment = async () => {
       try {
         const allDepartment = await axios.get(
-          'http://localhost:8800/api/semesters',
+          "http://localhost:8800/api/semesters",
           {
             withCredentials: true,
           }
@@ -48,7 +48,7 @@ const QuanLyHocKi = () => {
     // console.log(values);
     try {
       const res = await axios.post(
-        'http://localhost:8800/api/semesters',
+        "http://localhost:8800/api/semesters",
         values,
         {
           withCredentials: true,
@@ -69,13 +69,9 @@ const QuanLyHocKi = () => {
       // console.log(values);
       // const maKhoa = row.original.maKhoa;
       // console.log(maKhoa);
-      axios.put(
-        `http://localhost:8800/api/courses/${values.maKhoaHoc}`,
-        values,
-        {
-          withCredentials: true,
-        }
-      );
+      axios.put(`${DOMAIN}/semesters/${row.original.maHK}`, values, {
+        withCredentials: true,
+      });
       //send/receive api updates here, then refetch or update local table data for re-render
       setTableData([...tableData]);
       exitEditingMode(); //required to exit editing mode and close modal
@@ -90,7 +86,7 @@ const QuanLyHocKi = () => {
     async (row) => {
       if (
         !window.confirm(
-          `Are you sure you want to delete ${row.getValue('name')}`
+          `Are you sure you want to delete ${row.getValue("name")}`
         )
       ) {
         return;
@@ -116,9 +112,9 @@ const QuanLyHocKi = () => {
         helperText: validationErrors[cell.id],
         onBlur: (event) => {
           const isValid =
-            cell.column.id === 'email'
+            cell.column.id === "email"
               ? validateEmail(event.target.value)
-              : cell.column.id === 'age'
+              : cell.column.id === "age"
               ? validateAge(+event.target.value)
               : validateRequired(event.target.value);
           if (!isValid) {
@@ -150,7 +146,7 @@ const QuanLyHocKi = () => {
           withCredentials: true,
         }
       );
-      window.location.href = 'http://localhost:3000/quanlyhocki';
+      window.location.href = "http://localhost:3000/quanlyhocki";
     } catch (error) {
       console.log(error);
     }
@@ -161,16 +157,16 @@ const QuanLyHocKi = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'maHK',
-        header: 'Mã Học Kì',
+        accessorKey: "maHK",
+        header: "Mã Học Kì",
         enableColumnOrdering: false,
         // enableEditing: false, //disable editing on this column
         enableSorting: false,
         size: 80,
       },
       {
-        accessorKey: 'name',
-        header: 'Ten',
+        accessorKey: "name",
+        header: "Ten",
         size: 140,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
@@ -185,32 +181,32 @@ const QuanLyHocKi = () => {
       //   }),
       // },
       {
-        accessorKey: 'status',
-        header: 'Trang Thai',
+        accessorKey: "status",
+        header: "Trang Thai",
         enableEditing: false,
         Cell: ({ cell, row }) => (
           <Button
             sx={{
-              backgroundColor: '#ffe3a3',
-              color: '#aa8b8b',
+              backgroundColor: "#ffe3a3",
+              color: "#aa8b8b",
             }}
             onClick={() => handleChange(row)}
           >
-            {cell.getValue() === 0 ? 'Đóng' : 'Mở'}
+            {cell.getValue() === 0 ? "Đóng" : "Mở"}
           </Button>
         ),
       },
 
       {
-        accessorKey: 'semester',
-        header: 'Kì',
+        accessorKey: "semester",
+        header: "Kì",
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
         }),
       },
       {
-        accessorKey: 'year',
-        header: 'Năm',
+        accessorKey: "year",
+        header: "Năm",
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
         }),
@@ -225,9 +221,9 @@ const QuanLyHocKi = () => {
       <Box mt="40px">
         <MaterialReactTable
           displayColumnDefOptions={{
-            'mrt-row-actions': {
+            "mrt-row-actions": {
               muiTableHeadCellProps: {
-                align: 'center',
+                align: "center",
               },
               size: 120,
             },
@@ -240,7 +236,7 @@ const QuanLyHocKi = () => {
           onEditingRowSave={handleSaveRowEdits}
           onEditingRowCancel={handleCancelRowEdits}
           renderRowActions={({ row, table }) => (
-            <Box sx={{ display: 'flex', gap: '1rem' }}>
+            <Box sx={{ display: "flex", gap: "1rem" }}>
               <Tooltip arrow placement="left" title="Edit">
                 <IconButton onClick={() => table.setEditingRow(row)}>
                   <Edit />
@@ -285,7 +281,7 @@ export const CreateNewAccountModal = ({
 }) => {
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
-      acc[column.accessorKey ?? ''] = '';
+      acc[column.accessorKey ?? ""] = "";
       return acc;
     }, {})
   );
@@ -303,14 +299,14 @@ export const CreateNewAccountModal = ({
         <form onSubmit={(e) => e.preventDefault()}>
           <Stack
             sx={{
-              width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
+              width: "100%",
+              minWidth: { xs: "300px", sm: "360px", md: "400px" },
+              gap: "1.5rem",
             }}
           >
             {columns.map(
               (column) =>
-                column.accessorKey !== 'status' && (
+                column.accessorKey !== "status" && (
                   <TextField
                     key={column.accessorKey}
                     label={column.header}
@@ -325,7 +321,7 @@ export const CreateNewAccountModal = ({
         </form>
         {err && err}
       </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
+      <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
           Cancel
         </Button>

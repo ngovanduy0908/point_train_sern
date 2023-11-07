@@ -11,6 +11,7 @@ require("highcharts/modules/export-data")(Highcharts);
 HCMore(Highcharts);
 
 const Chart = ({ options, linkUrl, data }) => {
+  console.log("data chart: ", data);
   const { series, ...values } = options;
   const optionsString = JSON.stringify(options);
   //   console.log(optionsString);

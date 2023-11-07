@@ -1,12 +1,31 @@
-import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { AuthContext } from "context/authContext";
+import React, { useContext, useEffect, useState } from "react";
 
+const DOMAIN = process.env.REACT_APP_DOMAIN;
 const Countdown = () => {
+  // const { maLop } = user;
+  const { currentUser } = useContext(AuthContext);
   const [days, setDays] = useState("00");
   const [hours, setHours] = useState("00");
   const [minutes, setMinutes] = useState("00");
   const [seconds, setSeconds] = useState("00");
+  const getDeadlineByMaLop = async () => {
+    try {
+      await axios.get(
+        `${DOMAIN}/deadlines/deadlineMaLop/${currentUser.maLop}`,
+        {
+          withCredentials: true,
+        }
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  // console.log("domain: ", currentUser);
 
   useEffect(() => {
+    getDeadlineByMaLop();
     const target_date = new Date().getTime() + 1000 * 3600 * 48; // set the countdown date
 
     const countdownInterval = setInterval(() => {
