@@ -2,7 +2,7 @@ import { getUserInLocalStorage } from "context/getCurrentUser";
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import MaterialReactTable from "material-react-table";
-import { Box, IconButton, Tooltip } from "@mui/material";
+import { Box, IconButton, Tooltip, Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import PreviewIcon from "@mui/icons-material/Preview";
 import { getPointStudentByMaLopAndMaHK } from "utils/getDetails/getPointDanhSachLop";
@@ -11,6 +11,10 @@ import Badge from "components/Badge";
 import Modal from "components/modal/Modal";
 import ModalV1 from "components/modal/ModalV1";
 import DuyetDiemRenLuyenLT from "./DuyetDiemRenLuyenLT";
+import UploadProofStudent from "components/student/UploadProofStudent";
+import { toast } from "react-toastify";
+import axios from "axios";
+const DOMAIN = process.env.REACT_APP_DOMAIN;
 const DanhSachDRLSinhVien = () => {
   const currentUser = getUserInLocalStorage();
   const { maHK } = useParams();
@@ -106,7 +110,12 @@ const DanhSachDRLSinhVien = () => {
                 </IconButton>
               </Tooltip>
               <Tooltip title="Xem minh chứng">
-                <IconButton onClick={() => setOpenFormMinhChung(true)}>
+                <IconButton
+                  onClick={() => {
+                    setSinhVienItem(row.original);
+                    setOpenFormMinhChung(true);
+                  }}
+                >
                   <PreviewIcon />
                 </IconButton>
               </Tooltip>
@@ -118,13 +127,92 @@ const DanhSachDRLSinhVien = () => {
     [danhSachDiemSinhVien]
   );
 
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [handleChangeFile, setHandleChangeFile] = useState(false);
+  const [chooseFiles, setChooseFiles] = useState([]);
+
+  const handleUpload = async () => {
+    // TODO khi file change thì mới call api upload img
+    let file_img = null;
+    let choose_file = chooseFiles;
+    // console.log("choose_file: ", choose_file);
+    if (handleChangeFile) {
+      try {
+        console.log("change file: ", selectedFiles);
+        // console.log("change file v1: ", selectedFiles);
+
+        const formData = new FormData();
+        selectedFiles.forEach((file) => {
+          formData.append("images", file);
+        });
+        await axios.post(`${DOMAIN}/upload`, formData).then(async (res) => {
+          file_img = res.data.join(",");
+          // choose_file = [...chooseFiles, file_img];
+          choose_file = [file_img];
+          const values = {
+            name_image: choose_file.length ? choose_file.join(",") : "",
+            maSv: sinhVienItem?.maSv,
+          };
+          console.log("values: ", choose_file);
+          await axios
+            .post(
+              `${DOMAIN}/proof_mark/create_or_update_proof/${maHK}`,
+              values,
+              {
+                withCredentials: true,
+              }
+            )
+            .then(async (res) => {
+              toast.success(res.data);
+            });
+        });
+      } catch (error) {
+        console.error("Upload error:", error);
+      }
+    } else {
+      try {
+        const values = {
+          name_image: chooseFiles.length ? chooseFiles.join(",") : "",
+          maSv: sinhVienItem?.maSv,
+        };
+        console.log("values moi: ", values);
+        await axios
+          .post(`${DOMAIN}/proof_mark/create_or_update_proof/${maHK}`, values, {
+            withCredentials: true,
+          })
+          .then(async (res) => {
+            toast.success(res.data);
+          });
+      } catch (error) {
+        console.error("Upload error:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (openFormMinhChung === false) {
+      setHandleChangeFile(false);
+    }
+  }, [openFormMinhChung]);
+
   return (
     <Box m="1.5rem 2.5rem">
       <Header
-        title={currentUser?.name}
-        subtitle={`Danh Sách Sinh Viên Lớp - ${currentUser?.maLop}`}
+        title={`Danh Sách Sinh Viên Lớp - ${currentUser?.maLop}`}
+        subtitle={`Xét Duyệt Điểm Rèn Luyện - ${maHK}`}
       />
-      <Box mt="40px">
+      <Button
+        variant="contained"
+        sx={{
+          margin: "5px 0px 15px",
+        }}
+        onClick={() => {
+          console.log("ko rur anh");
+        }}
+      >
+        Danh Sách Sinh Viên Chưa Chấm ĐRL
+      </Button>
+      <Box>
         <MaterialReactTable
           displayColumnDefOptions={{
             "mrt-row-actions": {
@@ -154,14 +242,28 @@ const DanhSachDRLSinhVien = () => {
           sinhVienItem={sinhVienItem}
         />
       </ModalV1>
-
-      <Modal
-        open={openFormMinhChung}
-        setOpen={setOpenFormMinhChung}
-        title={"Minh chứng"}
-      >
-        Minh chứng của sinh viên
-      </Modal>
+      {sinhVienItem && (
+        <Modal
+          open={openFormMinhChung}
+          setOpen={setOpenFormMinhChung}
+          title={"Xét Duyệt Minh Chứng"}
+          displayButtonOk={false}
+          displayButtonCancel={false}
+          classNameChildren={"w-[800px]"}
+        >
+          <UploadProofStudent
+            maHK={maHK}
+            maSv={sinhVienItem.maSv}
+            selectedFiles={selectedFiles}
+            setSelectedFiles={setSelectedFiles}
+            handleChangeFile={handleChangeFile}
+            setHandleChangeFile={setHandleChangeFile}
+            chooseFiles={chooseFiles}
+            setChooseFiles={setChooseFiles}
+            handleUpload={handleUpload}
+          />
+        </Modal>
+      )}
     </Box>
   );
 };

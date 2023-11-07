@@ -446,7 +446,8 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
         });
         await axios.post(`${DOMAIN}/upload`, formData).then(async (res) => {
           file_img = res.data.join(",");
-          choose_file = [...chooseFiles, file_img];
+          // choose_file = [...chooseFiles, file_img];
+          choose_file = [file_img];
           const values = {
             name_image: choose_file.length ? choose_file.join(",") : "",
             maSv: maSv,

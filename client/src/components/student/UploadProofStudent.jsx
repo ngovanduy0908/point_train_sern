@@ -1,8 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { useTheme } from "@mui/material";
-
+import CircularProgress from "@mui/material/CircularProgress";
 const DOMAIN = process.env.REACT_APP_DOMAIN;
 
 const UploadProofStudent = ({
@@ -19,11 +18,13 @@ const UploadProofStudent = ({
   const theme = useTheme();
   // const [selectedFiles, setSelectedFiles] = useState([]);
   const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
   // const [handleChangeFile, setHandleChangeFile] = useState(false);
   //   TODO sẽ có initvalue gắn vào đây.
   // const [chooseFiles, setChooseFiles] = useState([]);
   const getProofStudent = async () => {
     try {
+      setLoading(true);
       const result = await axios.get(
         `${DOMAIN}/proof_mark/get_proof/${maHK}/${maSv}`,
         {
@@ -31,7 +32,7 @@ const UploadProofStudent = ({
         }
       );
       // console.log(result.data[0] ? result.data[0].name_image.split(",") : []);
-      console.log(result.data[0]);
+      // console.log(result.data[0]);
       setChooseFiles(
         result.data[0].name_img ? result.data[0].name_img.split(",") : []
       );
@@ -40,13 +41,19 @@ const UploadProofStudent = ({
           file: item,
           url: `/upload/${item}`,
         }));
-
+        console.log("values: ", value);
         setImages((prev) => [...prev, ...value]);
         // console.log("uniqueImages: ", uniqueImages);
-        // setChooseFiles((prev) => [...prev, ...value]);
+        // setChooseFiles((prev) => [
+        //   ...prev,
+        //   ...result.data[0].name_img.split(","),
+        // ]);
       }
+      setLoading(false);
     } catch (error) {
       console.log(error.message);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -62,7 +69,7 @@ const UploadProofStudent = ({
       url: URL.createObjectURL(file),
     }));
     setImages((prev) => [...prev, ...fileUrls]);
-    console.log("chooseFiles: ", chooseFiles);
+    // console.log("chooseFiles: ", chooseFiles);
     // setChooseFiles((prev) => [...prev, ...fileUrls]);
   };
 
@@ -140,7 +147,11 @@ const UploadProofStudent = ({
             className="w-[50%] m-auto"
           />
         </div>
-        {images.length ? (
+        {loading ? (
+          <div className="flex items-center justify-center my-3">
+            <CircularProgress />
+          </div>
+        ) : images.length ? (
           <div
             className="p-2 border-gray-800 rounded-lg max-h-[70vh] overflow-auto"
             style={{
