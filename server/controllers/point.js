@@ -60,7 +60,7 @@ export const insertOrUpdatePointStudent = (req, res) => {
   const maSv = req.params.maSv;
   const maHK = req.params.maHK;
   const values = req.body;
-  console.log("here: ", req.body);
+  // console.log("here: ", req.body);
   const checkExisPointStudent = `select maSv from point_student where maSv = '${maSv}' and maHK = '${maHK}'`;
   db.query(checkExisPointStudent, (err, data) => {
     if (err) return res.status(500).json(err);
@@ -205,7 +205,7 @@ export const insertOrUpdatePointStudentMonitor = (req, res) => {
   const maSv = req.query.maSv;
   const maHK = req.query.maHK;
   const values = req.body;
-  console.log("values.ltDiemTBHK: ", values.ltDiemTBHK);
+  // console.log("values.ltDiemTBHK: ", values.ltDiemTBHK);
   const checkExisPointMonitor = `select maSv from point_monitor where maSv = '${maSv}' and maHK = '${maHK}'`;
   db.query(checkExisPointMonitor, (err, data) => {
     if (err) return res.status(500).json(err);
@@ -255,7 +255,7 @@ export const insertOrUpdatePointStudentMonitor = (req, res) => {
         });
       });
     } else {
-      console.log("vao day nua");
+      // console.log("vao day nua");
       const q = `
       INSERT INTO point_monitor 
                                 (maSv, 
@@ -351,4 +351,67 @@ export const getPointStudentByMaLopAndMaHK = (req, res) => {
 
     return res.status(200).json(data);
   });
+};
+
+export const getPointStudentNoMark = (req, res) => {
+  // console.log("vao day");
+  // console.log("req: ", req.query);
+  const maLop = req.query.maLop;
+  const maHK = req.query.maHK;
+  const query = `SELECT * 
+  from 
+  students 
+  where 
+  maLop = '${maLop}' 
+  AND 
+  maSv 
+  not in 
+      (SELECT (students.maSv) 
+      from students 
+      LEFT JOIN 
+      point 
+      on students.maSv = point.maSv 
+      LEFT JOIN 
+      semester 
+      on point.maHK = semester.maHK 
+      WHERE 
+      students.maLop = '${maLop}' 
+      and point.maHK = '${maHK}')`;
+  db.query(query, (err, data) => {
+    if (err) return res.status(500).json(err);
+
+    return res.status(200).json(data);
+  });
+};
+
+export const markZero = (req, res) => {
+  // console.log("vao day: ", req.body);
+  const danhSachSinhVienNoMark = req.body;
+  danhSachSinhVienNoMark.forEach((element) => {
+    // console.log("vao day: ", element.maSv);
+    const maSv = element.maSv;
+    const maHK = element.maHK;
+
+    const sql_point = `insert into point
+                      (maSv, maHK, status, status_teacher, point_student, point_monitor, point_teacher)
+                      values
+                      ('${maSv}', '${maHK}', 1, 1, 0, 0, 0)`;
+
+    const sql_point_student = `insert into point_student (maSv, maHK) values('${maSv}', '${maHK}')`;
+    const sql_point_monitor = `insert into point_monitor (maSv, maHK) values('${maSv}', '${maHK}')`;
+    const sql_point_teacher = `insert into point_teacher (maSv, maHK) values('${maSv}', '${maHK}')`;
+    db.query(sql_point, (err, data) => {
+      if (err) return res.status(500).json(err);
+    });
+    db.query(sql_point_student, (err, data) => {
+      if (err) return res.status(500).json(err);
+    });
+    db.query(sql_point_monitor, (err, data) => {
+      if (err) return res.status(500).json(err);
+    });
+    db.query(sql_point_teacher, (err, data) => {
+      if (err) return res.status(500).json(err);
+    });
+  });
+  return res.status(200).json("Thành Công");
 };

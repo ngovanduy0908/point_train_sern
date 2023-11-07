@@ -6,6 +6,8 @@ import { Box, IconButton, Tooltip, Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import PreviewIcon from "@mui/icons-material/Preview";
 import { getPointStudentByMaLopAndMaHK } from "utils/getDetails/getPointDanhSachLop";
+import { getStudentsNoMark } from "utils/getMany/getStudentsNoMark";
+import { markZero } from "utils/postDetails/markZero";
 import Header from "components/Header";
 import Badge from "components/Badge";
 import Modal from "components/modal/Modal";
@@ -14,15 +16,19 @@ import DuyetDiemRenLuyenLT from "./DuyetDiemRenLuyenLT";
 import UploadProofStudent from "components/student/UploadProofStudent";
 import { toast } from "react-toastify";
 import axios from "axios";
+import DanhSachSVChuaChamDRL from "./DanhSachSVChuaChamDRL";
 const DOMAIN = process.env.REACT_APP_DOMAIN;
 const DanhSachDRLSinhVien = () => {
   const currentUser = getUserInLocalStorage();
   const { maHK } = useParams();
-
+  const maLop = currentUser?.maLop;
   const [danhSachDiemSinhVien, setDanhSachDiemSinhVien] = useState([]);
+  const [danhSachSinhVienNoMark, setDanhSachSinhVienNoMark] = useState([]);
   const [sinhVienItem, setSinhVienItem] = useState();
   const [openFormDRL, setOpenFormDRL] = useState(false);
   const [openFormMinhChung, setOpenFormMinhChung] = useState(false);
+  const [openDSSVNoMark, setOpenDSSVNoMark] = useState(false);
+
   const fetchData = async () => {
     const res = await getPointStudentByMaLopAndMaHK(
       `maHK=${maHK}&maLop=${currentUser.maLop}`
@@ -32,7 +38,7 @@ const DanhSachDRLSinhVien = () => {
       ...item,
     }));
     setDanhSachDiemSinhVien(newData);
-    console.log("res: ", res);
+    // console.log("res: ", res);
   };
   useEffect(() => {
     fetchData();
@@ -127,6 +133,7 @@ const DanhSachDRLSinhVien = () => {
     [danhSachDiemSinhVien]
   );
 
+  // minh chung
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [handleChangeFile, setHandleChangeFile] = useState(false);
   const [chooseFiles, setChooseFiles] = useState([]);
@@ -138,7 +145,7 @@ const DanhSachDRLSinhVien = () => {
     // console.log("choose_file: ", choose_file);
     if (handleChangeFile) {
       try {
-        console.log("change file: ", selectedFiles);
+        // console.log("change file: ", selectedFiles);
         // console.log("change file v1: ", selectedFiles);
 
         const formData = new FormData();
@@ -153,7 +160,7 @@ const DanhSachDRLSinhVien = () => {
             name_image: choose_file.length ? choose_file.join(",") : "",
             maSv: sinhVienItem?.maSv,
           };
-          console.log("values: ", choose_file);
+          // console.log("values: ", choose_file);
           await axios
             .post(
               `${DOMAIN}/proof_mark/create_or_update_proof/${maHK}`,
@@ -175,7 +182,7 @@ const DanhSachDRLSinhVien = () => {
           name_image: chooseFiles.length ? chooseFiles.join(",") : "",
           maSv: sinhVienItem?.maSv,
         };
-        console.log("values moi: ", values);
+        // console.log("values moi: ", values);
         await axios
           .post(`${DOMAIN}/proof_mark/create_or_update_proof/${maHK}`, values, {
             withCredentials: true,
@@ -194,6 +201,48 @@ const DanhSachDRLSinhVien = () => {
       setHandleChangeFile(false);
     }
   }, [openFormMinhChung]);
+  // end minh chung
+
+  // loc sinh vien chua cham drl
+  const getDanhSachSinhVienNoMark = async () => {
+    const res = await getStudentsNoMark(`maHK=${maHK}&maLop=${maLop}`);
+    const data = res.map((item, idx) => ({
+      stt: idx + 1,
+      ...item,
+    }));
+    setDanhSachSinhVienNoMark(data);
+    // console.log("res: ", res);
+  };
+
+  useEffect(() => {
+    getDanhSachSinhVienNoMark();
+  }, []);
+
+  const handleMarkZero = async () => {
+    try {
+      if (!danhSachSinhVienNoMark.length) {
+        return toast.warn("Không có sinh viên nào chưa chấm điểm.");
+      }
+      const newData = danhSachSinhVienNoMark.map((item) => ({
+        maHK,
+        maSv: item.maSv,
+      }));
+
+      await axios
+        .post(`${DOMAIN}/points/mark_zero`, newData, {
+          withCredentials: true,
+        })
+        .then(() => {
+          fetchData();
+          setOpenDSSVNoMark(false);
+          toast.success("Chấm điểm rèn luyện thành công", {
+            autoClose: 2000,
+          });
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -207,7 +256,7 @@ const DanhSachDRLSinhVien = () => {
           margin: "5px 0px 15px",
         }}
         onClick={() => {
-          console.log("ko rur anh");
+          setOpenDSSVNoMark(true);
         }}
       >
         Danh Sách Sinh Viên Chưa Chấm ĐRL
@@ -240,6 +289,20 @@ const DanhSachDRLSinhVien = () => {
           fetchData={fetchData}
           setOpen={setOpenFormDRL}
           sinhVienItem={sinhVienItem}
+        />
+      </ModalV1>
+
+      {/* danh sach sinh vien chua cham diem ren luyen */}
+      <ModalV1
+        open={openDSSVNoMark}
+        setOpen={setOpenDSSVNoMark}
+        title="Danh Sách Sinh Viên Không Chấm Điểm Rèn Luyện"
+        changeHeight={true}
+        okText="Xét Điểm Rèn Luyện Bằng 0"
+        onOK={handleMarkZero}
+      >
+        <DanhSachSVChuaChamDRL
+          danhSachSinhVienNoMark={danhSachSinhVienNoMark}
         />
       </ModalV1>
       {sinhVienItem && (

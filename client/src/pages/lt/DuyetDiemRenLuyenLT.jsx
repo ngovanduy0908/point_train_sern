@@ -435,47 +435,47 @@ const DuyetDiemRenLuyenLT = ({ sinhVienItem, fetchData, setOpen }) => {
     }
   };
 
-  useEffect(() => {
-    const changeValueTBHK =
-      pointCitizenMediumData.point_average >= 3.6
-        ? 20
-        : pointCitizenMediumData.point_average >= 3.2
-        ? 18
-        : pointCitizenMediumData.point_average >= 2.5
-        ? 16
-        : pointCitizenMediumData.point_average >= 2.0
-        ? 12
-        : pointCitizenMediumData.point_average >= 1.5
-        ? 10
-        : pointCitizenMediumData.point_average >= 1.0
-        ? 8
-        : 0;
-    const changeValueCitizen =
-      pointCitizenMediumData.point >= 90
-        ? 15
-        : pointCitizenMediumData.point >= 65
-        ? 10
-        : pointCitizenMediumData.point >= 50
-        ? 5
-        : 0;
-    const changeSvMonitor = [3, 5, 6].includes(studentData[0]?.role_id)
-      ? 7
-      : [7, 8, 9].includes(studentData[0]?.role_id)
-      ? 5
-      : 0;
-    setValues((prev) => ({
-      ...prev,
-      svDiemTBHK: changeValueTBHK,
-      svCitizen: changeValueCitizen,
-      svMonitor: changeSvMonitor,
-    }));
-    setValuesLT((prev) => ({
-      ...prev,
-      ltDiemTBHK: changeValueTBHK,
-      ltCitizen: changeValueCitizen,
-      ltMonitor: changeSvMonitor,
-    }));
-  }, [pointCitizenMediumData, studentData]);
+  // useEffect(() => {
+  //   const changeValueTBHK =
+  //     pointCitizenMediumData.point_average >= 3.6
+  //       ? 20
+  //       : pointCitizenMediumData.point_average >= 3.2
+  //       ? 18
+  //       : pointCitizenMediumData.point_average >= 2.5
+  //       ? 16
+  //       : pointCitizenMediumData.point_average >= 2.0
+  //       ? 12
+  //       : pointCitizenMediumData.point_average >= 1.5
+  //       ? 10
+  //       : pointCitizenMediumData.point_average >= 1.0
+  //       ? 8
+  //       : 0;
+  //   const changeValueCitizen =
+  //     pointCitizenMediumData.point >= 90
+  //       ? 15
+  //       : pointCitizenMediumData.point >= 65
+  //       ? 10
+  //       : pointCitizenMediumData.point >= 50
+  //       ? 5
+  //       : 0;
+  //   const changeSvMonitor = [3, 5, 6].includes(studentData[0]?.role_id)
+  //     ? 7
+  //     : [7, 8, 9].includes(studentData[0]?.role_id)
+  //     ? 5
+  //     : 0;
+  //   setValues((prev) => ({
+  //     ...prev,
+  //     svDiemTBHK: changeValueTBHK,
+  //     svCitizen: changeValueCitizen,
+  //     svMonitor: changeSvMonitor,
+  //   }));
+  //   setValuesLT((prev) => ({
+  //     ...prev,
+  //     ltDiemTBHK: changeValueTBHK,
+  //     ltCitizen: changeValueCitizen,
+  //     ltMonitor: changeSvMonitor,
+  //   }));
+  // }, [pointCitizenMediumData, studentData]);
 
   // start sum diem sinh vien
   const sum1 =

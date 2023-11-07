@@ -20,6 +20,7 @@ export default function ModalV1({
 }) {
   const cancelButtonRef = useRef(null);
   const theme = useTheme();
+  // console.log("them: ", theme);
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog
@@ -54,7 +55,7 @@ export default function ModalV1({
               <Dialog.Panel
                 className={`${
                   changeHeight ? "min-h-[700px]" : "min-h-auto"
-                }  h-full pb-3 w-[96%] m-auto ${
+                }  h-full  w-[96%] m-auto ${
                   isRelative ? "relative" : ""
                 }  overflow-x-auto overflow-hidden transform rounded-lg bg-white text-left shadow-xl transition-all`}
               >
@@ -100,13 +101,19 @@ export default function ModalV1({
                 <div
                   className={`${
                     displayButtonOk ? "flex justify-end" : "hidden"
-                  } bg-[#191f4589] px-4 py-3  w-full absolute bottom-0 `}
+                  }   px-4 py-3  w-full absolute bottom-0 `}
+                  style={{
+                    background: `${theme.palette.background.default}`,
+                  }}
                 >
                   {displayButtonOk && (
                     <button
                       type="button"
                       className={`w-[30%] mt-3 inline-flex justify-center rounded-md  px-3 py-2 text-sm font-semibold text-gray-100 shadow-sm ring-1 ring-inset ring-gray-300  sm:mt-0 sm:w-auto`}
                       onClick={onOK}
+                      style={{
+                        color: `${theme.palette.secondary[100]}`,
+                      }}
                     >
                       {okText}
                     </button>
