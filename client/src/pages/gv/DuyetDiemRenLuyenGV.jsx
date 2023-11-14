@@ -1,18 +1,17 @@
 import { Box } from "@mui/material";
 import axios from "axios";
 import Header from "components/Header";
-// import { getUserInLocalStorage } from "context/getCurrentUser";
-import React, { useState, useEffect } from "react";
+import Input from "components/input/Input";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import "../../assets/css/grid.css";
-import "../../components/student/phieu.css";
-import Input from "components/input/Input";
 import { getPointMonitorByMaSVAndMaHK } from "utils/getDetails/getPointMonitorByMa";
-import { insertOrUpdatePointStudentMonitor } from "utils/postDetails/insertOrUpdatePointMonitor";
+import { getPointTeacherByMa } from "utils/getDetails/getPointTeacherByMa";
+import { insertOrUpdatePointTeacher } from "utils/postDetails/insertOrUpdatePointTeacher";
 const DOMAIN = process.env.REACT_APP_DOMAIN;
-const colSpan = 3;
-const DuyetDiemRenLuyenLT = ({ sinhVienItem, fetchData, setOpen }) => {
+const colSpan = 4;
+
+const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
   const maSv = sinhVienItem.maSv;
   // const navigate = useNavigate();
   const { maHK } = useParams();
@@ -22,7 +21,7 @@ const DuyetDiemRenLuyenLT = ({ sinhVienItem, fetchData, setOpen }) => {
   const [pointCitizenMediumData, setCitizenMediumPointData] = useState({});
   const [pointStudentData, setPointStudentData] = useState({});
 
-  // console.log("pointStudentData: ", pointStudentData);
+  //   value student
   const [values, setValues] = useState({
     // muc 1
     svDiemTBHK: pointCitizenMediumData.svDiemTBHK
@@ -89,7 +88,9 @@ const DuyetDiemRenLuyenLT = ({ sinhVienItem, fetchData, setOpen }) => {
     svBonus: 0,
     svIrresponsibleMonitor: 0,
   });
+  // value student
 
+  // value monitor
   const [valuesLT, setValuesLT] = useState({
     // muc 1
     ltDiemTBHK: pointCitizenMediumData.ltDiemTBHK
@@ -157,6 +158,78 @@ const DuyetDiemRenLuyenLT = ({ sinhVienItem, fetchData, setOpen }) => {
     ltIrresponsibleMonitor: 0,
   });
 
+  // value monitor
+
+  // value teacher
+  const [valuesGV, setValuesGV] = useState({
+    // muc 1
+    gvDiemTBHK: pointCitizenMediumData.gvDiemTBHK
+      ? pointCitizenMediumData.gvDiemTBHK
+      : 0,
+    gvNCKH1: pointCitizenMediumData.gvNCKH1
+      ? pointCitizenMediumData.gvNCKH1
+      : 0,
+    gvNCKH2: pointCitizenMediumData.gvNCKH2
+      ? pointCitizenMediumData.gvNCKH2
+      : 0,
+    gvNCKH3: pointCitizenMediumData.gvNCKH3
+      ? pointCitizenMediumData.gvNCKH3
+      : 0,
+    gvOlympic1: pointCitizenMediumData.gvOlympic1
+      ? pointCitizenMediumData.gvOlympic1
+      : 0,
+    gvOlympic2: pointCitizenMediumData.gvOlympic2
+      ? pointCitizenMediumData.gvOlympic2
+      : 0,
+    gvOlympic3: pointCitizenMediumData.gvOlympic3
+      ? pointCitizenMediumData.gvOlympic3
+      : 0,
+    gvOlympic4: pointCitizenMediumData.gvOlympic4
+      ? pointCitizenMediumData.gvOlympic4
+      : 0,
+    gvNoRegulation: pointCitizenMediumData.gvNoRegulation
+      ? pointCitizenMediumData.gvNoRegulation
+      : 0,
+    gvOnTime: pointCitizenMediumData.gvOnTime
+      ? pointCitizenMediumData.gvOnTime
+      : 0,
+    gvAbandon: pointCitizenMediumData.gvAbandon
+      ? pointCitizenMediumData.gvAbandon
+      : 0,
+    gvUnTrueTime: pointCitizenMediumData.gvUnTrueTime
+      ? pointCitizenMediumData.gvUnTrueTime
+      : 0,
+
+    // muc 2
+    gvRightRule: 0,
+    gvCitizen: 0,
+    gvNoFullStudy: 0,
+    gvNoCard: 0,
+    gvNoAtivities: 0,
+    gvNoPayFee: 0,
+
+    // muc 3
+    gvFullActive: 0,
+    gvAchievementCity: 0,
+    gvAchievementSchool: 0,
+    gvAdvise: 0,
+    gvIrresponsible: 0,
+    gvNoCultural: 0,
+
+    // muc 4
+    gvPositiveStudy: 0,
+    gvPositiveLove: 0,
+    gvWarn: 0,
+    gvNoProtect: 0,
+
+    // muc 5
+    gvMonitor: 0,
+    gvBonus: 0,
+    gvIrresponsibleMonitor: 0,
+  });
+  // value teacher
+
+  // checkbox state
   const [checkboxState, setCheckboxState] = useState({
     svNoRegulation: false,
     svOnTime: false,
@@ -186,6 +259,52 @@ const DuyetDiemRenLuyenLT = ({ sinhVienItem, fetchData, setOpen }) => {
     ltMonitor: false,
     ltBonus: false,
   });
+
+  const [checkboxStateGV, setCheckboxStateGV] = useState({
+    gvNoRegulation: false,
+    gvOnTime: false,
+    gvRightRule: false,
+    gvNoFullStudy: false,
+    gvNoPayFee: false,
+    gvFullActive: false,
+    gvPositiveStudy: false,
+    gvPositiveLove: false,
+    gvWarn: false,
+    gvNoProtect: false,
+    gvMonitor: false,
+    gvBonus: false,
+  });
+  // checkbox state
+
+  const getSv = async () => {
+    try {
+      const getOneSv = await axios.get(
+        `${DOMAIN}/students/get_one_sv/${maHK}/${sinhVienItem.maSv}`,
+        {
+          withCredentials: true,
+        }
+      );
+      setStudentData(getOneSv.data.table1);
+      setData(getOneSv.data.table2);
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
+  const getPointCitizenMediumSv = async () => {
+    try {
+      const getCitizenMediumPoint = await axios.get(
+        `${DOMAIN}/points/get_citizen_medium/${maHK}/${sinhVienItem.maSv}`,
+        {
+          withCredentials: true,
+        }
+      );
+      //   console.log("getCitizenMediumPoint: ", getCitizenMediumPoint.data);
+      setCitizenMediumPointData(getCitizenMediumPoint.data);
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
 
   const checkExisPoint = async () => {
     try {
@@ -243,49 +362,49 @@ const DuyetDiemRenLuyenLT = ({ sinhVienItem, fetchData, setOpen }) => {
           svBonus: getStudentPoint.data.svBonus,
           svIrresponsibleMonitor: getStudentPoint.data.svIrresponsibleMonitor,
         }));
-        setValuesLT((prev) => ({
-          ...prev,
-          // muc 1
-          ltDiemTBHK: getStudentPoint.data.svDiemTBHK,
-          ltNCKH1: getStudentPoint.data.svNCKH1,
-          ltNCKH2: getStudentPoint.data.svNCKH2,
-          ltNCKH3: getStudentPoint.data.svNCKH3,
-          ltOlympic1: getStudentPoint.data.svOlympic1,
-          ltOlympic2: getStudentPoint.data.svOlympic2,
-          ltOlympic3: getStudentPoint.data.svOlympic3,
-          ltOlympic4: getStudentPoint.data.svOlympic4,
-          ltNoRegulation: getStudentPoint.data.svNoRegulation,
-          ltOnTime: getStudentPoint.data.svOnTime,
-          ltAbandon: getStudentPoint.data.svAbandon,
-          ltUnTrueTime: getStudentPoint.data.svUnTrueTime,
+        // setValuesLT((prev) => ({
+        //   ...prev,
+        //   // muc 1
+        //   ltDiemTBHK: getStudentPoint.data.svDiemTBHK,
+        //   ltNCKH1: getStudentPoint.data.svNCKH1,
+        //   ltNCKH2: getStudentPoint.data.svNCKH2,
+        //   ltNCKH3: getStudentPoint.data.svNCKH3,
+        //   ltOlympic1: getStudentPoint.data.svOlympic1,
+        //   ltOlympic2: getStudentPoint.data.svOlympic2,
+        //   ltOlympic3: getStudentPoint.data.svOlympic3,
+        //   ltOlympic4: getStudentPoint.data.svOlympic4,
+        //   ltNoRegulation: getStudentPoint.data.svNoRegulation,
+        //   ltOnTime: getStudentPoint.data.svOnTime,
+        //   ltAbandon: getStudentPoint.data.svAbandon,
+        //   ltUnTrueTime: getStudentPoint.data.svUnTrueTime,
 
-          // muc 2
-          ltRightRule: getStudentPoint.data.svRightRule,
-          ltCitizen: getStudentPoint.data.svCitizen,
-          ltNoFullStudy: getStudentPoint.data.svNoFullStudy,
-          ltNoCard: getStudentPoint.data.svNoCard,
-          ltNoAtivities: getStudentPoint.data.svNoAtivities,
-          ltNoPayFee: getStudentPoint.data.svNoPayFee,
+        //   // muc 2
+        //   ltRightRule: getStudentPoint.data.svRightRule,
+        //   ltCitizen: getStudentPoint.data.svCitizen,
+        //   ltNoFullStudy: getStudentPoint.data.svNoFullStudy,
+        //   ltNoCard: getStudentPoint.data.svNoCard,
+        //   ltNoAtivities: getStudentPoint.data.svNoAtivities,
+        //   ltNoPayFee: getStudentPoint.data.svNoPayFee,
 
-          // muc 3
-          ltFullActive: getStudentPoint.data.svFullActive,
-          ltAchievementCity: getStudentPoint.data.svAchievementCity,
-          ltAchievementSchool: getStudentPoint.data.svAchievementSchool,
-          ltAdvise: getStudentPoint.data.svAdvise,
-          ltIrresponsible: getStudentPoint.data.svIrresponsible,
-          ltNoCultural: getStudentPoint.data.svNoCultural,
+        //   // muc 3
+        //   ltFullActive: getStudentPoint.data.svFullActive,
+        //   ltAchievementCity: getStudentPoint.data.svAchievementCity,
+        //   ltAchievementSchool: getStudentPoint.data.svAchievementSchool,
+        //   ltAdvise: getStudentPoint.data.svAdvise,
+        //   ltIrresponsible: getStudentPoint.data.svIrresponsible,
+        //   ltNoCultural: getStudentPoint.data.svNoCultural,
 
-          // muc 4
-          ltPositiveStudy: getStudentPoint.data.svPositiveStudy,
-          ltPositiveLove: getStudentPoint.data.svPositiveLove,
-          ltWarn: getStudentPoint.data.svWarn,
-          ltNoProtect: getStudentPoint.data.svNoProtect,
+        //   // muc 4
+        //   ltPositiveStudy: getStudentPoint.data.svPositiveStudy,
+        //   ltPositiveLove: getStudentPoint.data.svPositiveLove,
+        //   ltWarn: getStudentPoint.data.svWarn,
+        //   ltNoProtect: getStudentPoint.data.svNoProtect,
 
-          // muc 5
-          ltMonitor: getStudentPoint.data.svMonitor,
-          ltBonus: getStudentPoint.data.svBonus,
-          ltIrresponsibleMonitor: getStudentPoint.data.svIrresponsibleMonitor,
-        }));
+        //   // muc 5
+        //   ltMonitor: getStudentPoint.data.svMonitor,
+        //   ltBonus: getStudentPoint.data.svBonus,
+        //   ltIrresponsibleMonitor: getStudentPoint.data.svIrresponsibleMonitor,
+        // }));
         setCheckboxState((prev) => ({
           ...prev,
           svNoRegulation:
@@ -305,135 +424,238 @@ const DuyetDiemRenLuyenLT = ({ sinhVienItem, fetchData, setOpen }) => {
           // svMonitor: getStudentPoint.data.svMonitor === 7 ? true : false,
           svBonus: getStudentPoint.data.svBonus === 3 ? true : false,
         }));
-        setCheckboxStateLT((prev) => ({
-          ...prev,
-          ltNoRegulation:
-            getStudentPoint.data.svNoRegulation === 3 ? true : false,
-          ltOnTime: getStudentPoint.data.svOnTime === 2 ? true : false,
-          ltRightRule: getStudentPoint.data.svRightRule === 10 ? true : false,
-          ltNoFullStudy:
-            getStudentPoint.data.svNoFullStudy === -10 ? true : false,
-          ltNoPayFee: getStudentPoint.data.svNoPayFee === -10 ? true : false,
-          ltFullActive: getStudentPoint.data.svFullActive === 13 ? true : false,
-          ltPositiveStudy:
-            getStudentPoint.data.svPositiveStudy === 10 ? true : false,
-          ltPositiveLove:
-            getStudentPoint.data.svPositiveLove === 5 ? true : false,
-          ltWarn: getStudentPoint.data.svWarn === -5 ? true : false,
-          ltNoProtect: getStudentPoint.data.svNoProtect === -20 ? true : false,
-          // svMonitor: getStudentPoint.data.svMonitor === 7 ? true : false,
-          ltBonus: getStudentPoint.data.svBonus === 3 ? true : false,
-        }));
+        // setCheckboxStateLT((prev) => ({
+        //   ...prev,
+        //   ltNoRegulation:
+        //     getStudentPoint.data.svNoRegulation === 3 ? true : false,
+        //   ltOnTime: getStudentPoint.data.svOnTime === 2 ? true : false,
+        //   ltRightRule: getStudentPoint.data.svRightRule === 10 ? true : false,
+        //   ltNoFullStudy:
+        //     getStudentPoint.data.svNoFullStudy === -10 ? true : false,
+        //   ltNoPayFee: getStudentPoint.data.svNoPayFee === -10 ? true : false,
+        //   ltFullActive: getStudentPoint.data.svFullActive === 13 ? true : false,
+        //   ltPositiveStudy:
+        //     getStudentPoint.data.svPositiveStudy === 10 ? true : false,
+        //   ltPositiveLove:
+        //     getStudentPoint.data.svPositiveLove === 5 ? true : false,
+        //   ltWarn: getStudentPoint.data.svWarn === -5 ? true : false,
+        //   ltNoProtect: getStudentPoint.data.svNoProtect === -20 ? true : false,
+        //   // svMonitor: getStudentPoint.data.svMonitor === 7 ? true : false,
+        //   ltBonus: getStudentPoint.data.svBonus === 3 ? true : false,
+        // }));
       }
     } catch (error) {
       console.log(error.response.data);
     }
   };
 
+  const checkExisPointMonitor = async () => {
+    try {
+      const getMonitorPoint = await getPointMonitorByMaSVAndMaHK(
+        `maHK=${maHK}&maSv=${maSv}`
+      );
+      if (getMonitorPoint) {
+        const pointMonitor = getMonitorPoint;
+        console.log("pointMonitor: ", pointMonitor);
+        setValuesLT((prev) => ({
+          ...prev,
+          // muc 1
+          ltDiemTBHK: pointMonitor.ltDiemTBHK,
+          ltNCKH1: pointMonitor.ltNCKH1,
+          ltNCKH2: pointMonitor.ltNCKH2,
+          ltNCKH3: pointMonitor.ltNCKH3,
+          ltOlympic1: pointMonitor.ltOlympic1,
+          ltOlympic2: pointMonitor.ltOlympic2,
+          ltOlympic3: pointMonitor.ltOlympic3,
+          ltOlympic4: pointMonitor.ltOlympic4,
+          ltNoRegulation: pointMonitor.ltNoRegulation,
+          ltOnTime: pointMonitor.ltOnTime,
+          ltAbandon: pointMonitor.ltAbandon,
+          ltUnTrueTime: pointMonitor.ltUnTrueTime,
+
+          // muc 2
+          ltRightRule: pointMonitor.ltRightRule,
+          ltCitizen: pointMonitor.ltCitizen,
+          ltNoFullStudy: pointMonitor.ltNoFullStudy,
+          ltNoCard: pointMonitor.ltNoCard,
+          ltNoAtivities: pointMonitor.ltNoAtivities,
+          ltNoPayFee: pointMonitor.ltNoPayFee,
+
+          // muc 3
+          ltFullActive: pointMonitor.ltFullActive,
+          ltAchievementCity: pointMonitor.ltAchievementCity,
+          ltAchievementSchool: pointMonitor.ltAchievementSchool,
+          ltAdvise: pointMonitor.ltAdvise,
+          ltIrresponsible: pointMonitor.ltIrresponsible,
+          ltNoCultural: pointMonitor.ltNoCultural,
+
+          // muc 4
+          ltPositiveStudy: pointMonitor.ltPositiveStudy,
+          ltPositiveLove: pointMonitor.ltPositiveLove,
+          ltWarn: pointMonitor.ltWarn,
+          ltNoProtect: pointMonitor.ltNoProtect,
+
+          // muc 5
+          ltMonitor: pointMonitor.ltMonitor,
+          ltBonus: pointMonitor.ltBonus,
+          ltIrresponsibleMonitor: pointMonitor.ltIrresponsibleMonitor,
+        }));
+        setValuesGV((prev) => ({
+          ...prev,
+          // muc 1
+          gvDiemTBHK: pointMonitor.ltDiemTBHK,
+          gvNCKH1: pointMonitor.ltNCKH1,
+          gvNCKH2: pointMonitor.ltNCKH2,
+          gvNCKH3: pointMonitor.ltNCKH3,
+          gvOlympic1: pointMonitor.ltOlympic1,
+          gvOlympic2: pointMonitor.ltOlympic2,
+          gvOlympic3: pointMonitor.ltOlympic3,
+          gvOlympic4: pointMonitor.ltOlympic4,
+          gvNoRegulation: pointMonitor.ltNoRegulation,
+          gvOnTime: pointMonitor.ltOnTime,
+          gvAbandon: pointMonitor.ltAbandon,
+          gvUnTrueTime: pointMonitor.ltUnTrueTime,
+
+          // muc 2
+          gvRightRule: pointMonitor.ltRightRule,
+          gvCitizen: pointMonitor.ltCitizen,
+          gvNoFullStudy: pointMonitor.ltNoFullStudy,
+          gvNoCard: pointMonitor.ltNoCard,
+          gvNoAtivities: pointMonitor.ltNoAtivities,
+          gvNoPayFee: pointMonitor.ltNoPayFee,
+
+          // muc 3
+          gvFullActive: pointMonitor.ltFullActive,
+          gvAchievementCity: pointMonitor.ltAchievementCity,
+          gvAchievementSchool: pointMonitor.ltAchievementSchool,
+          gvAdvise: pointMonitor.ltAdvise,
+          gvIrresponsible: pointMonitor.ltIrresponsible,
+          gvNoCultural: pointMonitor.ltNoCultural,
+
+          // muc 4
+          gvPositiveStudy: pointMonitor.ltPositiveStudy,
+          gvPositiveLove: pointMonitor.ltPositiveLove,
+          gvWarn: pointMonitor.ltWarn,
+          gvNoProtect: pointMonitor.ltNoProtect,
+
+          // muc 5
+          gvMonitor: pointMonitor.ltMonitor,
+          gvBonus: pointMonitor.ltBonus,
+          gvIrresponsibleMonitor: pointMonitor.ltIrresponsibleMonitor,
+        }));
+        setCheckboxStateLT((prev) => ({
+          ...prev,
+          ltNoRegulation: pointMonitor.ltNoRegulation === 3 ? true : false,
+          ltOnTime: pointMonitor.ltOnTime === 2 ? true : false,
+          ltRightRule: pointMonitor.ltRightRule === 10 ? true : false,
+          ltNoFullStudy: pointMonitor.ltNoFullStudy === -10 ? true : false,
+          ltNoPayFee: pointMonitor.ltNoPayFee === -10 ? true : false,
+          ltFullActive: pointMonitor.ltFullActive === 13 ? true : false,
+          ltPositiveStudy: pointMonitor.ltPositiveStudy === 10 ? true : false,
+          ltPositiveLove: pointMonitor.ltPositiveLove === 5 ? true : false,
+          ltWarn: pointMonitor.ltWarn === -5 ? true : false,
+          ltNoProtect: pointMonitor.ltNoProtect === -20 ? true : false,
+          ltBonus: pointMonitor.ltBonus === 3 ? true : false,
+        }));
+        setCheckboxStateGV((prev) => ({
+          ...prev,
+          gvNoRegulation: pointMonitor.ltNoRegulation === 3 ? true : false,
+          gvOnTime: pointMonitor.ltOnTime === 2 ? true : false,
+          gvRightRule: pointMonitor.ltRightRule === 10 ? true : false,
+          gvNoFullStudy: pointMonitor.ltNoFullStudy === -10 ? true : false,
+          gvNoPayFee: pointMonitor.ltNoPayFee === -10 ? true : false,
+          gvFullActive: pointMonitor.ltFullActive === 13 ? true : false,
+          gvPositiveStudy: pointMonitor.ltPositiveStudy === 10 ? true : false,
+          gvPositiveLove: pointMonitor.ltPositiveLove === 5 ? true : false,
+          gvWarn: pointMonitor.ltWarn === -5 ? true : false,
+          gvNoProtect: pointMonitor.ltNoProtect === -20 ? true : false,
+          gvBonus: pointMonitor.ltBonus === 3 ? true : false,
+        }));
+        // console.log("pointMonitor: ", pointMonitor);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     checkExisPoint();
+    checkExisPointMonitor();
     getSv();
     getPointCitizenMediumSv();
   }, []);
 
-  const getPointMonitor = async () => {
-    const res = await getPointMonitorByMaSVAndMaHK(`maHK=${maHK}&maSv=${maSv}`);
-    if (res) {
-      // console.log("vao trong nay: ", res);
-      setValuesLT((prev) => ({
-        ...prev,
-        // muc 1
-        ltDiemTBHK: res.ltDiemTBHK,
-        ltNCKH1: res.ltNCKH1,
-        ltNCKH2: res.ltNCKH2,
-        ltNCKH3: res.ltNCKH3,
-        ltOlympic1: res.ltOlympic1,
-        ltOlympic2: res.ltOlympic2,
-        ltOlympic3: res.ltOlympic3,
-        ltOlympic4: res.ltOlympic4,
-        ltNoRegulation: res.ltNoRegulation,
-        ltOnTime: res.ltOnTime,
-        ltAbandon: res.ltAbandon,
-        ltUnTrueTime: res.ltUnTrueTime,
+  const checkExisPointTeacher = async () => {
+    try {
+      const res = await getPointTeacherByMa(`maHK=${maHK}&maSv=${maSv}`);
+      // console.log('res: ', res);
+      if (res) {
+        setValuesGV((prev) => ({
+          ...prev,
+          // muc 1
+          gvDiemTBHK: res.gvDiemTBHK,
+          gvNCKH1: res.gvNCKH1,
+          gvNCKH2: res.gvNCKH2,
+          gvNCKH3: res.gvNCKH3,
+          gvOlympic1: res.gvOlympic1,
+          gvOlympic2: res.gvOlympic2,
+          gvOlympic3: res.gvOlympic3,
+          gvOlympic4: res.gvOlympic4,
+          gvNoRegulation: res.gvNoRegulation,
+          gvOnTime: res.gvOnTime,
+          gvAbandon: res.gvAbandon,
+          gvUnTrueTime: res.gvUnTrueTime,
 
-        // muc 2
-        ltRightRule: res.ltRightRule,
-        ltCitizen: res.ltCitizen,
-        ltNoFullStudy: res.ltNoFullStudy,
-        ltNoCard: res.ltNoCard,
-        ltNoAtivities: res.ltNoAtivities,
-        ltNoPayFee: res.ltNoPayFee,
+          // muc 2
+          gvRightRule: res.gvRightRule,
+          gvCitizen: res.gvCitizen,
+          gvNoFullStudy: res.gvNoFullStudy,
+          gvNoCard: res.gvNoCard,
+          gvNoAtivities: res.gvNoAtivities,
+          gvNoPayFee: res.gvNoPayFee,
 
-        // muc 3
-        ltFullActive: res.ltFullActive,
-        ltAchievementCity: res.ltAchievementCity,
-        ltAchievementSchool: res.ltAchievementSchool,
-        ltAdvise: res.ltAdvise,
-        ltIrresponsible: res.ltIrresponsible,
-        ltNoCultural: res.ltNoCultural,
+          // muc 3
+          gvFullActive: res.gvFullActive,
+          gvAchievementCity: res.gvAchievementCity,
+          gvAchievementSchool: res.gvAchievementSchool,
+          gvAdvise: res.gvAdvise,
+          gvIrresponsible: res.gvIrresponsible,
+          gvNoCultural: res.gvNoCultural,
 
-        // muc 4
-        ltPositiveStudy: res.ltPositiveStudy,
-        ltPositiveLove: res.ltPositiveLove,
-        ltWarn: res.ltWarn,
-        ltNoProtect: res.ltNoProtect,
+          // muc 4
+          gvPositiveStudy: res.gvPositiveStudy,
+          gvPositiveLove: res.gvPositiveLove,
+          gvWarn: res.gvWarn,
+          gvNoProtect: res.gvNoProtect,
 
-        // muc 5
-        ltMonitor: res.ltMonitor,
-        ltBonus: res.ltBonus,
-        ltIrresponsibleMonitor: res.ltIrresponsibleMonitor,
-      }));
-
-      setCheckboxStateLT((prev) => ({
-        ...prev,
-        ltNoRegulation: res.ltNoRegulation === 3 ? true : false,
-        ltOnTime: res.ltOnTime === 2 ? true : false,
-        ltRightRule: res.ltRightRule === 10 ? true : false,
-        ltNoFullStudy: res.ltNoFullStudy === -10 ? true : false,
-        ltNoPayFee: res.ltNoPayFee === -10 ? true : false,
-        ltFullActive: res.ltFullActive === 13 ? true : false,
-        ltPositiveStudy: res.ltPositiveStudy === 10 ? true : false,
-        ltPositiveLove: res.ltPositiveLove === 5 ? true : false,
-        ltWarn: res.ltWarn === -5 ? true : false,
-        ltNoProtect: res.ltNoProtect === -20 ? true : false,
-        // ltMonitor: res.ltMonitor === 7 ? true : false,
-        ltBonus: res.ltBonus === 3 ? true : false,
-      }));
+          // muc 5
+          gvMonitor: res.gvMonitor,
+          gvBonus: res.gvBonus,
+          gvIrresponsibleMonitor: res.gvIrresponsibleMonitor,
+        }));
+        setCheckboxStateGV((prev) => ({
+          ...prev,
+          gvNoRegulation: res.gvNoRegulation === 3 ? true : false,
+          gvOnTime: res.gvOnTime === 2 ? true : false,
+          gvRightRule: res.gvRightRule === 10 ? true : false,
+          gvNoFullStudy: res.gvNoFullStudy === -10 ? true : false,
+          gvNoPayFee: res.gvNoPayFee === -10 ? true : false,
+          gvFullActive: res.gvFullActive === 13 ? true : false,
+          gvPositiveStudy: res.gvPositiveStudy === 10 ? true : false,
+          gvPositiveLove: res.gvPositiveLove === 5 ? true : false,
+          gvWarn: res.gvWarn === -5 ? true : false,
+          gvNoProtect: res.gvNoProtect === -20 ? true : false,
+          gvBonus: res.gvBonus === 3 ? true : false,
+        }));
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
+
   useEffect(() => {
-    getPointMonitor();
+    checkExisPointTeacher();
   }, []);
-
-  const getSv = async () => {
-    try {
-      const getOneSv = await axios.get(
-        `http://localhost:8800/api/students/get_one_sv/${maHK}/${sinhVienItem.maSv}`,
-        {
-          withCredentials: true,
-        }
-      );
-      setStudentData(getOneSv.data.table1);
-      setData(getOneSv.data.table2);
-    } catch (error) {
-      console.log(error.response.data);
-    }
-  };
-
-  const getPointCitizenMediumSv = async () => {
-    try {
-      const getCitizenMediumPoint = await axios.get(
-        `http://localhost:8800/api/points/get_citizen_medium/${maHK}/${sinhVienItem.maSv}`,
-        {
-          withCredentials: true,
-        }
-      );
-      //   console.log("getCitizenMediumPoint: ", getCitizenMediumPoint.data);
-      setCitizenMediumPointData(getCitizenMediumPoint.data);
-    } catch (error) {
-      console.log(error.response.data);
-    }
-  };
 
   useEffect(() => {
     const changeValueTBHK =
@@ -464,11 +686,11 @@ const DuyetDiemRenLuyenLT = ({ sinhVienItem, fetchData, setOpen }) => {
       ? 5
       : 0;
 
-    setValuesLT((prev) => ({
+    setValuesGV((prev) => ({
       ...prev,
-      ltDiemTBHK: changeValueTBHK,
-      ltCitizen: changeValueCitizen,
-      ltMonitor: changeSvMonitor,
+      gvDiemTBHK: changeValueTBHK,
+      gvCitizen: changeValueCitizen,
+      gvMonitor: changeSvMonitor,
     }));
   }, [pointCitizenMediumData, studentData]);
 
@@ -575,14 +797,67 @@ const DuyetDiemRenLuyenLT = ({ sinhVienItem, fetchData, setOpen }) => {
   const [sumFourlt, setSumFourlt] = useState(sum4lt);
   const [sumFivelt, setSumFivelt] = useState(sum5lt);
   // end sum tong lop truong
+
+  //   start sum tong giao vien
+  const sum1gv =
+    parseInt(valuesGV.gvDiemTBHK) +
+    parseInt(valuesGV.gvNCKH1) +
+    parseInt(valuesGV.gvNCKH2) +
+    parseInt(valuesGV.gvNCKH3) +
+    parseInt(valuesGV.gvOlympic1) +
+    parseInt(valuesGV.gvOlympic2) +
+    parseInt(valuesGV.gvOlympic3) +
+    parseInt(valuesGV.gvOlympic4) +
+    parseInt(valuesGV.gvNoRegulation) +
+    parseInt(valuesGV.gvOnTime) +
+    parseInt(valuesGV.gvAbandon) +
+    parseInt(valuesGV.gvUnTrueTime);
+
+  const sum2gv =
+    parseInt(valuesGV.gvRightRule) +
+    parseInt(valuesGV.gvCitizen) +
+    parseInt(valuesGV.gvNoFullStudy) +
+    parseInt(valuesGV.gvNoCard) +
+    parseInt(valuesGV.gvNoAtivities) +
+    parseInt(valuesGV.gvNoPayFee);
+
+  const sum3gv =
+    parseInt(valuesGV.gvFullActive) +
+    parseInt(valuesGV.gvAchievementCity) +
+    parseInt(valuesGV.gvAchievementSchool) +
+    parseInt(valuesGV.gvAdvise) +
+    parseInt(valuesGV.gvIrresponsible) +
+    parseInt(valuesGV.gvNoCultural);
+
+  const sum4gv =
+    parseInt(valuesGV.gvPositiveStudy) +
+    parseInt(valuesGV.gvPositiveLove) +
+    parseInt(valuesGV.gvWarn) +
+    parseInt(valuesGV.gvNoProtect);
+
+  const sum5gv =
+    parseInt(valuesGV.gvMonitor) +
+    parseInt(valuesGV.gvBonus) +
+    parseInt(valuesGV.gvIrresponsibleMonitor);
+
+  const [sumgv, setSumgv] = useState(
+    sum1gv + sum2gv + sum3gv + sum4gv + sum5gv
+  );
+
+  const [sumOnegv, setSumOnegv] = useState(sum1gv);
+  const [sumTwogv, setSumTwogv] = useState(sum2gv);
+  const [sumThreegv, setSumThreegv] = useState(sum3gv);
+  const [sumFourgv, setSumFourgv] = useState(sum4gv);
+  const [sumFivegv, setSumFivegv] = useState(sum5lt);
+  // end sum tong giao vien
   const handleChangeValue = (e) => {
     const { name, value, checked } = e.target;
 
-    setValuesLT((prev) => ({
+    setValuesGV((prev) => ({
       ...prev,
       [name]: checked ? value : 0,
     }));
-    setCheckboxStateLT((prev) => ({
+    setCheckboxStateGV((prev) => ({
       ...prev,
       [name]: checked,
     }));
@@ -590,7 +865,7 @@ const DuyetDiemRenLuyenLT = ({ sinhVienItem, fetchData, setOpen }) => {
 
   const handleChangeSelect = (e) => {
     const { name, value } = e.target;
-    setValuesLT((prevValues) => ({
+    setValuesGV((prevValues) => ({
       ...prevValues,
       [name]: value,
     }));
@@ -599,7 +874,7 @@ const DuyetDiemRenLuyenLT = ({ sinhVienItem, fetchData, setOpen }) => {
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
     console.log("name: ", name);
-    setValuesLT((prevValues) => ({
+    setValuesGV((prevValues) => ({
       ...prevValues,
       [name]: value ? value : 0,
     }));
@@ -714,33 +989,77 @@ const DuyetDiemRenLuyenLT = ({ sinhVienItem, fetchData, setOpen }) => {
   }, [valuesLT]);
   // end sum lop truong
 
-  /*
-Ở đây, ta dùng destructuring để lấy ra các giá trị của name, checked và value của input element. 
-Sau đó, ta sử dụng setValues để cập nhật giá trị của values với name của checkbox hiện tại và giá trị của value nếu checkbox được checked, hoặc 0 nếu checkbox không được checked.
+  // start sum giao vien
+  useEffect(() => {
+    const sum1 =
+      parseInt(valuesGV.gvDiemTBHK) +
+      parseInt(valuesGV.gvNCKH1) +
+      parseInt(valuesGV.gvNCKH2) +
+      parseInt(valuesGV.gvNCKH3) +
+      parseInt(valuesGV.gvOlympic1) +
+      parseInt(valuesGV.gvOlympic2) +
+      parseInt(valuesGV.gvOlympic3) +
+      parseInt(valuesGV.gvOlympic4) +
+      parseInt(valuesGV.gvNoRegulation) +
+      parseInt(valuesGV.gvOnTime) +
+      parseInt(valuesGV.gvAbandon) +
+      parseInt(valuesGV.gvUnTrueTime);
+    setSumOnegv(sum1);
 
-Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne. Để tính lại giá trị của sumOne, ta sẽ lấy giá trị hiện tại của sumOne và cộng với giá trị mới của checkbox hiện tại (nếu được checked), trừ đi giá trị cũ của checkbox hiện tại. Lưu ý rằng ta phải sử dụng parseInt để chuyển đổi giá trị sang kiểu số nguyên.
-  */
+    const sum2 =
+      parseInt(valuesGV.gvRightRule) +
+      parseInt(valuesGV.gvCitizen) +
+      parseInt(valuesGV.gvNoFullStudy) +
+      parseInt(valuesGV.gvNoCard) +
+      parseInt(valuesGV.gvNoAtivities) +
+      parseInt(valuesGV.gvNoPayFee);
+
+    setSumTwogv(sum2);
+
+    const sum3 =
+      parseInt(valuesGV.gvFullActive) +
+      parseInt(valuesGV.gvAchievementCity) +
+      parseInt(valuesGV.gvAchievementSchool) +
+      parseInt(valuesGV.gvAdvise) +
+      parseInt(valuesGV.gvIrresponsible) +
+      parseInt(valuesGV.gvNoCultural);
+    setSumThreegv(sum3);
+
+    const sum4 =
+      parseInt(valuesGV.gvPositiveStudy) +
+      parseInt(valuesGV.gvPositiveLove) +
+      parseInt(valuesGV.gvWarn) +
+      parseInt(valuesGV.gvNoProtect);
+    setSumFourgv(sum4);
+
+    const sum5 =
+      parseInt(valuesGV.gvMonitor) +
+      parseInt(valuesGV.gvBonus) +
+      parseInt(valuesGV.gvIrresponsibleMonitor);
+    setSumFivegv(sum5);
+
+    const sum = sum1 + sum2 + sum3 + sum4 + sum5;
+    setSumgv(sum);
+    // console.log("thay doi");
+  }, [valuesGV]);
+
+  // end sum giao vien
 
   const handleSubmit = async () => {
     try {
       const data = {
-        ...valuesLT,
-        sum: sumlt,
+        ...valuesGV,
+        sum: sumgv,
       };
-      await insertOrUpdatePointStudentMonitor(
-        `maHK=${maHK}&maSv=${maSv}`,
-        data
-      );
+      await insertOrUpdatePointTeacher(`maHK=${maHK}&maSv=${maSv}`, data);
       fetchData();
       setOpen(false);
       toast.success("Duyệt Điểm Rèn Luyện Thành Công", {
         autoClose: 2000,
       });
+      // console.log("vao day: ", values);
     } catch (error) {
-      toast.success("Cham Diem Ren Luyen That Bai", {
-        autoClose: 2000,
-      });
-      console.log(error.message);
+      console.log(error);
     }
   };
 
@@ -826,6 +1145,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                   </th>
                   <th>Điểm do sinh viên tự đánh giá</th>
                   <th>Điểm do lớp đánh giá</th>
+                  <th>Điểm do hội đồng Khoa đánh giá</th>
 
                   {/* <th className="textCenter" style={{ width: '10%' }}>
                     Điểm do lớp đánh giá
@@ -900,6 +1220,15 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       readOnly
                     />
                   </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="gvDiemTBHK"
+                      id=""
+                      value={valuesLT.ltDiemTBHK}
+                      readOnly
+                    />
+                  </td>
                 </tr>
 
                 <tr>
@@ -940,6 +1269,17 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       onChange={handleChangeInput}
                     />
                   </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="gvNCKH1"
+                      id=""
+                      min="0"
+                      max="8"
+                      value={valuesGV.gvNCKH1}
+                      onChange={handleChangeInput}
+                    />
+                  </td>
                 </tr>
 
                 <tr>
@@ -969,6 +1309,17 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       handleChangeInput={handleChangeInput}
                     />
                   </td>
+                  <td>
+                    <Input
+                      type="number"
+                      name="gvNCKH2"
+                      id=""
+                      min="0"
+                      max="6"
+                      value={valuesGV.gvNCKH2}
+                      handleChangeInput={handleChangeInput}
+                    />
+                  </td>
                 </tr>
 
                 <tr>
@@ -994,6 +1345,17 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       min="0"
                       max="6"
                       value={valuesLT.ltNCKH3}
+                      handleChangeInput={handleChangeInput}
+                    />
+                  </td>
+                  <td>
+                    <Input
+                      type="number"
+                      name="gvNCKH3"
+                      id=""
+                      min="0"
+                      max="6"
+                      value={valuesGV.gvNCKH3}
                       handleChangeInput={handleChangeInput}
                     />
                   </td>
@@ -1026,6 +1388,17 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       handleChangeInput={handleChangeInput}
                     />
                   </td>
+                  <td>
+                    <Input
+                      type="number"
+                      name="gvOlympic1"
+                      id=""
+                      min="0"
+                      max="10"
+                      value={valuesGV.gvOlympic1}
+                      handleChangeInput={handleChangeInput}
+                    />
+                  </td>
                 </tr>
 
                 <tr>
@@ -1052,6 +1425,17 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       min="0"
                       max="6"
                       value={valuesLT.ltOlympic2}
+                      handleChangeInput={handleChangeInput}
+                    />
+                  </td>
+                  <td>
+                    <Input
+                      type="number"
+                      name="gvOlympic2"
+                      id=""
+                      min="0"
+                      max="6"
+                      value={valuesGV.gvOlympic2}
                       handleChangeInput={handleChangeInput}
                     />
                   </td>
@@ -1084,6 +1468,17 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       onChange={handleChangeInput}
                     />
                   </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="gvOlympic3"
+                      id=""
+                      min="0"
+                      max="5"
+                      value={valuesGV.gvOlympic3}
+                      onChange={handleChangeInput}
+                    />
+                  </td>
                 </tr>
 
                 <tr>
@@ -1110,6 +1505,17 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       min="0"
                       max="2"
                       value={valuesLT.ltOlympic4}
+                      handleChangeInput={handleChangeInput}
+                    />
+                  </td>
+                  <td>
+                    <Input
+                      type="number"
+                      name="gvOlympic4"
+                      id=""
+                      min="0"
+                      max="2"
+                      value={valuesGV.gvOlympic4}
                       handleChangeInput={handleChangeInput}
                     />
                   </td>
@@ -1146,6 +1552,16 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       checked={checkboxStateLT.ltNoRegulation}
                     />
                   </td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      name="gvNoRegulation"
+                      id=""
+                      value="3"
+                      onChange={handleChangeValue}
+                      checked={checkboxStateGV.gvNoRegulation}
+                    />
+                  </td>
                 </tr>
                 {pointStudentData && (
                   <tr>
@@ -1171,6 +1587,16 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                         value="2"
                         onChange={handleChangeValue}
                         checked={checkboxStateLT.ltOnTime}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        name="gvOnTime"
+                        id=""
+                        value="2"
+                        onChange={handleChangeValue}
+                        checked={checkboxStateGV.gvOnTime}
                       />
                     </td>
                   </tr>
@@ -1219,6 +1645,17 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       handleChangeInput={handleChangeInput}
                     />
                   </td>
+                  <td>
+                    <Input
+                      type="number"
+                      name="gvAbandon"
+                      id=""
+                      min="-15"
+                      max="0"
+                      value={valuesGV.gvAbandon}
+                      handleChangeInput={handleChangeInput}
+                    />
+                  </td>
                 </tr>
 
                 <tr>
@@ -1256,6 +1693,21 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       ))}
                     </select>
                   </td>
+                  <td>
+                    <select
+                      name="gvUnTrueTime"
+                      id="gvUnTrueTime"
+                      onChange={handleChangeSelect}
+                      value={valuesGV.gvUnTrueTime}
+                      className="select"
+                    >
+                      {Array.from({ length: 6 }, (_, index) => (
+                        <option key={index} value={index * -2}>
+                          {index}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
                 </tr>
 
                 <tr>
@@ -1277,6 +1729,15 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       name="sumOnelt"
                       className="sum_one sum_item"
                       value={sumOnelt}
+                      readOnly
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="sumOnegv"
+                      className="sum_one sum_item"
+                      value={sumOnegv}
                       readOnly
                     />
                   </td>
@@ -1343,6 +1804,16 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       checked={checkboxStateLT.ltRightRule}
                     />
                   </td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      name="gvRightRule"
+                      id=""
+                      value="10"
+                      onChange={handleChangeValue}
+                      checked={checkboxStateGV.gvRightRule}
+                    />
+                  </td>
                 </tr>
 
                 <tr>
@@ -1375,6 +1846,15 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       name="ltCitizen"
                       id=""
                       value={values.svCitizen}
+                      readOnly
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="gvCitizen"
+                      id=""
+                      value={valuesLT.ltCitizen}
                       readOnly
                     />
                   </td>
@@ -1420,6 +1900,17 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       checked={checkboxStateLT.ltNoFullStudy}
                     />
                   </td>
+
+                  <td>
+                    <input
+                      type="checkbox"
+                      name="gvNoFullStudy"
+                      id=""
+                      value="-10"
+                      onChange={handleChangeValue}
+                      checked={checkboxStateGV.gvNoFullStudy}
+                    />
+                  </td>
                 </tr>
 
                 <tr>
@@ -1449,6 +1940,23 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       name="ltNoCard"
                       id="ltNoCard"
                       value={valuesLT.ltNoCard}
+                      onChange={handleChangeSelect}
+                      className="select"
+                    >
+                      {Array.from({ length: 6 }, (_, index) => {
+                        return (
+                          <option key={index} value={index * -5}>
+                            {index}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </td>
+                  <td>
+                    <select
+                      name="gvNoCard"
+                      id="gvNoCard"
+                      value={valuesGV.gvNoCard}
                       onChange={handleChangeSelect}
                       className="select"
                     >
@@ -1499,6 +2007,21 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       ))}
                     </select>
                   </td>
+                  <td>
+                    <select
+                      name="gvNoAtivities"
+                      id="gvNoAtivities"
+                      value={valuesGV.gvNoAtivities}
+                      onChange={handleChangeSelect}
+                      className="select"
+                    >
+                      {Array.from({ length: 6 }, (_, index) => (
+                        <option key={index} value={index * -5}>
+                          {index}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
                 </tr>
 
                 <tr>
@@ -1524,6 +2047,15 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       checked={checkboxStateLT.ltNoPayFee}
                     />
                   </td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      name="gvNoPayFee"
+                      value="-10"
+                      onChange={handleChangeValue}
+                      checked={checkboxStateGV.gvNoPayFee}
+                    />
+                  </td>
                 </tr>
 
                 <tr>
@@ -1545,6 +2077,15 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       name="sumTwolt"
                       class="sum_two sum_item"
                       value={sumTwolt}
+                      readOnly
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="sumTwogv"
+                      class="sum_two sum_item"
+                      value={sumTwogv}
                       readOnly
                     />
                   </td>
@@ -1605,6 +2146,16 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       checked={checkboxStateLT.ltFullActive}
                     />
                   </td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      name="gvFullActive"
+                      id=""
+                      value="13"
+                      onChange={handleChangeValue}
+                      checked={checkboxStateGV.gvFullActive}
+                    />
+                  </td>
                 </tr>
 
                 <tr>
@@ -1642,6 +2193,17 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       onChange={handleChangeInput}
                     />
                   </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="gvAchievementSchool"
+                      id=""
+                      min="0"
+                      max="3"
+                      value={valuesGV.gvAchievementSchool}
+                      onChange={handleChangeInput}
+                    />
+                  </td>
                 </tr>
 
                 <tr>
@@ -1666,6 +2228,17 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       name="ltAchievementCity"
                       id=""
                       value={valuesLT.ltAchievementCity}
+                      min="0"
+                      max="5"
+                      onChange={handleChangeInput}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      name="gvAchievementCity"
+                      id=""
+                      value={valuesGV.gvAchievementCity}
                       min="0"
                       max="5"
                       onChange={handleChangeInput}
@@ -1698,6 +2271,21 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       name="ltAdvise"
                       id="ltAdvise"
                       value={valuesLT.ltAdvise}
+                      onChange={handleChangeSelect}
+                      className="select"
+                    >
+                      {Array.from({ length: 6 }, (_, index) => (
+                        <option key={index} value={index * 2}>
+                          {index}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td>
+                    <select
+                      name="gvAdvise"
+                      id="gvAdvise"
+                      value={valuesGV.gvAdvise}
                       onChange={handleChangeSelect}
                       className="select"
                     >
@@ -1755,6 +2343,22 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       ))}
                     </select>
                   </td>
+
+                  <td>
+                    <select
+                      name="gvIrresponsible"
+                      id="gvIrresponsible"
+                      value={valuesGV.gvIrresponsible}
+                      onChange={handleChangeSelect}
+                      className="select"
+                    >
+                      {Array.from({ length: 6 }, (_, index) => (
+                        <option key={index} value={index * -5}>
+                          {index}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
                 </tr>
 
                 <tr>
@@ -1792,6 +2396,22 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       ))}
                     </select>
                   </td>
+
+                  <td>
+                    <select
+                      name="gvNoCultural"
+                      id="gvNoCultural"
+                      value={valuesGV.gvNoCultural}
+                      onChange={handleChangeSelect}
+                      className="select"
+                    >
+                      {Array.from({ length: 6 }, (_, index) => (
+                        <option key={index} value={index * -5}>
+                          {index}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
                 </tr>
 
                 <tr>
@@ -1813,6 +2433,15 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       class="sum_three sum_item"
                       value={sumThreelt}
                       name="sumThreelt"
+                      readOnly
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      class="sum_three sum_item"
+                      value={sumThreegv}
+                      name="sumThreegv"
                       readOnly
                     />
                   </td>
@@ -1869,8 +2498,16 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       value="10"
                       onChange={handleChangeValue}
                       checked={checkboxStateLT.ltPositiveStudy}
-
-                      // checked={valuesLT.ltPositiveStudy === 10}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      name="gvPositiveStudy"
+                      id=""
+                      value="10"
+                      onChange={handleChangeValue}
+                      checked={checkboxStateGV.gvPositiveStudy}
                     />
                   </td>
                 </tr>
@@ -1900,8 +2537,16 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       value="5"
                       onChange={handleChangeValue}
                       checked={checkboxStateLT.ltPositiveLove}
-
-                      // checked={valuesLT.ltPositiveLove === 5}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      name="gvPositiveLove"
+                      id=""
+                      value="5"
+                      onChange={handleChangeValue}
+                      checked={checkboxStateGV.gvPositiveLove}
                     />
                   </td>
                 </tr>
@@ -1939,8 +2584,16 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       value="-5"
                       onChange={handleChangeValue}
                       checked={checkboxStateLT.ltWarn}
-
-                      // checked={valuesLT.ltWarn === -5}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      name="gvWarn"
+                      id=""
+                      value="-5"
+                      onChange={handleChangeValue}
+                      checked={checkboxStateGV.gvWarn}
                     />
                   </td>
                 </tr>
@@ -1968,8 +2621,16 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       value="-20"
                       onChange={handleChangeValue}
                       checked={checkboxStateLT.ltNoProtect}
-
-                      // checked={valuesLT.ltNoProtect === -20}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      name="gvNoProtect"
+                      id=""
+                      value="-20"
+                      onChange={handleChangeValue}
+                      checked={checkboxStateGV.gvNoProtect}
                     />
                   </td>
                 </tr>
@@ -1993,6 +2654,15 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       class="sum_four sum_item"
                       value={sumFourlt}
                       name="sumFourlt"
+                      readOnly
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      class="sum_four sum_item"
+                      value={sumFourgv}
+                      name="sumFourgv"
                       readOnly
                     />
                   </td>
@@ -2057,6 +2727,16 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       readOnly
                     />
                   </td>
+                  <td>
+                    <input
+                      type="radio"
+                      name="gvMonitor"
+                      id=""
+                      checked={valuesGV?.gvMonitor === 7}
+                      value="7"
+                      readOnly
+                    />
+                  </td>
                 </tr>
 
                 <tr>
@@ -2084,6 +2764,16 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       readOnly
                     />
                   </td>
+                  <td>
+                    <input
+                      type="radio"
+                      name="gvMonitor"
+                      id=""
+                      value="5"
+                      checked={valuesGV?.gvMonitor === 5}
+                      readOnly
+                    />
+                  </td>
                 </tr>
                 <tr>
                   <td>
@@ -2108,8 +2798,16 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       value="3"
                       onChange={handleChangeValue}
                       checked={checkboxStateLT.ltBonus}
-
-                      // checked={valuesLT.ltBonus === 3}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      name="gvBonus"
+                      id=""
+                      value="3"
+                      onChange={handleChangeValue}
+                      checked={checkboxStateGV.gvBonus}
                     />
                   </td>
                 </tr>
@@ -2160,6 +2858,21 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       ))}
                     </select>
                   </td>
+                  <td>
+                    <select
+                      name="gvIrresponsibleMonitor"
+                      id="gvIrresponsibleMonitor"
+                      value={valuesGV.gvIrresponsibleMonitor}
+                      onChange={handleChangeSelect}
+                      className="select"
+                    >
+                      {Array.from({ length: 6 }, (_, index) => (
+                        <option key={index} value={index * -5}>
+                          {index}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
                 </tr>
 
                 <tr>
@@ -2184,6 +2897,15 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       readOnly
                     />
                   </td>
+                  <td>
+                    <input
+                      type="number"
+                      class="sum_five sum_item"
+                      value={sumFivegv}
+                      name="sumFivegv"
+                      readOnly
+                    />
+                  </td>
                 </tr>
 
                 <tr class="sum_all">
@@ -2198,6 +2920,13 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                       type="number"
                       class="sum_mark-student"
                       value={sumlt}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      class="sum_mark-student"
+                      value={sumgv}
                     />
                   </td>
                 </tr>
@@ -2235,4 +2964,4 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
   );
 };
 
-export default DuyetDiemRenLuyenLT;
+export default DuyetDiemRenLuyenGV;

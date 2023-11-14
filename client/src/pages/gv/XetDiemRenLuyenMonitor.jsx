@@ -2,16 +2,15 @@ import FormChonHocKi from "components/FormChonHocKi";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const XetDiemRenLuyen = () => {
+const XetDiemRenLuyenMonitor = ({ maLop }) => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const maHK = searchParams.get("maHK");
   const [value, setValue] = useState(maHK || "");
 
   const navigate = useNavigate();
-
   const handleSubmit = () => {
-    navigate(`/xetdiemrenluyen/${value}`);
+    navigate(`/quanlylopchunhiem/${maLop}/${value}`);
   };
 
   return (
@@ -25,4 +24,4 @@ const XetDiemRenLuyen = () => {
   );
 };
 
-export default XetDiemRenLuyen;
+export default XetDiemRenLuyenMonitor;

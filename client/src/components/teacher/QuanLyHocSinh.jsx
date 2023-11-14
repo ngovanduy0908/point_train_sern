@@ -18,17 +18,20 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Grid,
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import Modal from "components/modal/Modal";
+import XetDiemRenLuyenMonitor from "pages/gv/XetDiemRenLuyenMonitor";
 
 const QuanLyHocSinh = () => {
-  const { pathname } = useLocation();
-  const maLop = pathname.split("/")[2];
+  const { maLop } = useParams();
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [createUploadFileStudent, setCreateUploadFileStudent] = useState(false);
+  const [openFormChonHocKi, setOpenFormChonHocKi] = useState(false);
   const [createUploadPointStudent, setCreateUploadPointStudent] =
     useState(false);
 
@@ -247,7 +250,23 @@ const QuanLyHocSinh = () => {
         title={currentUser.name}
         subtitle={`Danh Sách Sinh Viên Lớp ${classData[0]?.class_name}`}
       />
-      <Box mt="40px">
+      <Box>
+        <Box sx={{ flexGrow: 1 }} mb="10px">
+          <Grid container spacing={2}>
+            <Grid item xs={3}>
+              <Button
+                color="secondary"
+                variant="contained"
+                sx={{
+                  width: "100%",
+                }}
+                onClick={() => setOpenFormChonHocKi(true)}
+              >
+                Xét Điểm Rèn Luyện
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
         <MaterialReactTable
           displayColumnDefOptions={{
             "mrt-row-actions": {
@@ -314,6 +333,15 @@ const QuanLyHocSinh = () => {
             </>
           )}
         />
+
+        <Modal
+          open={openFormChonHocKi}
+          setOpen={setOpenFormChonHocKi}
+          displayButtonOk={false}
+          displayButtonCancel={false}
+        >
+          <XetDiemRenLuyenMonitor maLop={maLop} />
+        </Modal>
 
         <CreateNewAccountModal
           err={err}
@@ -386,46 +414,6 @@ export const CreateNewAccountModal = ({ err, open, onClose, onSubmit }) => {
             <TextField label="Ma SV" name="maSv" onChange={handleChange} />
 
             <TextField label="Ten SV" name="name" onChange={handleChange} />
-
-            {/* <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                Chon Giao Vien
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={values.maGv}
-                label="Chon Giao Vien"
-                name="maGv"
-                onChange={handleChange}
-              >
-                {teacherData.map((item) => (
-                  <MenuItem key={item.maGv} value={item.maGv}>
-                    {item.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                Chon Khóa Học
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={values.maKhoaHoc}
-                label="Chon Khoa Hoc"
-                onChange={handleChange}
-                name="maKhoaHoc"
-              >
-                {courseData.map((item) => (
-                  <MenuItem key={item.maKhoaHoc} value={item.maKhoaHoc}>
-                    {item.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl> */}
           </Stack>
         </form>
         {err && err}
@@ -474,18 +462,6 @@ export const CreateUploadFileSV = ({ err, open, onClose, maLop }) => {
     <Dialog open={open}>
       <DialogTitle textAlign="center">Upload file student</DialogTitle>
       <DialogContent>
-        {/* <form onSubmit={handleSubmit}>
-          <Stack
-            sx={{
-              width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
-            }}
-          >
-            <input type="file" onChange={handleFileUpload} />
-            <button type="submit">Upload</button>
-          </Stack>
-        </form> */}
         <form onSubmit={handleSubmit}>
           <TextField type="file" onChange={handleFileUpload} />
           <Button type="submit">Upload</Button>
@@ -496,9 +472,6 @@ export const CreateUploadFileSV = ({ err, open, onClose, maLop }) => {
         <Button onClick={onClose} color="secondary">
           Cancel
         </Button>
-        {/* <Button color="secondary" onClick={handleSubmit} variant="contained">
-          Thêm Mới
-        </Button> */}
       </DialogActions>
     </Dialog>
   );
@@ -520,15 +493,6 @@ export const CreateChooseSemesterModel = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     navigate(`/quanlylopchunhiem/uploadfilecdsv/${maLop}/${value}`);
-    // console.log(formData);
-    // try {
-    //   axios.post(`http://localhost:8800/api/excel/students/${maLop}`, value, {
-    //     withCredentials: true,
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    // console.log(value);
   };
 
   return (

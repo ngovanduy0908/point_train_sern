@@ -39,10 +39,10 @@ import AfterMark from "components/student/AfterMark";
 import TestChart from "components/monitor/TestChart";
 import ChartDetail from "pages/chart/ChartDetail";
 import Luckysheet from "components/Luckysheet";
-import FormWord from "components/monitor/FormWord";
 import GenerateDocument from "components/monitor/GenerateDocument ";
 import XetDiemRenLuyen from "pages/lt/XetDiemRenLuyen";
 import DanhSachDRLSinhVien from "pages/lt/DanhSachDRLSinhVien";
+import DanhSachDiemRenLuyenLT from "pages/gv/DanhSachDiemRenLuyenLT";
 function App() {
   const mode = useSelector((state) => state.global.mode);
 
@@ -116,6 +116,11 @@ function App() {
               <Route
                 path="/quanlylopchunhiem/:maLop"
                 element={<QuanLyHocSinh />}
+              />
+
+              <Route
+                path="/quanlylopchunhiem/:maLop/:maHK"
+                element={<DanhSachDiemRenLuyenLT />}
               />
 
               <Route

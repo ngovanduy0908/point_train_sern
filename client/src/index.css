@@ -118,11 +118,13 @@ button.ghost {
 input {
   background-color: #eee;
   border: none;
-  padding: 12px 15px;
+  padding: 8px 4px;
   margin: 8px 0;
   width: 75%;
   color: #000;
   border-radius: 5px;
+  font-size: 14px;
+  /* text-align: center; */
 }
 
 .container_login {
