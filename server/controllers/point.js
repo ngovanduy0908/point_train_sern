@@ -415,3 +415,171 @@ export const markZero = (req, res) => {
   });
   return res.status(200).json("Thành Công");
 };
+
+export const getPointStudentTeacherByMaLopAndMaHK = (req, res) => {
+  // console.log("xuong day: ", req.query);
+  const maLop = req.query.maLop;
+  const maHK = req.query.maHK;
+  const q = `select students.*, point.*
+  from 
+  students, point
+  where 
+  students.maSv = point.maSv 
+  and point.maHK = '${maHK}' 
+  and point.status = '1' 
+  and students.maLop = '${maLop}'`;
+  db.query(q, (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(200).json(data);
+  });
+};
+
+export const getPointTeacherByMa = (req, res) => {
+  const maHK = req.query.maHK;
+  const maSv = req.query.maSv;
+  const q = `select * from point_teacher where maHK='${maHK}' and maSv='${maSv}'`;
+  db.query(q, (err, data) => {
+    if (err) return res.status(500).json(err);
+
+    return res.status(200).json(...data);
+  });
+};
+
+export const insertOrUpdatePointTeacher = (req, res) => {
+  const { maHK, maSv } = req.query;
+  // console.log("mahk va masv: ", maHK, maSv);
+  const values = req.body;
+  // console.log("value: ", values);
+  const checkExisPointTeacher = `select maSv from point_teacher where maSv = '${maSv}' and maHK = '${maHK}'`;
+  db.query(checkExisPointTeacher, (err, data) => {
+    if (err) return res.status(500).json(err);
+    // console.log("data: ", data);
+    if (data.length) {
+      const q = `
+      update point_teacher set
+                            gvDiemTBHK = '${values.gvDiemTBHK}',
+                            gvNCKH1  = '${values.gvNCKH1}',
+                            gvNCKH2 = '${values.gvNCKH2}',
+                            gvNCKH3 = '${values.gvNCKH3}',
+                            gvOlympic1 = '${values.gvOlympic1}',
+                            gvOlympic2 = '${values.gvOlympic2}',
+                            gvOlympic3 = '${values.gvOlympic3}',
+                            gvOlympic4 = '${values.gvOlympic4}',
+                            gvNoRegulation = '${values.gvNoRegulation}',
+                            gvOnTime = '${values.gvOnTime}',
+                            gvAbandon = '${values.gvAbandon}',
+                            gvUnTrueTime = '${values.gvUnTrueTime}',
+                            gvRightRule = '${values.gvRightRule}',
+                            gvCitizen = '${values.gvCitizen}',
+                            gvNoFullStudy = '${values.gvNoFullStudy}',
+                            gvNoCard = '${values.gvNoCard}',
+                            gvNoAtivities = '${values.gvNoAtivities}',
+                            gvNoPayFee = '${values.gvNoPayFee}',
+                            gvFullActive = '${values.gvFullActive}',
+                            gvAchievementSchool = '${values.gvAchievementSchool}',
+                            gvAchievementCity = '${values.gvAchievementCity}',
+                            gvAdvise = '${values.gvAdvise}',
+                            gvIrresponsible = '${values.gvIrresponsible}',
+                            gvNoCultural = '${values.gvNoCultural}',
+                            gvPositiveStudy = '${values.gvPositiveStudy}',
+                            gvPositiveLove = '${values.gvPositiveLove}',
+                            gvWarn = '${values.gvWarn}',
+                            gvNoProtect = '${values.gvNoProtect}',
+                            gvMonitor = '${values.gvMonitor}',
+                            gvBonus = '${values.gvBonus}',
+                            gvIrresponsibleMonitor = '${values.gvIrresponsibleMonitor}'
+                            where maSv = '${maSv}' and maHK = '${maHK}'`;
+      const q1 = `update point set point_teacher = '${values.sum}', status_teacher = 1 where maSv = '${maSv}' and maHK = '${maHK}'`;
+      db.query(q, (err, data) => {
+        if (err) return res.status(500).json(err);
+
+        db.query(q1, (err, data) => {
+          if (err) return res.status(500).json(err);
+
+          return res.status(200).json("Giáo viên cập nhật điểm thành công");
+        });
+      });
+    } else {
+      const q = `
+      INSERT INTO point_teacher 
+                                (maSv, 
+                                gvDiemTBHK, 
+                                gvCitizen, 
+                                gvMonitor, 
+                                gvNCKH1, 
+                                gvNCKH2, 
+                                gvNCKH3, 
+                                gvOlympic1, 
+                                gvOlympic2, 
+                                gvOlympic3, 
+                                gvOlympic4, 
+                                gvNoRegulation, 
+                                gvOnTime, 
+                                gvAbandon, 
+                                gvUnTrueTime, 
+                                gvNoFullStudy, 
+                                gvNoCard, 
+                                gvNoAtivities, 
+                                gvNoPayFee, 
+                                gvFullActive, 
+                                gvAchievementSchool, 
+                                gvAchievementCity, 
+                                gvAdvise, 
+                                gvIrresponsible, 
+                                gvNoCultural, 
+                                gvPositiveStudy, 
+                                gvPositiveLove, 
+                                gvWarn, 
+                                gvNoProtect, 
+                                gvBonus, 
+                                gvIrresponsibleMonitor, 
+                                maHK, 
+                                gvRightRule)
+                            VALUES 
+                                ('${maSv}', 
+                                '${values.gvDiemTBHK}', 
+                                '${values.gvCitizen}', 
+                                '${values.gvMonitor}', 
+                                '${values.gvNCKH1}', 
+                                '${values.gvNCKH2}', 
+                                '${values.gvNCKH3}', 
+                                '${values.gvOlympic1}', 
+                                '${values.gvOlympic2}', 
+                                '${values.gvOlympic3}', 
+                                '${values.gvOlympic4}', 
+                                '${values.gvNoRegulation}', 
+                                '${values.gvOnTime}', 
+                                '${values.gvAbandon}', 
+                                '${values.gvUnTrueTime}', 
+                                '${values.gvNoFullStudy}', 
+                                '${values.gvNoCard}', 
+                                '${values.gvNoAtivities}', 
+                                '${values.gvNoPayFee}', 
+                                '${values.gvFullActive}', 
+                                '${values.gvAchievementSchool}', 
+                                '${values.gvAchievementCity}', 
+                                '${values.gvAdvise}', 
+                                '${values.gvIrresponsible}', 
+                                '${values.gvNoCultural}', 
+                                '${values.gvPositiveStudy}', 
+                                '${values.gvPositiveLove}', 
+                                '${values.gvWarn}', 
+                                '${values.gvNoProtect}', 
+                                '${values.gvBonus}', 
+                                '${values.gvIrresponsibleMonitor}', 
+                                '${maHK}', 
+                                '${values.gvRightRule}')`;
+      const q1 = `update point set point_teacher = '${values.sum}', status_teacher = 1 where maSv = '${maSv}' and maHK = '${maHK}'`;
+
+      db.query(q, (err, data) => {
+        if (err) return res.status(500).json(err);
+
+        db.query(q1, (err, data) => {
+          if (err) return res.status(500).json(err);
+
+          return res.status(200).json("Giáo viên duyệt thành công");
+        });
+      });
+    }
+  });
+};
