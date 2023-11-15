@@ -1,32 +1,18 @@
-import axios from "axios";
-import { AuthContext } from "context/authContext";
-import React, { useContext, useEffect, useState } from "react";
+import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
 
-const DOMAIN = process.env.REACT_APP_DOMAIN;
-const Countdown = () => {
-  // const { maLop } = user;
-  const { currentUser } = useContext(AuthContext);
+const Countdown = ({ timeEndStudentMark }) => {
   const [days, setDays] = useState("00");
   const [hours, setHours] = useState("00");
   const [minutes, setMinutes] = useState("00");
   const [seconds, setSeconds] = useState("00");
-  const getDeadlineByMaLop = async () => {
-    try {
-      await axios.get(
-        `${DOMAIN}/deadlines/deadlineMaLop/${currentUser.maLop}`,
-        {
-          withCredentials: true,
-        }
-      );
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-  // console.log("domain: ", currentUser);
+  // console.log("time Start StudentMark: ", timeStartStudentMark);
+  // console.log("time End StudentMark: ", timeEndStudentMark);
 
   useEffect(() => {
-    getDeadlineByMaLop();
-    const target_date = new Date().getTime() + 1000 * 3600 * 48; // set the countdown date
+    const target_date =
+      new Date(dayjs(timeEndStudentMark).format("YYYY-MM-DD")).getTime() +
+      17 * 60 * 60 * 1000; // set the countdown date
 
     const countdownInterval = setInterval(() => {
       const current_date = new Date().getTime();
@@ -60,10 +46,10 @@ const Countdown = () => {
         <span>{seconds}</span>
       </div>
       <div className="labels">
-        <li>Days</li>
-        <li>Hours</li>
-        <li>Mins</li>
-        <li>Secs</li>
+        <li>Ngày</li>
+        <li>Giờ</li>
+        <li>Phút</li>
+        <li>Giây</li>
       </div>
     </div>
   );

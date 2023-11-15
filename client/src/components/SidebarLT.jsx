@@ -18,10 +18,14 @@ import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import PreviewIcon from "@mui/icons-material/Preview";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
 import { ChevronLeft, ChevronRightOutlined } from "@mui/icons-material";
+import { formatDay } from "utils/formatDay";
+import { getDeadlineBySinhVien } from "utils/getDetails/getDealineBySinhVien";
+import { AuthContext } from "context/authContext";
+import Countdown from "./countdown/CountDown";
 
 const navItemsLT = [
   {
@@ -29,16 +33,16 @@ const navItemsLT = [
     icon: <ApartmentOutlinedIcon />,
     path: "home",
   },
-  {
-    text: "Xét Điểm Rèn Luyện",
-    icon: <PlaylistAddCheckIcon />,
-    path: "xetdiemrenluyen",
-  },
-  {
-    text: "Chấm Điểm Rèn Luyện",
-    icon: <BorderColorIcon />,
-    path: "chamdiemrenluyen",
-  },
+  // {
+  //   text: "Xét Điểm Rèn Luyện",
+  //   icon: <PlaylistAddCheckIcon />,
+  //   path: "xetdiemrenluyen",
+  // },
+  // {
+  //   text: "Chấm Điểm Rèn Luyện",
+  //   icon: <BorderColorIcon />,
+  //   path: "chamdiemrenluyen",
+  // },
   {
     text: "Xem Điểm Rèn Luyện",
     icon: <PreviewIcon />,
@@ -53,16 +57,83 @@ const SidebarLT = ({
   setIsSidebarOpen,
   isNonMobile,
 }) => {
+  const { currentUser } = useContext(AuthContext);
+
   const { pathname } = useLocation();
-  // console.log(user);
-  // console.log(pathname);
   const [active, setActive] = useState("overview");
   const navigate = useNavigate();
   const theme = useTheme();
 
+  const [navList, setNavList] = useState(navItemsLT);
+  const [timeStartStudentMark, setTimeStartStudentMark] = useState(null);
+  const [timeEndStudentMark, setTimeEndStudentMark] = useState(null);
+  const [timeEndMonitorMark, setTimeEndMonitorMark] = useState(null);
+  const [checkTimePoint, setCheckTimePoint] = useState(false);
+  const [checkTimeMark, setCheckTimeMark] = useState(false);
+  const curDate = new Date();
+
   useEffect(() => {
     setActive(pathname.substring(1));
   }, [pathname]);
+
+  const getDeadlineByMaLop = async () => {
+    try {
+      const res = await getDeadlineBySinhVien(`${currentUser.maLop}`);
+      setTimeStartStudentMark(res.start_time_student);
+      setTimeEndStudentMark(res.end_time_student);
+      setTimeEndMonitorMark(res.end_time_monitor);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getDeadlineByMaLop();
+  }, []);
+
+  useEffect(() => {
+    const a = formatDay(curDate) >= formatDay(timeStartStudentMark);
+    const b = formatDay(curDate) <= formatDay(timeEndStudentMark);
+    const c = formatDay(curDate) > formatDay(timeEndStudentMark);
+    const d = formatDay(curDate) <= formatDay(timeEndMonitorMark);
+    console.log("c, d: ", c, d);
+    if (c && d) {
+      setCheckTimeMark(true);
+      const isChamDiemRenLuyenExists = navItemsLT.some(
+        (item) => item.path === "xetdiemrenluyen"
+      );
+
+      if (!isChamDiemRenLuyenExists) {
+        const newNavItem = {
+          text: "Xét Điểm Rèn Luyện",
+          icon: <PlaylistAddCheckIcon />,
+          path: "xetdiemrenluyen",
+        };
+        setNavList((prev) => [...prev, newNavItem]);
+      }
+    } else {
+      setCheckTimePoint(false);
+      setNavList((prev) => [...prev]);
+    }
+    if (a && b) {
+      setCheckTimePoint(true);
+      const isChamDiemRenLuyenExists = navItemsLT.some(
+        (item) => item.path === "chamdiemrenluyen"
+      );
+
+      if (!isChamDiemRenLuyenExists) {
+        const newNavItem = {
+          text: "Chấm Điểm Rèn Luyện",
+          icon: <BorderColorIcon />,
+          path: "chamdiemrenluyen",
+        };
+        setNavList((prev) => [...prev, newNavItem]);
+      }
+    } else {
+      setCheckTimePoint(false);
+      setNavList((prev) => [...prev]);
+    }
+  }, [timeStartStudentMark, timeEndStudentMark]);
 
   return (
     <Box component="nav" className="z-0">
@@ -99,7 +170,7 @@ const SidebarLT = ({
               </FlexBetween>
             </Box>
             <List>
-              {navItemsLT.map(({ text, icon, path }) => {
+              {navList.map(({ text, icon, path }) => {
                 return (
                   <ListItem key={text} disablePadding>
                     <ListItemButton
@@ -135,6 +206,12 @@ const SidebarLT = ({
                   </ListItem>
                 );
               })}
+              {user && checkTimePoint && (
+                <Countdown timeEndStudentMark={timeEndStudentMark} />
+              )}
+              {user && checkTimeMark && (
+                <Countdown timeEndStudentMark={timeEndMonitorMark} />
+              )}
             </List>
           </Box>
         </Drawer>

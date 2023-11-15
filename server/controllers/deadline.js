@@ -95,6 +95,12 @@ export const deleteDeadline = (req, res) => {
 };
 
 export const deadlineWithMaSv = (req, res) => {
-  const maLop = req.params.maLop;
-  console.log("maLop: ", maLop);
+  const { maLop } = req.params;
+  // console.log("co ma lop: ", maLop);
+  const q = `select deadline.* from deadline, teacher, class WHERE deadline.maGv = teacher.maGv and teacher.maGv = class.maGv and class.maLop = '${maLop}'`;
+  db.query(q, (err, data) => {
+    if (err) return res.status(500).json(err);
+
+    return res.status(200).json(...data);
+  });
 };
