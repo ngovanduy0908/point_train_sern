@@ -17,6 +17,7 @@ import {
 import { Delete, Edit } from "@mui/icons-material";
 
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const QuanLyKhoa = () => {
   // const theme = useTheme();
@@ -43,28 +44,23 @@ const QuanLyKhoa = () => {
     getAllDepartment();
   }, []);
 
-  // console.log(tableData);
   const handleCreateNewRow = async (values) => {
-    // console.log(values);
     try {
       await axios.post("http://localhost:8800/api/departments", values, {
         withCredentials: true,
       });
       tableData.push(values);
       setTableData([...tableData]);
-      // console.log(res.data);
+      toast.success("Thêm khoa thành công");
     } catch (error) {
-      setErr(error.response.data);
+      toast.error(error.response.data);
     }
   };
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
       tableData[row.index] = values;
-      // console.log(row);
-      console.log(values);
-      // const maKhoa = row.original.maKhoa;
-      // console.log(maKhoa);
+
       axios.put(
         `http://localhost:8800/api/departments/${values.maKhoa}`,
         values,
@@ -72,9 +68,9 @@ const QuanLyKhoa = () => {
           withCredentials: true,
         }
       );
-      //send/receive api updates here, then refetch or update local table data for re-render
       setTableData([...tableData]);
-      exitEditingMode(); //required to exit editing mode and close modal
+      exitEditingMode();
+      toast.success("Sửa thông tin khoa thành công.");
     }
   };
 
@@ -101,6 +97,7 @@ const QuanLyKhoa = () => {
       );
       tableData.splice(row.index, 1);
       setTableData([...tableData]);
+      toast.success("Xóa khoa thành công.");
     },
     [tableData]
   );
@@ -148,7 +145,7 @@ const QuanLyKhoa = () => {
       },
       {
         accessorKey: "name",
-        header: "Ten",
+        header: "Tên Khoa",
         size: 140,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
@@ -156,7 +153,7 @@ const QuanLyKhoa = () => {
       },
       {
         accessorKey: "account",
-        header: "Tai Khoan",
+        header: "Tài Khoản",
         size: 140,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
@@ -164,7 +161,7 @@ const QuanLyKhoa = () => {
       },
       {
         accessorKey: "password",
-        header: "Password",
+        header: "Mật Khẩu",
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
         }),
@@ -175,7 +172,7 @@ const QuanLyKhoa = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="KHOA" subtitle="Danh sách Khoa" />
+      <Header title="KHOA" subtitle="Danh Sách Khoa" />
       <Box mt="40px">
         <MaterialReactTable
           displayColumnDefOptions={{
@@ -188,19 +185,19 @@ const QuanLyKhoa = () => {
           }}
           columns={columns}
           data={tableData}
-          editingMode="modal" //default
+          editingMode="modal"
           enableColumnOrdering
           enableEditing
           onEditingRowSave={handleSaveRowEdits}
           onEditingRowCancel={handleCancelRowEdits}
           renderRowActions={({ row, table }) => (
             <Box sx={{ display: "flex", gap: "1rem" }}>
-              <Tooltip arrow placement="left" title="Edit">
+              <Tooltip arrow placement="left" title="Sửa thông tin">
                 <IconButton onClick={() => table.setEditingRow(row)}>
                   <Edit />
                 </IconButton>
               </Tooltip>
-              <Tooltip arrow placement="right" title="Delete">
+              <Tooltip arrow placement="right" title="Xóa khoa">
                 <IconButton color="error" onClick={() => handleDeleteRow(row)}>
                   <Delete />
                 </IconButton>

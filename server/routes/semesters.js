@@ -16,7 +16,7 @@ const router = express.Router();
 router.get("/", getAllListSemester);
 router.get("/get_semester_open", getSemesterOpen);
 
-router.put("/:maHK/:status", changeSemester);
+router.put("/status/:maHK", changeSemester);
 router.post("/", addSemester);
 router.put("/:maHK", editSemester);
 router.delete("/:maHK", deleteSemester);

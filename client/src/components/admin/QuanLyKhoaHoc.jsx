@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import Header from '../Header';
-import MaterialReactTable from 'material-react-table';
-import './admin.css';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import Header from "../Header";
+import MaterialReactTable from "material-react-table";
+import "./admin.css";
 import {
   Box,
   Button,
@@ -13,10 +13,11 @@ import {
   Stack,
   TextField,
   Tooltip,
-} from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
+} from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
 
-import axios from 'axios';
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const QuanLyKhoaHoc = () => {
   // const theme = useTheme();
@@ -30,7 +31,7 @@ const QuanLyKhoaHoc = () => {
     const getAllDepartment = async () => {
       try {
         const allDepartment = await axios.get(
-          'http://localhost:8800/api/courses',
+          "http://localhost:8800/api/courses",
           {
             withCredentials: true,
           }
@@ -43,12 +44,10 @@ const QuanLyKhoaHoc = () => {
     getAllDepartment();
   }, []);
 
-  // console.log(tableData);
   const handleCreateNewRow = async (values) => {
-    // console.log(values);
     try {
       const res = await axios.post(
-        'http://localhost:8800/api/courses',
+        "http://localhost:8800/api/courses",
         values,
         {
           withCredentials: true,
@@ -56,19 +55,16 @@ const QuanLyKhoaHoc = () => {
       );
       tableData.push(values);
       setTableData([...tableData]);
-      console.log(res.data);
+      toast.success("Thêm khóa học thành công");
     } catch (error) {
-      setErr(error.response.data);
+      toast.error(error.response.data);
     }
   };
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
       tableData[row.index] = values;
-      // console.log(row);
-      // console.log(values);
-      // const maKhoa = row.original.maKhoa;
-      // console.log(maKhoa);
+
       axios.put(
         `http://localhost:8800/api/courses/${values.maKhoaHoc}`,
         values,
@@ -79,6 +75,7 @@ const QuanLyKhoaHoc = () => {
       //send/receive api updates here, then refetch or update local table data for re-render
       setTableData([...tableData]);
       exitEditingMode(); //required to exit editing mode and close modal
+      toast.success("Sửa khóa học thành công");
     }
   };
 
@@ -90,7 +87,7 @@ const QuanLyKhoaHoc = () => {
     async (row) => {
       if (
         !window.confirm(
-          `Are you sure you want to delete ${row.getValue('name')}`
+          `Are you sure you want to delete ${row.getValue("name")}`
         )
       ) {
         return;
@@ -105,6 +102,7 @@ const QuanLyKhoaHoc = () => {
       );
       tableData.splice(row.index, 1);
       setTableData([...tableData]);
+      toast.success("Xóa khóa học thành công");
     },
     [tableData]
   );
@@ -116,9 +114,9 @@ const QuanLyKhoaHoc = () => {
         helperText: validationErrors[cell.id],
         onBlur: (event) => {
           const isValid =
-            cell.column.id === 'email'
+            cell.column.id === "email"
               ? validateEmail(event.target.value)
-              : cell.column.id === 'age'
+              : cell.column.id === "age"
               ? validateAge(+event.target.value)
               : validateRequired(event.target.value);
           if (!isValid) {
@@ -143,32 +141,32 @@ const QuanLyKhoaHoc = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'maKhoaHoc',
-        header: 'Mã Khóa Học',
+        accessorKey: "maKhoaHoc",
+        header: "Mã Khóa Học",
         enableColumnOrdering: false,
         enableEditing: false, //disable editing on this column
         enableSorting: false,
         size: 80,
       },
       {
-        accessorKey: 'name',
-        header: 'Ten',
+        accessorKey: "name",
+        header: "Tên Khóa Học",
         size: 140,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
         }),
       },
       {
-        accessorKey: 'start_year',
-        header: 'Năm bắt đầu',
+        accessorKey: "start_year",
+        header: "Năm bắt đầu",
         size: 140,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
         }),
       },
       {
-        accessorKey: 'final_year',
-        header: 'Năm kết thúc',
+        accessorKey: "final_year",
+        header: "Năm kết thúc",
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
         }),
@@ -179,13 +177,13 @@ const QuanLyKhoaHoc = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="KHOA" subtitle="Danh sách Khóa Học" />
+      <Header title="Khóa Học" subtitle="Danh Sách Khóa Học" />
       <Box mt="40px">
         <MaterialReactTable
           displayColumnDefOptions={{
-            'mrt-row-actions': {
+            "mrt-row-actions": {
               muiTableHeadCellProps: {
-                align: 'center',
+                align: "center",
               },
               size: 120,
             },
@@ -198,13 +196,13 @@ const QuanLyKhoaHoc = () => {
           onEditingRowSave={handleSaveRowEdits}
           onEditingRowCancel={handleCancelRowEdits}
           renderRowActions={({ row, table }) => (
-            <Box sx={{ display: 'flex', gap: '1rem' }}>
-              <Tooltip arrow placement="left" title="Edit">
+            <Box sx={{ display: "flex", gap: "1rem" }}>
+              <Tooltip arrow placement="left" title="Sửa học kì">
                 <IconButton onClick={() => table.setEditingRow(row)}>
                   <Edit />
                 </IconButton>
               </Tooltip>
-              <Tooltip arrow placement="right" title="Delete">
+              <Tooltip arrow placement="right" title="Xóa học kì">
                 <IconButton color="error" onClick={() => handleDeleteRow(row)}>
                   <Delete />
                 </IconButton>
@@ -243,7 +241,7 @@ export const CreateNewAccountModal = ({
 }) => {
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
-      acc[column.accessorKey ?? ''] = '';
+      acc[column.accessorKey ?? ""] = "";
       return acc;
     }, {})
   );
@@ -261,9 +259,9 @@ export const CreateNewAccountModal = ({
         <form onSubmit={(e) => e.preventDefault()}>
           <Stack
             sx={{
-              width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
+              width: "100%",
+              minWidth: { xs: "300px", sm: "360px", md: "400px" },
+              gap: "1.5rem",
             }}
           >
             {columns.map((column) => (
@@ -280,7 +278,7 @@ export const CreateNewAccountModal = ({
         </form>
         {err && err}
       </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
+      <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
           Cancel
         </Button>

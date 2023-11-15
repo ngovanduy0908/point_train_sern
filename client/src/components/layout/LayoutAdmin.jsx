@@ -1,20 +1,19 @@
-import { Box, useMediaQuery } from '@mui/material';
-import { useState } from 'react';
-import Sidebar from '../Sidebar';
-import Navbar from '../Navbar';
-import { Outlet } from 'react-router-dom';
-import { CssBaseline, ThemeProvider } from '@mui/material';
+import { Box, useMediaQuery } from "@mui/material";
+import { useState } from "react";
+import Sidebar from "../Sidebar";
+import Navbar from "../Navbar";
+import { Outlet } from "react-router-dom";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { ToastContainer } from "react-toastify";
 
 const LayoutAdmin = ({ currentUser, theme }) => {
-  //   const mode = useSelector((state) => state.global.mode);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const isNonMobile = useMediaQuery('(min-width: 600px)');
-  //   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+  const isNonMobile = useMediaQuery("(min-width: 600px)");
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box display={isNonMobile ? 'flex' : 'block'} width="100%" height="100%">
+      <Box display={isNonMobile ? "flex" : "block"} width="100%" height="100%">
         <Sidebar
           user={currentUser || {}}
           isNonMobile={isNonMobile}
@@ -31,6 +30,7 @@ const LayoutAdmin = ({ currentUser, theme }) => {
           <Outlet />
         </Box>
       </Box>
+      <ToastContainer />
     </ThemeProvider>
   );
 };

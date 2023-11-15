@@ -17,6 +17,7 @@ import {
 import { Delete, Edit } from "@mui/icons-material";
 
 import axios from "axios";
+import { toast } from "react-toastify";
 const DOMAIN = process.env.REACT_APP_DOMAIN;
 const QuanLyHocKi = () => {
   // const theme = useTheme();
@@ -26,55 +27,49 @@ const QuanLyHocKi = () => {
   const [validationErrors, setValidationErrors] = useState({});
   const [err, setErr] = useState(null);
 
-  useEffect(() => {
-    const getAllDepartment = async () => {
-      try {
-        const allDepartment = await axios.get(
-          "http://localhost:8800/api/semesters",
-          {
-            withCredentials: true,
-          }
-        );
-        setTableData(allDepartment.data);
-      } catch (error) {
-        console.log(error.response.data);
-      }
-    };
-    getAllDepartment();
-  }, []);
-
-  // console.log(tableData);
-  const handleCreateNewRow = async (values) => {
-    // console.log(values);
+  const getAllDepartment = async () => {
     try {
-      const res = await axios.post(
+      const allDepartment = await axios.get(
         "http://localhost:8800/api/semesters",
-        values,
         {
           withCredentials: true,
         }
       );
+      setTableData(allDepartment.data);
+      console.log("call lại cái");
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+  useEffect(() => {
+    getAllDepartment();
+  }, []);
+
+  const handleCreateNewRow = async (values) => {
+    try {
+      await axios.post("http://localhost:8800/api/semesters", values, {
+        withCredentials: true,
+      });
       tableData.push(values);
       setTableData([...tableData]);
-      console.log(res.data);
+      toast.success("Thêm học kì thành công");
     } catch (error) {
-      setErr(error.response.data);
+      // setErr(error.response.data);
+      toast.error(error.response.data);
     }
   };
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
       tableData[row.index] = values;
-      // console.log(row);
-      // console.log(values);
-      // const maKhoa = row.original.maKhoa;
-      // console.log(maKhoa);
+
       axios.put(`${DOMAIN}/semesters/${row.original.maHK}`, values, {
         withCredentials: true,
       });
-      //send/receive api updates here, then refetch or update local table data for re-render
+
       setTableData([...tableData]);
       exitEditingMode(); //required to exit editing mode and close modal
+      toast.success("Sửa học kì thành công");
     }
   };
 
@@ -101,6 +96,7 @@ const QuanLyHocKi = () => {
       );
       tableData.splice(row.index, 1);
       setTableData([...tableData]);
+      toast.success("Xóa học kì thành công");
     },
     [tableData]
   );
@@ -139,14 +135,23 @@ const QuanLyHocKi = () => {
   // const [value, setValue] = useState(0);
   const handleChange = async (value) => {
     try {
-      axios.put(
-        `http://localhost:8800/api/semesters/${value.original.maHK}/${value.original.status}`,
-        value.original,
-        {
+      // console.log("value status: ", value.status);
+      if (!window.confirm(`Bạn có muốn thay đổi trạng thái học kì không?`)) {
+        return;
+      }
+      const status = value.status;
+      const data = {
+        status: status === 0 ? 1 : 0,
+      };
+      // console.log("data nguoc: ", data);
+      await axios
+        .put(`${DOMAIN}/semesters/status/${value.maHK}`, data, {
           withCredentials: true,
-        }
-      );
-      window.location.href = "http://localhost:3000/quanlyhocki";
+        })
+        .then(() => {
+          getAllDepartment();
+          toast.success("Cập nhật học kì thành công");
+        });
     } catch (error) {
       console.log(error);
     }
@@ -160,41 +165,34 @@ const QuanLyHocKi = () => {
         accessorKey: "maHK",
         header: "Mã Học Kì",
         enableColumnOrdering: false,
-        // enableEditing: false, //disable editing on this column
         enableSorting: false,
         size: 80,
       },
       {
         accessorKey: "name",
-        header: "Ten",
+        header: "Tên Học Kì",
         size: 140,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
         }),
       },
-      // {
-      //   accessorKey: 'status',
-      //   header: 'Trạng Thái',
-      //   size: 140,
-      //   muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
-      //     ...getCommonEditTextFieldProps(cell),
-      //   }),
-      // },
       {
         accessorKey: "status",
-        header: "Trang Thai",
+        header: "Trạng Thái",
         enableEditing: false,
-        Cell: ({ cell, row }) => (
-          <Button
-            sx={{
-              backgroundColor: "#ffe3a3",
-              color: "#aa8b8b",
-            }}
-            onClick={() => handleChange(row)}
-          >
-            {cell.getValue() === 0 ? "Đóng" : "Mở"}
-          </Button>
-        ),
+        Cell: ({ cell, row }) => {
+          return (
+            <Button
+              sx={{
+                backgroundColor: "#ffe3a3",
+                color: "#aa8b8b",
+              }}
+              onClick={() => handleChange(row.original)}
+            >
+              {row.original.status === 0 ? "Đóng" : "Mở"}
+            </Button>
+          );
+        },
       },
 
       {
@@ -212,12 +210,12 @@ const QuanLyHocKi = () => {
         }),
       },
     ],
-    [getCommonEditTextFieldProps]
+    [getCommonEditTextFieldProps, tableData]
   );
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="KHOA" subtitle="Danh sách Khóa Học" />
+      <Header title="Học Kì" subtitle="Danh Sách Học Kì" />
       <Box mt="40px">
         <MaterialReactTable
           displayColumnDefOptions={{
@@ -237,12 +235,12 @@ const QuanLyHocKi = () => {
           onEditingRowCancel={handleCancelRowEdits}
           renderRowActions={({ row, table }) => (
             <Box sx={{ display: "flex", gap: "1rem" }}>
-              <Tooltip arrow placement="left" title="Edit">
+              <Tooltip arrow placement="left" title="Sửa học kì">
                 <IconButton onClick={() => table.setEditingRow(row)}>
                   <Edit />
                 </IconButton>
               </Tooltip>
-              <Tooltip arrow placement="right" title="Delete">
+              <Tooltip arrow placement="right" title="Xóa học kì">
                 <IconButton color="error" onClick={() => handleDeleteRow(row)}>
                   <Delete />
                 </IconButton>
