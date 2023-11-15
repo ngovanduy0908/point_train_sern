@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import Header from '../Header';
-import MaterialReactTable from 'material-react-table';
-import '../admin/admin.css';
-import { getUserInLocalStorage } from '../../context/getCurrentUser.js';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import Header from "../Header";
+import MaterialReactTable from "material-react-table";
+import "../admin/admin.css";
+import { getUserInLocalStorage } from "../../context/getCurrentUser.js";
 import {
   Box,
   Button,
@@ -18,11 +18,12 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
-} from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
+} from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
 
-import axios from 'axios';
-
+import axios from "axios";
+import { toast } from "react-toastify";
+const DOMAIN = process.env.REACT_APP_DOMAIN;
 const QuanLyLopHoc = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
@@ -35,42 +36,45 @@ const QuanLyLopHoc = () => {
   const currentUser = getUserInLocalStorage();
 
   // get all class
+  const getAllClass = async () => {
+    try {
+      const allClass = await axios.get(
+        `${DOMAIN}/class/${currentUser.maKhoa}`,
+        {
+          withCredentials: true,
+        }
+      );
+      setTableData(allClass.data.table1);
+      setCourseData(allClass.data.table2);
+      setTeacherData(allClass.data.table3);
+      // console.log(tableData);
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
   useEffect(() => {
-    const getAllClass = async () => {
-      try {
-        const allClass = await axios.get(
-          `http://localhost:8800/api/class/${currentUser.maKhoa}`,
-          {
-            withCredentials: true,
-          }
-        );
-        setTableData(allClass.data.table1);
-        setCourseData(allClass.data.table2);
-        setTeacherData(allClass.data.table3);
-        // console.log(tableData);
-      } catch (error) {
-        console.log(error.response.data);
-      }
-    };
     getAllClass();
-  }, [currentUser.maKhoa]);
+  }, []);
 
   // console.log(tableData);
   const handleCreateNewRow = async (values) => {
     // console.log(values);
     try {
-      const res = await axios.post(
+      await axios.post(
         `http://localhost:8800/api/class/${currentUser.maKhoa}`,
         values,
         {
           withCredentials: true,
         }
       );
+      getAllClass();
       tableData.push(values);
       setTableData([...tableData]);
-      console.log(res.data);
+      toast.success("Thêm lớp học thành công");
+      // console.log(res.data);
     } catch (error) {
-      setErr(error.response.data);
+      // setErr(error.response.data);
+      toast.error(error.response.data);
     }
   };
 
@@ -78,7 +82,7 @@ const QuanLyLopHoc = () => {
     if (!Object.keys(validationErrors).length) {
       tableData[row.index] = values;
       // console.log(values);
-      axios.put(
+      await axios.put(
         `http://localhost:8800/api/class/${row.original.maLop}`,
         values,
         {
@@ -88,6 +92,7 @@ const QuanLyLopHoc = () => {
       //send/receive api updates here, then refetch or update local table data for re-render
       setTableData([...tableData]);
       exitEditingMode(); //required to exit editing mode and close modal
+      toast.success("Sửa lớp học thành công");
     }
   };
 
@@ -97,115 +102,80 @@ const QuanLyLopHoc = () => {
 
   const handleDeleteRow = useCallback(
     async (row) => {
-      if (
-        !window.confirm(
-          `Are you sure you want to delete ${row.getValue('name')}`
-        )
-      ) {
+      if (!window.confirm(`Bạn có muốn xóa lớp học không ?`)) {
         return;
       }
-      // console.log(row);
-      //send api delete request here, then refetch or update local table data for re-render
       await axios.delete(
-        `http://localhost:8800/api/class/${currentUser.maKhoa}/${row.original.maLop}`,
+        `${DOMAIN}/class/${currentUser.maKhoa}/${row.original.maLop}`,
         {
           withCredentials: true,
         }
       );
       tableData.splice(row.index, 1);
       setTableData([...tableData]);
+      toast.success("Xóa lớp học thành công?");
     },
     [tableData, currentUser.maKhoa]
   );
 
-  const handleChangeGiaoVien = (e, maLop) => {
-    if (!window.confirm(`Are you sure you want to change GV`)) {
+  const handleChangeGiaoVien = async (e, maLop) => {
+    if (!window.confirm(`Bạn có muốn thay đổi giáo viên chủ nhiệm không?`)) {
       return;
     }
     try {
-      axios.put(
-        `http://localhost:8800/api/class/changeGV/${maLop}/${e.target.value}`,
-        maLop,
-        {
+      await axios
+        .put(`${DOMAIN}/class/changeGV/${maLop}/${e.target.value}`, maLop, {
           withCredentials: true,
-        }
-      );
-      window.location.href = 'http://localhost:3000/quanlylophoc';
+        })
+        .then(() => {
+          getAllClass();
+        });
+      // window.location.href = "http://localhost:3000/quanlylophoc";
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleChangeKhoaHoc = (e, maLop) => {
-    if (!window.confirm(`Are you sure you want to change GV`)) {
+  const handleChangeKhoaHoc = async (e, maLop) => {
+    if (!window.confirm(`Bạn có muốn thay đổi khóa học không?`)) {
       return;
     }
     try {
-      axios.put(
-        `http://localhost:8800/api/class/changeKhoaHoc/${maLop}/${e.target.value}`,
-        maLop,
-        {
-          withCredentials: true,
-        }
-      );
-      window.location.href = 'http://localhost:3000/quanlylophoc';
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getCommonEditTextFieldProps = useCallback(
-    (cell) => {
-      return {
-        error: !!validationErrors[cell.id],
-        helperText: validationErrors[cell.id],
-        onBlur: (event) => {
-          const isValid =
-            cell.column.id === 'email'
-              ? validateEmail(event.target.value)
-              : cell.column.id === 'age'
-              ? validateAge(+event.target.value)
-              : validateRequired(event.target.value);
-          if (!isValid) {
-            //set validation error for cell if invalid
-            setValidationErrors({
-              ...validationErrors,
-              [cell.id]: `${cell.column.columnDef.header} is required`,
-            });
-          } else {
-            //remove validation error for cell if valid
-            delete validationErrors[cell.id];
-            setValidationErrors({
-              ...validationErrors,
-            });
+      await axios
+        .put(
+          `${DOMAIN}/class/changeKhoaHoc/${maLop}/${e.target.value}`,
+          maLop,
+          {
+            withCredentials: true,
           }
-        },
-      };
-    },
-    [validationErrors]
-  );
+        )
+        .then(() => {
+          getAllClass();
+        });
+      // window.location.href = "http://localhost:3000/quanlylophoc";
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'maLop',
-        header: 'Mã Lớp',
+        accessorKey: "maLop",
+        header: "Mã Lớp",
         enableColumnOrdering: false,
         // enableEditing: false, //disable editing on this column
         enableSorting: false,
         size: 80,
       },
       {
-        accessorKey: 'class_name',
-        header: 'Ten Lop',
+        accessorKey: "class_name",
+        header: "Tên Lớp",
         size: 140,
-        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
-          ...getCommonEditTextFieldProps(cell),
-        }),
       },
       {
-        accessorKey: 'maGv',
-        header: 'Ten Giao Vien',
+        accessorKey: "maGv",
+        header: "Tên Giáo Viên",
         size: 140,
         enableEditing: false,
         Cell: ({ cell, row }) => (
@@ -226,8 +196,8 @@ const QuanLyLopHoc = () => {
         ),
       },
       {
-        accessorKey: 'maKhoaHoc',
-        header: 'Ten Khóa',
+        accessorKey: "maKhoaHoc",
+        header: "Tên Khóa Học",
         enableEditing: false,
         Cell: ({ cell, row }) => (
           <Box>
@@ -245,26 +215,23 @@ const QuanLyLopHoc = () => {
             </Select>
           </Box>
         ),
-        // muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
-        //   ...getCommonEditTextFieldProps(cell),
-        // }),
       },
     ],
-    [getCommonEditTextFieldProps, courseData, teacherData]
+    [courseData, teacherData, tableData]
   );
 
   return (
     <Box m="1.5rem 2.5rem">
       <Header
         title={currentUser.name}
-        subtitle={`Danh sách Lop Hoc Khoa ${currentUser.name}`}
+        subtitle={`Danh sách lớp học khoa ${currentUser.name}`}
       />
       <Box mt="40px">
         <MaterialReactTable
           displayColumnDefOptions={{
-            'mrt-row-actions': {
+            "mrt-row-actions": {
               muiTableHeadCellProps: {
-                align: 'center',
+                align: "center",
               },
               size: 120,
             },
@@ -277,13 +244,13 @@ const QuanLyLopHoc = () => {
           onEditingRowSave={handleSaveRowEdits}
           onEditingRowCancel={handleCancelRowEdits}
           renderRowActions={({ row, table }) => (
-            <Box sx={{ display: 'flex', gap: '1rem' }}>
-              <Tooltip arrow placement="left" title="Edit">
+            <Box sx={{ display: "flex", gap: "1rem" }}>
+              <Tooltip arrow placement="left" title="Chỉnh sửa thông tin">
                 <IconButton onClick={() => table.setEditingRow(row)}>
                   <Edit />
                 </IconButton>
               </Tooltip>
-              <Tooltip arrow placement="right" title="Delete">
+              <Tooltip arrow placement="right" title="Xóa lớp học">
                 <IconButton color="error" onClick={() => handleDeleteRow(row)}>
                   <Delete />
                 </IconButton>
@@ -325,10 +292,10 @@ export const CreateNewAccountModal = ({
   teacherData,
 }) => {
   const [values, setValues] = useState({
-    maLop: '',
-    class_name: '',
-    maGv: '',
-    maKhoaHoc: '',
+    maLop: "",
+    class_name: "",
+    maGv: "",
+    maKhoaHoc: "",
   });
 
   const handleChange = (e) => {
@@ -337,7 +304,7 @@ export const CreateNewAccountModal = ({
       [e.target.name]: e.target.value,
     }));
   };
-  console.log(values);
+  // console.log(values);
 
   // console.log(values);
   const handleSubmit = () => {
@@ -353,28 +320,28 @@ export const CreateNewAccountModal = ({
         <form onSubmit={(e) => e.preventDefault()}>
           <Stack
             sx={{
-              width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
+              width: "100%",
+              minWidth: { xs: "300px", sm: "360px", md: "400px" },
+              gap: "1.5rem",
             }}
           >
-            <TextField label="Ma Lop" name="maLop" onChange={handleChange} />
+            <TextField label="Mã Lớp" name="maLop" onChange={handleChange} />
 
             <TextField
-              label="Ten Lop"
+              label="Tên Lớp"
               name="class_name"
               onChange={handleChange}
             />
 
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">
-                Chon Giao Vien
+                Chọn Giáo Viên
               </InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={values.maGv}
-                label="Chon Giao Vien"
+                label="Chọn Giáo Viên"
                 name="maGv"
                 onChange={handleChange}
               >
@@ -388,13 +355,13 @@ export const CreateNewAccountModal = ({
 
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">
-                Chon Khóa Học
+                Chọn Khóa Học
               </InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={values.maKhoaHoc}
-                label="Chon Khoa Hoc"
+                label="Chọn Khóa Học"
                 onChange={handleChange}
                 name="maKhoaHoc"
               >
@@ -409,9 +376,9 @@ export const CreateNewAccountModal = ({
         </form>
         {err && err}
       </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
+      <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
-          Cancel
+          Thoát
         </Button>
         <Button color="secondary" onClick={handleSubmit} variant="contained">
           Thêm Mới
@@ -420,15 +387,5 @@ export const CreateNewAccountModal = ({
     </Dialog>
   );
 };
-
-const validateRequired = (value) => !!value.length;
-const validateEmail = (email) =>
-  !!email.length &&
-  email
-    .toLowerCase()
-    .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    );
-const validateAge = (age) => age >= 18 && age <= 50;
 
 export default QuanLyLopHoc;

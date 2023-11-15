@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import Header from '../Header';
-import MaterialReactTable from 'material-react-table';
-import '../admin/admin.css';
-import { getUserInLocalStorage } from '../../context/getCurrentUser.js';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import Header from "../Header";
+import MaterialReactTable from "material-react-table";
+import "../admin/admin.css";
+import { getUserInLocalStorage } from "../../context/getCurrentUser.js";
 import {
   Box,
   Button,
@@ -14,14 +14,13 @@ import {
   Stack,
   TextField,
   Tooltip,
-} from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
+} from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
 
-import axios from 'axios';
-
+import axios from "axios";
+import { toast } from "react-toastify";
+const DOMAIN = process.env.REACT_APP_DOMAIN;
 const QuanLyGiaoVien = () => {
-  // const theme = useTheme();
-
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [tableData, setTableData] = useState([]);
   const [validationErrors, setValidationErrors] = useState({});
@@ -29,20 +28,20 @@ const QuanLyGiaoVien = () => {
 
   const currentUser = getUserInLocalStorage();
 
+  const getAllDepartment = async () => {
+    try {
+      const allDepartment = await axios.get(
+        `${DOMAIN}/teachers/${currentUser.maKhoa}`,
+        {
+          withCredentials: true,
+        }
+      );
+      setTableData(allDepartment.data);
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
   useEffect(() => {
-    const getAllDepartment = async () => {
-      try {
-        const allDepartment = await axios.get(
-          `http://localhost:8800/api/teachers/${currentUser.maKhoa}`,
-          {
-            withCredentials: true,
-          }
-        );
-        setTableData(allDepartment.data);
-      } catch (error) {
-        console.log(error.response.data);
-      }
-    };
     getAllDepartment();
   }, []);
 
@@ -50,29 +49,23 @@ const QuanLyGiaoVien = () => {
   const handleCreateNewRow = async (values) => {
     // console.log(values);
     try {
-      const res = await axios.post(
-        `http://localhost:8800/api/teachers/${currentUser.maKhoa}`,
-        values,
-        {
-          withCredentials: true,
-        }
-      );
+      await axios.post(`${DOMAIN}/teachers/${currentUser.maKhoa}`, values, {
+        withCredentials: true,
+      });
+      getAllDepartment();
       tableData.push(values);
       setTableData([...tableData]);
-      console.log(res.data);
+      toast.success("Thêm giáo viên thành công");
     } catch (error) {
-      setErr(error.response.data);
+      // setErr(error.response.data);
+      toast.error(error.response.data);
     }
   };
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
       tableData[row.index] = values;
-      // console.log(row);
-      // console.log(values);
-      // const maKhoa = row.original.maKhoa;
-      // console.log(maKhoa);
-      axios.put(
+      await axios.put(
         `http://localhost:8800/api/teachers/${currentUser.maKhoa}/${values.maGv}`,
         values,
         {
@@ -82,6 +75,7 @@ const QuanLyGiaoVien = () => {
       //send/receive api updates here, then refetch or update local table data for re-render
       setTableData([...tableData]);
       exitEditingMode(); //required to exit editing mode and close modal
+      toast.success("Sửa giáo viên thành công");
     }
   };
 
@@ -91,115 +85,68 @@ const QuanLyGiaoVien = () => {
 
   const handleDeleteRow = useCallback(
     async (row) => {
-      if (
-        !window.confirm(
-          `Are you sure you want to delete ${row.getValue('name')}`
-        )
-      ) {
+      if (!window.confirm(`Bạn có muốn xóa ${row.getValue("name")}`)) {
         return;
       }
       // console.log(row);
       //send api delete request here, then refetch or update local table data for re-render
       await axios.delete(
-        `http://localhost:8800/api/teachers/${currentUser.maKhoa}/${row.original.maGv}`,
+        `${DOMAIN}/teachers/${currentUser.maKhoa}/${row.original.maGv}`,
         {
           withCredentials: true,
         }
       );
       tableData.splice(row.index, 1);
       setTableData([...tableData]);
+      toast.success("Xóa giáo viên thành công");
     },
     [tableData]
-  );
-
-  const getCommonEditTextFieldProps = useCallback(
-    (cell) => {
-      return {
-        error: !!validationErrors[cell.id],
-        helperText: validationErrors[cell.id],
-        onBlur: (event) => {
-          const isValid =
-            cell.column.id === 'email'
-              ? validateEmail(event.target.value)
-              : cell.column.id === 'age'
-              ? validateAge(+event.target.value)
-              : validateRequired(event.target.value);
-          if (!isValid) {
-            //set validation error for cell if invalid
-            setValidationErrors({
-              ...validationErrors,
-              [cell.id]: `${cell.column.columnDef.header} is required`,
-            });
-          } else {
-            //remove validation error for cell if valid
-            delete validationErrors[cell.id];
-            setValidationErrors({
-              ...validationErrors,
-            });
-          }
-        },
-      };
-    },
-    [validationErrors]
   );
 
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'maGv',
-        header: 'Mã GV',
+        accessorKey: "maGv",
+        header: "Mã Giáo Viên",
         enableColumnOrdering: false,
-        // enableEditing: false, //disable editing on this column
         enableSorting: false,
         size: 80,
       },
       {
-        accessorKey: 'name',
-        header: 'Ten',
+        accessorKey: "name",
+        header: "Tên Giáo Viên",
         size: 140,
-        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
-          ...getCommonEditTextFieldProps(cell),
-        }),
       },
       {
-        accessorKey: 'email',
-        header: 'Email',
+        accessorKey: "email",
+        header: "Email",
         size: 140,
-        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
-          ...getCommonEditTextFieldProps(cell),
-        }),
       },
       {
-        accessorKey: 'password',
-        header: 'Password',
-        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
-          ...getCommonEditTextFieldProps(cell),
-        }),
+        accessorKey: "password",
+        header: "Mật Khẩu",
       },
 
       {
-        accessorKey: 'phone_number',
-        header: 'Số Điện Thoại',
-        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
-          ...getCommonEditTextFieldProps(cell),
-        }),
+        accessorKey: "phone_number",
+        header: "Số Điện Thoại",
       },
     ],
-    [getCommonEditTextFieldProps]
+    [tableData]
   );
 
   return (
     <Box m="1.5rem 2.5rem">
       <Header
         title={currentUser.name}
-        subtitle={`Danh sách Giao Vien Khoa ${currentUser.name}`}
+        subtitle={`Danh sách giáo viên khoa ${currentUser.name}`}
       />
       <Box mt="40px">
         <MaterialReactTable
           displayColumnDefOptions={{
-            'mrt-row-actions': {
+            "mrt-row-actions": {
               muiTableHeadCellProps: {
-                align: 'center',
+                align: "center",
               },
               size: 120,
             },
@@ -212,13 +159,13 @@ const QuanLyGiaoVien = () => {
           onEditingRowSave={handleSaveRowEdits}
           onEditingRowCancel={handleCancelRowEdits}
           renderRowActions={({ row, table }) => (
-            <Box sx={{ display: 'flex', gap: '1rem' }}>
-              <Tooltip arrow placement="left" title="Edit">
+            <Box sx={{ display: "flex", gap: "1rem" }}>
+              <Tooltip arrow placement="left" title="Sửa thông tin giáo viên">
                 <IconButton onClick={() => table.setEditingRow(row)}>
                   <Edit />
                 </IconButton>
               </Tooltip>
-              <Tooltip arrow placement="right" title="Delete">
+              <Tooltip arrow placement="right" title="Xóa giáo viên">
                 <IconButton color="error" onClick={() => handleDeleteRow(row)}>
                   <Delete />
                 </IconButton>
@@ -256,8 +203,8 @@ export const CreateNewAccountModal = ({
   onSubmit,
 }) => {
   const [values, setValues] = useState({
-    maGv: '',
-    name: '',
+    maGv: "",
+    name: "",
   });
 
   const handleChange = (e) => {
@@ -281,21 +228,28 @@ export const CreateNewAccountModal = ({
         <form onSubmit={(e) => e.preventDefault()}>
           <Stack
             sx={{
-              width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
+              width: "100%",
+              minWidth: { xs: "300px", sm: "360px", md: "400px" },
+              gap: "1.5rem",
             }}
           >
-            <TextField label="Ma GV" name="maGv" onChange={handleChange} />
-
-            <TextField label="Ten" name="name" onChange={handleChange} />
+            <TextField
+              label="Mã Giáo Viên"
+              name="maGv"
+              onChange={handleChange}
+            />
+            <TextField
+              label="Tên Giáo Viên"
+              name="name"
+              onChange={handleChange}
+            />
           </Stack>
         </form>
         {err && err}
       </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
+      <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
-          Cancel
+          Thoát
         </Button>
         <Button color="secondary" onClick={handleSubmit} variant="contained">
           Thêm Mới
