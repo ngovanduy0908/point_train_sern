@@ -10,7 +10,14 @@ import {
   TextField,
 } from "@mui/material";
 
-export default function FormDialog({ open, handleClose, data, currentUser }) {
+export default function FormDialog({
+  open,
+  handleClose,
+  data,
+  currentUser,
+  setOpen,
+  fetchData,
+}) {
   const { start_time_student, end_time_student, end_time_monitor } = data;
   const [startTimeStudent, setStartTimeStudent] = useState(
     start_time_student || ""
@@ -31,7 +38,10 @@ export default function FormDialog({ open, handleClose, data, currentUser }) {
           withCredentials: true,
         }
       );
-      window.location.href = "http://localhost:3000/quanlythoigian";
+      fetchData();
+      setOpen(false);
+      // toast.success('')
+      // window.location.href = "http://localhost:3000/quanlythoigian";
     } catch (error) {
       console.log(error.message);
     }
@@ -39,11 +49,7 @@ export default function FormDialog({ open, handleClose, data, currentUser }) {
     // console.log(values);
   };
   return (
-    <div
-      style={{
-        width: "35%",
-      }}
-    >
+    <div>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -51,15 +57,20 @@ export default function FormDialog({ open, handleClose, data, currentUser }) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {start_time_student ? "Update deadline" : "Create new deadline"}
+          {start_time_student ? "Cập nhật thời gian" : "Thêm mới thời gian"}
         </DialogTitle>
         <DialogContent>
-          <form onSubmit={(e) => e.preventDefault()}>
+          <form
+            onSubmit={(e) => e.preventDefault()}
+            style={{
+              width: "460px",
+            }}
+          >
             <TextField
               name="start_time_student"
               value={startTimeStudent}
               onChange={(e) => setStartTimeStudent(e.target.value)}
-              label="Thoi Gian Sinh Vien Bat Dau Cham"
+              label="Thời Gian Sinh Viên Bắt Đầu Chấm"
               variant="outlined"
               margin="dense"
               fullWidth
@@ -69,7 +80,7 @@ export default function FormDialog({ open, handleClose, data, currentUser }) {
               name="end_time_student"
               value={endTimeStudent}
               onChange={(e) => setEndTimeStudent(e.target.value)}
-              label="Thoi Gian Sinh Vien Ket Thuc Cham"
+              label="Thời Gian Sinh Viên Kết Thúc Chấm"
               variant="outlined"
               margin="dense"
               fullWidth
@@ -79,7 +90,7 @@ export default function FormDialog({ open, handleClose, data, currentUser }) {
               name="end_time_monitor"
               value={endTimeMonitor}
               onChange={(e) => setEndTimeMonitor(e.target.value)}
-              label="Thoi Gian Lop Truong Duyet"
+              label="Thời Gian Lớp Trưởng Duyệt"
               variant="outlined"
               margin="dense"
               fullWidth
@@ -89,14 +100,14 @@ export default function FormDialog({ open, handleClose, data, currentUser }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="secondary" variant="outlined">
-            Cancel
+            Thoát
           </Button>
           <Button
             color="primary"
             onClick={() => handleSubmit()}
             variant="contained"
           >
-            {start_time_student ? "Luu" : "Submit"}
+            {start_time_student ? "Lưu" : "Tạo"}
           </Button>
         </DialogActions>
       </Dialog>

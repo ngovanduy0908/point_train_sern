@@ -26,7 +26,8 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import Modal from "components/modal/Modal";
 import XetDiemRenLuyenMonitor from "pages/gv/XetDiemRenLuyenMonitor";
-
+import { toast } from "react-toastify";
+const DOMAIN = process.env.REACT_APP_DOMAIN;
 const QuanLyHocSinh = () => {
   const { maLop } = useParams();
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -83,21 +84,18 @@ const QuanLyHocSinh = () => {
     }
   };
 
-  // console.log(semesterData);
-  // console.log(tableData);
   const handleCreateNewRow = async (values) => {
-    // console.log(values);
-    // console.log(maLop);
-
     try {
-      await axios.post(`http://localhost:8800/api/students/${maLop}`, values, {
+      await axios.post(`${DOMAIN}/students/${maLop}`, values, {
         withCredentials: true,
       });
+      getAllClass();
       tableData.push(values);
       setTableData([...tableData]);
-      window.location.href = `http://localhost:3000/quanlylopchunhiem/${maLop}`;
+      toast.success("Thêm mới sinh viên thành công");
     } catch (error) {
-      setErr(error.response.data);
+      // setErr(error.response.data);
+      toast.error("Thêm mới sinh viên thất bại");
     }
   };
 
@@ -106,7 +104,7 @@ const QuanLyHocSinh = () => {
       tableData[row.index] = values;
       // console.log(values);
       axios.put(
-        `http://localhost:8800/api/students/change-student/${row.original.maSv}`,
+        `${DOMAIN}/students/change-student/${row.original.maSv}`,
         values,
         {
           withCredentials: true,
@@ -115,6 +113,7 @@ const QuanLyHocSinh = () => {
       //send/receive api updates here, then refetch or update local table data for re-render
       setTableData([...tableData]);
       exitEditingMode(); //required to exit editing mode and close modal
+      toast.success("Sửa thông tin thành công");
     }
   };
 
@@ -124,77 +123,42 @@ const QuanLyHocSinh = () => {
 
   const handleDeleteRow = useCallback(
     async (row) => {
-      if (
-        !window.confirm(
-          `Are you sure you want to delete ${row.getValue("name")}`
-        )
-      ) {
+      if (!window.confirm(`Bạn có muốn xóa ${row.getValue("name")}`)) {
         return;
       }
-      // console.log(row);
-      //send api delete request here, then refetch or update local table data for re-render
-      await axios.delete(
-        `http://localhost:8800/api/students/${row.original.maSv}`,
-        {
-          withCredentials: true,
-        }
-      );
+
+      await axios.delete(`${DOMAIN}/students/${row.original.maSv}`, {
+        withCredentials: true,
+      });
       tableData.splice(row.index, 1);
       setTableData([...tableData]);
     },
     [tableData]
   );
 
-  const handleChangeChucVu = (e, maSv) => {
-    if (!window.confirm(`Are you sure you want to change Chuc Vu`)) {
+  const handleChangeChucVu = async (e, sinhVien) => {
+    if (!window.confirm(`Bạn có muốn thay đổi chức vụ không?`)) {
       return;
     }
     try {
-      axios.put(
-        `http://localhost:8800/api/students/change-role/${maSv}/${e.target.value}`,
+      // const maLop =
+      const { maSv, maLop } = sinhVien;
+      // console.log("sinh vien: ", sinhVien);
+      await axios.put(
+        `${DOMAIN}/students/change-role/${maSv}/${e.target.value}?maLop=${maLop}`,
         maLop,
         {
           withCredentials: true,
         }
       );
-      window.location.href = `http://localhost:3000/quanlylopchunhiem/${maLop}`;
-      // getAllClass();
+      getAllClass();
+      toast.success("Thay đổi thành công");
     } catch (error) {
+      toast.warn(error.response.data);
+
       console.log(error);
     }
-    // console.log(maSv);
   };
-
-  const getCommonEditTextFieldProps = useCallback(
-    (cell) => {
-      return {
-        error: !!validationErrors[cell.id],
-        helperText: validationErrors[cell.id],
-        onBlur: (event) => {
-          const isValid =
-            cell.column.id === "email"
-              ? validateEmail(event.target.value)
-              : cell.column.id === "age"
-              ? validateAge(+event.target.value)
-              : validateRequired(event.target.value);
-          if (!isValid) {
-            //set validation error for cell if invalid
-            setValidationErrors({
-              ...validationErrors,
-              [cell.id]: `${cell.column.columnDef.header} is required`,
-            });
-          } else {
-            //remove validation error for cell if valid
-            delete validationErrors[cell.id];
-            setValidationErrors({
-              ...validationErrors,
-            });
-          }
-        },
-      };
-    },
-    [validationErrors]
-  );
 
   const columns = useMemo(
     () => [
@@ -210,9 +174,6 @@ const QuanLyHocSinh = () => {
         accessorKey: "name",
         header: "Họ Và Tên",
         size: 140,
-        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
-          ...getCommonEditTextFieldProps(cell),
-        }),
       },
       {
         accessorKey: "role_id",
@@ -225,7 +186,7 @@ const QuanLyHocSinh = () => {
               labelId="demo-simple-select-label"
               id="demo-simple-select"
               value={row.original.role_id}
-              onChange={(e) => handleChangeChucVu(e, row.original.maSv)}
+              onChange={(e) => handleChangeChucVu(e, row.original)}
             >
               {roleData.map(
                 (item) =>
@@ -241,7 +202,7 @@ const QuanLyHocSinh = () => {
         ),
       },
     ],
-    [getCommonEditTextFieldProps, roleData]
+    [roleData, tableData]
   );
 
   return (
@@ -285,12 +246,12 @@ const QuanLyHocSinh = () => {
           onEditingRowCancel={handleCancelRowEdits}
           renderRowActions={({ row, table }) => (
             <Box sx={{ display: "flex", gap: "1rem" }}>
-              <Tooltip arrow placement="left" title="Edit">
+              <Tooltip arrow placement="left" title="Sửa thông tin">
                 <IconButton onClick={() => table.setEditingRow(row)}>
                   <Edit />
                 </IconButton>
               </Tooltip>
-              <Tooltip arrow placement="right" title="Delete">
+              <Tooltip arrow placement="right" title="Xóa sinh viên">
                 <IconButton color="error" onClick={() => handleDeleteRow(row)}>
                   <Delete />
                 </IconButton>
@@ -312,7 +273,7 @@ const QuanLyHocSinh = () => {
                 onClick={() => setCreateUploadFileStudent(true)}
                 variant="contained"
               >
-                Upload file sinh vien
+                Upload file danh sách SV
               </Button>
 
               <Button
@@ -320,7 +281,7 @@ const QuanLyHocSinh = () => {
                 onClick={() => setCreateUploadPointStudent(true)}
                 variant="contained"
               >
-                Quan Ly Diem Tuan CDSV
+                Quản Lý Điểm Tuần CDSV
               </Button>
 
               <Button
@@ -328,7 +289,7 @@ const QuanLyHocSinh = () => {
                 onClick={() => setCreateUploadPointMediumStudent(true)}
                 variant="contained"
               >
-                Quan Ly Diem TBHK
+                Quản Lý Điểm TBHK
               </Button>
             </>
           )}
@@ -411,16 +372,24 @@ export const CreateNewAccountModal = ({ err, open, onClose, onSubmit }) => {
               gap: "1.5rem",
             }}
           >
-            <TextField label="Ma SV" name="maSv" onChange={handleChange} />
+            <TextField
+              label="Mã Sinh Viên"
+              name="maSv"
+              onChange={handleChange}
+            />
 
-            <TextField label="Ten SV" name="name" onChange={handleChange} />
+            <TextField
+              label="Tên Sinh Viên"
+              name="name"
+              onChange={handleChange}
+            />
           </Stack>
         </form>
         {err && err}
       </DialogContent>
       <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
-          Cancel
+          Thoát
         </Button>
         <Button color="secondary" onClick={handleSubmit} variant="contained">
           Thêm Mới
@@ -460,7 +429,7 @@ export const CreateUploadFileSV = ({ err, open, onClose, maLop }) => {
 
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign="center">Upload file student</DialogTitle>
+      <DialogTitle textAlign="center">Upload Danh Sách SV</DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit}>
           <TextField type="file" onChange={handleFileUpload} />
@@ -470,7 +439,7 @@ export const CreateUploadFileSV = ({ err, open, onClose, maLop }) => {
       </DialogContent>
       <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
-          Cancel
+          Thoát
         </Button>
       </DialogActions>
     </Dialog>
@@ -497,7 +466,9 @@ export const CreateChooseSemesterModel = ({
 
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign="center">Chon Hoc Ki Upload Diem CDSV</DialogTitle>
+      <DialogTitle textAlign="center">
+        Chọn HK Upload Điểm Tuần CDSV
+      </DialogTitle>
       <DialogContent>
         <form onSubmit={(e) => e.preventDefault()}>
           <Stack
@@ -508,12 +479,12 @@ export const CreateChooseSemesterModel = ({
             }}
           >
             <FormControl fullWidth required={true}>
-              <InputLabel id="demo-simple-select-label">Chon Hoc Ki</InputLabel>
+              <InputLabel id="demo-simple-select-label">Chọn Học Kì</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={value}
-                label="Chon Hoc Ki"
+                label="Chọn Học Kì"
                 name="maHK"
                 onChange={handleChange}
               >
@@ -530,10 +501,10 @@ export const CreateChooseSemesterModel = ({
       </DialogContent>
       <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
-          Cancel
+          Thoát
         </Button>
         <Button color="secondary" onClick={handleSubmit} variant="contained">
-          Chon
+          Chọn
         </Button>
       </DialogActions>
     </Dialog>
@@ -556,20 +527,11 @@ export const CreateChooseSemesterTwoModel = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     navigate(`/quanlylopchunhiem/uploadfiletbhk/${maLop}/${value}`);
-    // console.log(formData);
-    // try {
-    //   axios.post(`http://localhost:8800/api/excel/students/${maLop}`, value, {
-    //     withCredentials: true,
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    // console.log(value);
   };
 
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign="center">Chon Hoc Ki Upload Diem TBHK</DialogTitle>
+      <DialogTitle textAlign="center">Chọn HK Upload Điểm TBHK</DialogTitle>
       <DialogContent>
         <form onSubmit={(e) => e.preventDefault()}>
           <Stack
@@ -580,12 +542,12 @@ export const CreateChooseSemesterTwoModel = ({
             }}
           >
             <FormControl fullWidth required={true}>
-              <InputLabel id="demo-simple-select-label">Chon Hoc Ki</InputLabel>
+              <InputLabel id="demo-simple-select-label">Chọn Học Kì</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={value}
-                label="Chon Hoc Ki"
+                label="Chọn Học Kì"
                 name="maHK"
                 onChange={handleChange}
               >
@@ -602,24 +564,14 @@ export const CreateChooseSemesterTwoModel = ({
       </DialogContent>
       <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
-          Cancel
+          Thoát
         </Button>
         <Button color="secondary" onClick={handleSubmit} variant="contained">
-          Chon
+          Chọn
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
-
-const validateRequired = (value) => !!value.length;
-const validateEmail = (email) =>
-  !!email.length &&
-  email
-    .toLowerCase()
-    .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    );
-const validateAge = (age) => age >= 18 && age <= 50;
 
 export default QuanLyHocSinh;

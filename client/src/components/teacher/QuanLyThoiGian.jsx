@@ -20,7 +20,8 @@ import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
 import axios from "axios";
 import { getUserInLocalStorage } from "context/getCurrentUser";
 import FormDialog from "./Dialog";
-
+import { toast } from "react-toastify";
+const DOMAIN = process.env.REACT_APP_DOMAIN;
 const QuanLyThoiGian = () => {
   // const theme = useTheme();
   const currentUser = getUserInLocalStorage();
@@ -43,7 +44,7 @@ const QuanLyThoiGian = () => {
   const getAllDeadline = async () => {
     try {
       const allDeadline = await axios.get(
-        `http://localhost:8800/api/deadlines/${currentUser.maGv}`,
+        `${DOMAIN}/deadlines/${currentUser.maGv}`,
         {
           withCredentials: true,
         }
@@ -55,18 +56,14 @@ const QuanLyThoiGian = () => {
   };
 
   const handleCreateNewRow = async (values) => {
-    console.log(values);
     try {
-      const res = await axios.post(
-        `http://localhost:8800/api/deadlines/${currentUser.maGv}`,
-        values,
-        {
-          withCredentials: true,
-        }
-      );
+      await axios.post(`${DOMAIN}/deadlines/${currentUser.maGv}`, values, {
+        withCredentials: true,
+      });
+      getAllDeadline();
       tableData.push(values);
       setTableData([...tableData]);
-      console.log(res.data);
+      toast.success("Thêm thời gian thành công");
     } catch (error) {
       setErr(error.response.data);
     }
@@ -75,13 +72,9 @@ const QuanLyThoiGian = () => {
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
       tableData[row.index] = values;
-      axios.put(
-        `http://localhost:8800/api/departments/${values.maKhoa}`,
-        values,
-        {
-          withCredentials: true,
-        }
-      );
+      await axios.put(`${DOMAIN}/departments/${values.maKhoa}`, values, {
+        withCredentials: true,
+      });
       setTableData([...tableData]);
       exitEditingMode(); //required to exit editing mode and close modal
     }
@@ -99,54 +92,20 @@ const QuanLyThoiGian = () => {
       }
       // console.log(row);
       //send api delete request here, then refetch or update local table data for re-render
-      await axios.delete(
-        `http://localhost:8800/api/deadlines/${currentUser.maGv}`,
-        {
-          withCredentials: true,
-        }
-      );
+      await axios.delete(`${DOMAIN}/deadlines/${currentUser.maGv}`, {
+        withCredentials: true,
+      });
       tableData.splice(row.index, 1);
       setTableData([...tableData]);
     },
     [tableData, currentUser.maGv]
   );
 
-  const getCommonEditTextFieldProps = useCallback(
-    (cell) => {
-      return {
-        error: !!validationErrors[cell.id],
-        helperText: validationErrors[cell.id],
-        onBlur: (event) => {
-          const isValid =
-            cell.column.id === "email"
-              ? validateEmail(event.target.value)
-              : cell.column.id === "age"
-              ? validateAge(+event.target.value)
-              : validateRequired(event.target.value);
-          if (!isValid) {
-            //set validation error for cell if invalid
-            setValidationErrors({
-              ...validationErrors,
-              [cell.id]: `${cell.column.columnDef.header} is required`,
-            });
-          } else {
-            //remove validation error for cell if valid
-            delete validationErrors[cell.id];
-            setValidationErrors({
-              ...validationErrors,
-            });
-          }
-        },
-      };
-    },
-    [validationErrors]
-  );
-
   const columns = useMemo(
     () => [
       {
         accessorKey: "start_time_student",
-        header: "Thoi Gian Sinh Vien Bat Dau Cham",
+        header: "Sinh Viên Bắt Đầu Chấm",
         enableColumnOrdering: false,
         enableEditing: false, //disable editing on this column
         enableSorting: false,
@@ -154,27 +113,21 @@ const QuanLyThoiGian = () => {
       },
       {
         accessorKey: "end_time_student",
-        header: "Thoi Gian Sinh Vien Ket Thuc Cham",
+        header: "Sinh Viên Kết Thúc Chấm",
         size: 140,
-        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
-          ...getCommonEditTextFieldProps(cell),
-        }),
       },
       {
         accessorKey: "end_time_monitor",
-        header: "Thoi Gian Lop Truong Ket Thuc Cham",
+        header: "Lớp Trưởng Kết Thúc Duyệt",
         size: 140,
-        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
-          ...getCommonEditTextFieldProps(cell),
-        }),
       },
     ],
-    [getCommonEditTextFieldProps]
+    [tableData]
   );
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title={currentUser.name} subtitle="Thoi Gian Cham, Duyet Diem" />
+      <Header title={currentUser.name} subtitle="Thời Gian Chấm, Duyệt Điểm" />
       <Box mt="40px">
         <MaterialReactTable
           displayColumnDefOptions={{
@@ -197,12 +150,12 @@ const QuanLyThoiGian = () => {
               sx={{ display: "flex", gap: "1rem" }}
               onClick={() => console.log(row)}
             >
-              <Tooltip arrow placement="left" title="Edit">
+              <Tooltip arrow placement="left" title="Sửa Thời Gian">
                 <IconButton onClick={handleClickOpen}>
                   <Edit />
                 </IconButton>
               </Tooltip>
-              <Tooltip arrow placement="right" title="Delete">
+              <Tooltip arrow placement="right" title="Xóa Thời Gian">
                 <IconButton color="error" onClick={() => handleDeleteRow(row)}>
                   <Delete />
                 </IconButton>
@@ -238,6 +191,8 @@ const QuanLyThoiGian = () => {
             open={open}
             handleClose={handleClose}
             data={tableData[0]}
+            setOpen={setOpen}
+            fetchData={getAllDeadline}
           />
         )}
       </Box>
@@ -305,15 +260,5 @@ export const CreateNewAccountModal = ({
     </Dialog>
   );
 };
-
-const validateRequired = (value) => !!value.length;
-const validateEmail = (email) =>
-  !!email.length &&
-  email
-    .toLowerCase()
-    .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    );
-const validateAge = (age) => age >= 18 && age <= 50;
 
 export default QuanLyThoiGian;
