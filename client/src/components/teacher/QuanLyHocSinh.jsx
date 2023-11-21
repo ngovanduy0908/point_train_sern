@@ -415,13 +415,9 @@ export const CreateUploadFileSV = ({ err, open, onClose, maLop }) => {
     formData.append("file", file);
     // console.log(formData);
     try {
-      axios.post(
-        `http://localhost:8800/api/excel/students/${maLop}`,
-        formData,
-        {
-          withCredentials: true,
-        }
-      );
+      axios.post(`${DOMAIN}/excel/students/${maLop}`, formData, {
+        withCredentials: true,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -429,11 +425,19 @@ export const CreateUploadFileSV = ({ err, open, onClose, maLop }) => {
 
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign="center">Upload Danh Sách SV</DialogTitle>
+      <DialogTitle textAlign="center">Upload Danh Sách Sinh Viên</DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit}>
           <TextField type="file" onChange={handleFileUpload} />
-          <Button type="submit">Upload</Button>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              marginTop: "15px",
+            }}
+          >
+            Upload
+          </Button>
         </form>
         {err && err}
       </DialogContent>
