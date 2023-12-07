@@ -21,6 +21,7 @@ import { AuthContext } from "../../context/authContext";
 const pages = ["TRANG WEB ĐÀO TẠO", "TRANG WEB CNTT", "TRANG WEB HUMG"];
 
 function ResponsiveAppBar() {
+  // console.log("trang login : ", socket);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
@@ -128,7 +129,8 @@ function ResponsiveAppBar() {
   );
 }
 
-const Login = () => {
+const Login = ({ socket }) => {
+  // console.log("socket ne: ", socket);
   const [inputs, setInputs] = useState({
     tk: "",
     mk: "",
@@ -145,7 +147,11 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await login(inputs);
+      const value = await login(inputs);
+      console.log("value login: ", value.maSv);
+      if (value.maSv) {
+        socket.emit("newUser", value);
+      }
       navigate("/");
     } catch (err) {
       setErr(err.response.data);

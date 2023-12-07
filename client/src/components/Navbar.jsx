@@ -6,39 +6,60 @@ import {
   SettingsOutlined,
   ArrowDropDownOutlined,
 } from "@mui/icons-material";
-import LanguageIcon from "@mui/icons-material/Language";
 import FlexBetween from "components/FlexBetween";
+import LanguageIcon from "@mui/icons-material/Language";
+import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import { useDispatch } from "react-redux";
 import { setMode } from "state";
 import {
   AppBar,
+  Badge,
   Box,
   Button,
   IconButton,
   Menu,
   MenuItem,
+  SvgIcon,
   Toolbar,
+  Tooltip,
   Typography,
   useTheme,
 } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
+import { formatDayNotification } from "utils/formatDay";
+const Navbar = ({
+  user,
+  isSidebarOpen,
+  setIsSidebarOpen,
+  notifications,
+  socket,
+}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useTheme();
-  // console.log(user);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorElV1, setAnchorElV1] = useState(null);
+  console.log("theme navbar: ", theme);
   const isOpen = Boolean(anchorEl);
+  const isOpenNoti = Boolean(anchorElV1);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
+  const handleClickV1 = (event) => setAnchorElV1(event.currentTarget);
+
   const handleClose = async () => {
     setAnchorEl(null);
+  };
+  const handleCloseV1 = async () => {
+    setAnchorElV1(null);
   };
 
   const handleLogout = async () => {
     await axios.post("http://localhost:8800/api/auth/logout");
     localStorage.removeItem("user");
+    if (socket) {
+      socket.emit("logoutUser", user?.maSv);
+      // console.log("remove nguoi dung");
+    }
     navigate("/login");
   };
 
@@ -68,8 +89,6 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
             <Typography
               variant="h6"
               noWrap
-              // component="a"
-              // href="/"
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -97,6 +116,48 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
           <IconButton>
             <SettingsOutlined sx={{ fontSize: "25px" }} />
           </IconButton>
+          <FlexBetween>
+            {notifications?.length ? (
+              <Tooltip title="Notifications">
+                <IconButton onClick={handleClickV1}>
+                  <Badge badgeContent={`${notifications?.length}`}>
+                    <SvgIcon fontSize="large">
+                      <NotificationsNoneIcon />
+                    </SvgIcon>
+                  </Badge>
+                </IconButton>
+              </Tooltip>
+            ) : (
+              ""
+            )}
+            <Menu
+              anchorEl={anchorElV1}
+              open={isOpenNoti}
+              onClose={handleCloseV1}
+              placement="bottom-start"
+              // anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            >
+              {notifications?.length ? (
+                notifications.map((item, idx) => (
+                  <MenuItem
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "start",
+                      backgroundColor: `${theme.palette.secondary[300]}`,
+                      color: `${theme.palette.primary[600]}`,
+                      marginTop: "5px",
+                    }}
+                  >
+                    <h4>Lớp trưởng đã duyệt điểm rèn luyện cho bạn </h4>
+                    <span>{formatDayNotification(item.currentTime)}</span>
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem>No Notification</MenuItem>
+              )}
+            </Menu>
+          </FlexBetween>
 
           <FlexBetween>
             <Button

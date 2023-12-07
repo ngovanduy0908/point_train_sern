@@ -583,3 +583,14 @@ export const insertOrUpdatePointTeacher = (req, res) => {
     }
   });
 };
+
+// danh sách điểm rèn luyện
+export const getListPointByMaSV = (req, res) => {
+  const { maSv } = req.query;
+  // console.log("xuong get danh sach diem: ", maSv);
+  const query = `SELECT semester.name, point.* from semester, point WHERE point.maHK = semester.maHK and point.maSv = '${maSv}'`;
+  db.query(query, (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(200).json(data);
+  });
+};

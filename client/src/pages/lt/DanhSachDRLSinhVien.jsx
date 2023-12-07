@@ -18,7 +18,8 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import DanhSachSVChuaChamDRL from "./DanhSachSVChuaChamDRL";
 const DOMAIN = process.env.REACT_APP_DOMAIN;
-const DanhSachDRLSinhVien = () => {
+const DanhSachDRLSinhVien = ({ socket }) => {
+  // console.log("vao dan hsach sinh vien: ", socket);
   const currentUser = getUserInLocalStorage();
   const { maHK } = useParams();
   const maLop = currentUser?.maLop;
@@ -289,6 +290,8 @@ const DanhSachDRLSinhVien = () => {
           fetchData={fetchData}
           setOpen={setOpenFormDRL}
           sinhVienItem={sinhVienItem}
+          currentUser={currentUser}
+          socket={socket}
         />
       </ModalV1>
 

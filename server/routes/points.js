@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getCitizenMediumByMaSv,
+  getListPointByMaSV,
   getPointMonitorByMa,
   getPointStudentByMa,
   getPointStudentByMaLopAndMaHK,
@@ -21,6 +22,7 @@ router.get("/get_point_monitor", getPointMonitorByMa);
 router.get("/studentNoMark", getPointStudentNoMark);
 router.get("/get_point_teacher", getPointStudentTeacherByMaLopAndMaHK);
 router.get("/point_teacher", getPointTeacherByMa);
+router.get("/list_point", getListPointByMaSV);
 router.post("/insert_or_update/:maHK/:maSv", insertOrUpdatePointStudent);
 router.post("/insert_or_update_monitor", insertOrUpdatePointStudentMonitor);
 router.post("/mark_zero", markZero);

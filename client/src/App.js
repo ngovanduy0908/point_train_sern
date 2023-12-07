@@ -1,12 +1,9 @@
 import "./App.scss";
-
 import { AuthContext } from "./context/authContext";
 import Login from "./pages/login/Login";
 import ChangeInfoOne from "./pages/login/ChangeInfoOne";
-
 // import Khoa from './pages/khoa/Khoa';
-import { useContext, useMemo } from "react";
-
+import { useContext, useEffect, useMemo, useState } from "react";
 import SV from "./pages/sv/SV";
 import { themeSettings } from "./theme.js";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
@@ -43,11 +40,25 @@ import GenerateDocument from "components/monitor/GenerateDocument ";
 import XetDiemRenLuyen from "pages/lt/XetDiemRenLuyen";
 import DanhSachDRLSinhVien from "pages/lt/DanhSachDRLSinhVien";
 import DanhSachDiemRenLuyenLT from "pages/gv/DanhSachDiemRenLuyenLT";
+import { io } from "socket.io-client";
+import DanhSachDRL from "pages/sv/DanhSachDRL";
+const IO = process.env.REACT_APP_IO;
 function App() {
   const mode = useSelector((state) => state.global.mode);
-
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   const { currentUser } = useContext(AuthContext);
+  const [socket, setSocket] = useState();
+
+  useEffect(() => {
+    const socketIo = io(`${IO}`);
+    // setSocket(io(`${IO}`));
+    setSocket(socketIo);
+    // console.log("current user ban đầu: ", currentUser);
+    if (currentUser) {
+      // console.log("current user tôn tai: ", currentUser);
+      socketIo.emit("newUser", currentUser);
+    }
+  }, [currentUser]);
 
   if (currentUser) {
     var tk = currentUser.tk;
@@ -144,7 +155,13 @@ function App() {
           <Routes>
             {currentUser.role_id === 3 ? (
               <Route
-                element={<LayoutLT currentUser={currentUser} theme={theme} />}
+                element={
+                  <LayoutLT
+                    socket={socket}
+                    currentUser={currentUser}
+                    theme={theme}
+                  />
+                }
               >
                 <Route
                   path="/"
@@ -160,7 +177,7 @@ function App() {
                 <Route path="/xetdiemrenluyen" element={<XetDiemRenLuyen />} />
                 <Route
                   path="/xetdiemrenluyen/:maHK"
-                  element={<DanhSachDRLSinhVien />}
+                  element={<DanhSachDRLSinhVien socket={socket} />}
                 />
 
                 <Route path="/chamdiemrenluyen" element={<PhieuChamDiem />} />
@@ -170,10 +187,17 @@ function App() {
                   element={<AfterMark />}
                 />
                 <Route path="/chamdiemrenluyen/:maHK" element={<Mark />} />
+                <Route path="/xemdiemrenluyen" element={<DanhSachDRL />} />
               </Route>
             ) : (
               <Route
-                element={<LayoutSV currentUser={currentUser} theme={theme} />}
+                element={
+                  <LayoutSV
+                    socket={socket}
+                    currentUser={currentUser}
+                    theme={theme}
+                  />
+                }
               >
                 <Route
                   path="/"
@@ -192,10 +216,17 @@ function App() {
                   element={<AfterMark />}
                 />
                 <Route path="/chamdiemrenluyen/:maHK" element={<Mark />} />
+                <Route path="/xemdiemrenluyen" element={<DanhSachDRL />} />
               </Route>
             )}
             <Route
-              element={<LayoutSV currentUser={currentUser} theme={theme} />}
+              element={
+                <LayoutSV
+                  socket={socket}
+                  currentUser={currentUser}
+                  theme={theme}
+                />
+              }
             >
               <Route
                 path="/"
@@ -204,9 +235,10 @@ function App() {
                 }
               />
               <Route path="/" element={<SV />} />
+              <Route path="/xemdiemrenluyen" element={<DanhSachDRL />} />
             </Route>
             <Route path="/change-info" element={<ChangeInfoOne />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login socket={socket} />} />
             <Route path="/chart" element={<TestChart />} />
             <Route path="/chart/detail" element={<ChartDetail />} />
             <Route path="/excel" element={<Luckysheet />} />
@@ -225,7 +257,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Navigate to="/login" replace />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login socket={socket} />} />
             <Route path="/chart" element={<TestChart />} />
             <Route path="/chart/detail" element={<ChartDetail />} />
             <Route path="/excel" element={<Luckysheet />} />

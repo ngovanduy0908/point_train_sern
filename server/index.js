@@ -14,7 +14,7 @@ import pointCitizenRouter from "./routes/point_citizens.js";
 import pointMediumRouter from "./routes/point_mediums.js";
 import pointMarkRouter from "./routes/points.js";
 import proofMarkRouter from "./routes/proof_mark.js";
-
+import { Server } from "socket.io";
 import multer from "multer";
 import xlsx from "xlsx";
 import { db } from "./db.js";
@@ -180,6 +180,64 @@ app.post("/api/upload", upload.array("images", 10), (req, res) => {
 
   return res.status(200).json(uploadedFiles);
 });
+
+// socket
+const io = new Server({
+  /* options */
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+
+let onlineUsers = [];
+
+const addNewUser = (maSv, socketId) => {
+  // console.log("vao add new user: ", socketId);
+  !onlineUsers.some((user) => user.maSv === maSv) &&
+    onlineUsers.push({ maSv, socketId });
+  // console.log("onlineUsers: ", onlineUsers);
+};
+
+const removeUser = (socketId) => {
+  onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
+};
+
+const getUser = (maSv) => {
+  return onlineUsers.find((user) => user.maSv === maSv);
+};
+
+io.on("connection", (socket) => {
+  // console.log("socket: ", socket.id);
+  socket.on("newUser", (user) => {
+    addNewUser(user.maSv, socket.id);
+    // console.log("vao day di ma, please: ", socket.id);
+  });
+
+  socket.on("sendNotification", ({ senderName, receiverName }) => {
+    // console.log("vao day xem ano: ", senderName, receiverName);
+    const receiver = getUser(receiverName);
+    // console.log("receiver no ti: ", receiverName);
+    if (receiver) {
+      // console.log("người nhận: ", receiver.socketId);
+      io.to(receiver.socketId).emit("getNotification", {
+        senderName,
+        currentTime: Date.now(),
+      });
+    }
+  });
+
+  socket.on("logoutUser", (id) => {
+    removeUser(id);
+    // console.log("online user logout: ", onlineUsers);
+  });
+
+  socket.on("disconnect", () => {
+    // removeUser(socket.id);
+    console.log("someone has left: ");
+  });
+});
+
+io.listen(5000);
 
 app.listen(8800, () => {
   console.log("I Am Ready");

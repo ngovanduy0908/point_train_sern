@@ -156,3 +156,42 @@ export const deleteStudent = (req, res) => {
     return res.status(200).json(data);
   });
 };
+
+export const getInfoForPhieuDiem = (req, res) => {
+  // console.log("xuong day: ", req.query);
+  const { maHK, maSv } = req.query;
+  const q = `
+  SELECT 
+  semester.semester AS 'ki', 
+  semester.maHK AS 'ma_hk', 
+  semester.year AS 'nam_hoc', 
+  course.name AS 'ten_lop', 
+  department.name AS 'khoa', 
+  course.name AS 'khoa_hoc', 
+  point.*, 
+  point_student.*, 
+  point_monitor.*, 
+  point_teacher.* 
+  FROM 
+  students 
+  INNER JOIN class ON students.maLop = class.maLop 
+  INNER JOIN course ON class.maKhoaHoc = course.maKhoaHoc 
+  INNER JOIN department ON class.maKhoa = department.maKhoa 
+  INNER JOIN semester ON semester.maHK = '${maHK}' 
+  LEFT JOIN point ON students.maSv = point.maSv AND 
+  point.maHK = semester.maHK 
+  LEFT JOIN point_student ON students.maSv = point_student.maSv AND 
+  point_student.maHK = semester.maHK 
+  LEFT JOIN point_monitor ON students.maSv = point_monitor.maSv AND 
+  point_monitor.maHK = semester.maHK 
+  LEFT JOIN point_teacher ON students.maSv = point_teacher.maSv AND 
+  point_teacher.maHK = semester.maHK 
+  WHERE 
+  students.maSv = '${maSv}';
+  `;
+  db.query(q, (err, data) => {
+    if (err) return res.status(500).json(err);
+    // console.log("vao day: ", data);
+    return res.status(200).json(...data);
+  });
+};

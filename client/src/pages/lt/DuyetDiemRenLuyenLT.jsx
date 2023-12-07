@@ -10,9 +10,17 @@ import "../../components/student/phieu.css";
 import Input from "components/input/Input";
 import { getPointMonitorByMaSVAndMaHK } from "utils/getDetails/getPointMonitorByMa";
 import { insertOrUpdatePointStudentMonitor } from "utils/postDetails/insertOrUpdatePointMonitor";
+import { io } from "socket.io-client";
+const IO = process.env.REACT_APP_IO;
 const DOMAIN = process.env.REACT_APP_DOMAIN;
 const colSpan = 3;
-const DuyetDiemRenLuyenLT = ({ sinhVienItem, fetchData, setOpen }) => {
+const DuyetDiemRenLuyenLT = ({
+  sinhVienItem,
+  fetchData,
+  setOpen,
+  currentUser,
+  socket,
+}) => {
   const maSv = sinhVienItem.maSv;
   // const navigate = useNavigate();
   const { maHK } = useParams();
@@ -714,12 +722,19 @@ const DuyetDiemRenLuyenLT = ({ sinhVienItem, fetchData, setOpen }) => {
   }, [valuesLT]);
   // end sum lop truong
 
-  /*
-Ở đây, ta dùng destructuring để lấy ra các giá trị của name, checked và value của input element. 
-Sau đó, ta sử dụng setValues để cập nhật giá trị của values với name của checkbox hiện tại và giá trị của value nếu checkbox được checked, hoặc 0 nếu checkbox không được checked.
+  // socket
+  // const [socket, setSocket] = useState();
 
-Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne. Để tính lại giá trị của sumOne, ta sẽ lấy giá trị hiện tại của sumOne và cộng với giá trị mới của checkbox hiện tại (nếu được checked), trừ đi giá trị cũ của checkbox hiện tại. Lưu ý rằng ta phải sử dụng parseInt để chuyển đổi giá trị sang kiểu số nguyên.
-  */
+  // useEffect(() => {
+  //   setSocket(io(`${IO}`));
+  //   // console.log("socket: ", socket);
+  // }, []);
+
+  // useEffect(() => {
+  //   socket?.emit("newUser", sinhVienItem);
+  // }, [socket, sinhVienItem]);
+
+  // end socket
 
   const handleSubmit = async () => {
     try {
@@ -735,6 +750,10 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
       setOpen(false);
       toast.success("Duyệt Điểm Rèn Luyện Thành Công", {
         autoClose: 2000,
+      });
+      socket.emit("sendNotification", {
+        senderName: currentUser.maSv,
+        receiverName: sinhVienItem.maSv,
       });
     } catch (error) {
       toast.success("Cham Diem Ren Luyen That Bai", {

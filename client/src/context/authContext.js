@@ -21,6 +21,7 @@ export const AuthContextProvider = ({ children }) => {
     );
 
     setCurrentUser(res.data);
+    return res.data;
   };
 
   useEffect(() => {

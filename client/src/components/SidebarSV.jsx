@@ -80,6 +80,7 @@ const SidebarSV = ({
   useEffect(() => {
     const a = formatDay(curDate) >= formatDay(timeStartStudentMark);
     const b = formatDay(curDate) <= formatDay(timeEndStudentMark);
+    // console.log("a va b: ", a, b);
     if (a && b) {
       setCheckTimePoint(true);
       const isChamDiemRenLuyenExists = navItemsSV.some(
