@@ -2,6 +2,7 @@ import { Box, Button, Grid } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import FormPhieuCham from "components/student/FormPhieuCham";
 import { generateDocument } from "utils/function/exportFormDRL";
+import { generatePdf } from "utils/function/generatePdf";
 import { AuthContext } from "context/authContext";
 import { getInfoForPhieuDiem } from "utils/getDetails/getInfoForPhieuDiem";
 function calculateTotal(...values) {
@@ -11,16 +12,12 @@ const PhieuDRL = ({ hkItem }) => {
   const { currentUser } = useContext(AuthContext);
   const [info, setInfo] = useState();
   const nameFile = `${currentUser.maSv}_${currentUser.name}_${hkItem.name}`;
-  console.log("currentUser: ", currentUser);
   const fetchData = async () => {
     try {
       const res = await getInfoForPhieuDiem(
         `maSv=${currentUser.maSv}&maHK=${hkItem.maHK}`
       );
-      console.log("res: ", {
-        ...res,
-        ...currentUser,
-      });
+
       const {
         svNCKH1,
         svNCKH2,
@@ -250,6 +247,10 @@ const PhieuDRL = ({ hkItem }) => {
     fetchData();
   }, []);
 
+  const handleBlankPage = () => {
+    window.open(`/print-pdf/${hkItem.maHK}`, "_blank");
+  };
+
   return (
     <Box m="1rem 1.2rem">
       <Box sx={{ flexGrow: 1 }} mb="10px">
@@ -273,7 +274,8 @@ const PhieuDRL = ({ hkItem }) => {
               sx={{
                 width: "100%",
               }}
-              // onClick={() => setOpenFormChonHocKi(true)}
+              // onClick={() => generatePdf(nameFile, info)}
+              onClick={() => handleBlankPage()}
             >
               In file
             </Button>
@@ -294,7 +296,7 @@ const PhieuDRL = ({ hkItem }) => {
         </Grid>
       </Box>
       <div className="max-h-[550px] overflow-x-auto">
-        <FormPhieuCham hkItem={hkItem} />
+        <FormPhieuCham maHK={hkItem.maHK} />
       </div>
     </Box>
   );

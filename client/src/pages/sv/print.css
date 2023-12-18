@@ -1,0 +1,32 @@
+#print input {
+  background-color: transparent;
+  padding: unset;
+  margin: unset;
+}
+
+#print form {
+  padding: 0px !important;
+}
+
+#print p {
+  margin: 0px !important;
+}
+
+#print table {
+  font-size: 13px !important;
+}
+
+#print .textCenter {
+  vertical-align: middle !important;
+  padding: 0px !important;
+}
+
+#print .container__header-info {
+  font-size: 14px;
+}
+
+.table-bordered td,
+.table-bordered th {
+  border: 1px solid #999;
+  vertical-align: middle;
+}

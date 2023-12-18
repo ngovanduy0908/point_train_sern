@@ -8,8 +8,7 @@ import { getPointTeacherByMa } from "utils/getDetails/getPointTeacherByMa";
 const DOMAIN = process.env.REACT_APP_DOMAIN;
 const colSpan = 4;
 
-const FormPhieuCham = ({ hkItem }) => {
-  const { maHK } = hkItem;
+const FormPhieuCham = ({ maHK }) => {
   const { currentUser } = useContext(AuthContext);
   const [studentData, setStudentData] = useState([]);
   const [data, setData] = useState([]);
