@@ -43,6 +43,7 @@ import DanhSachDiemRenLuyenLT from "pages/gv/DanhSachDiemRenLuyenLT";
 import { io } from "socket.io-client";
 import DanhSachDRL from "pages/sv/DanhSachDRL";
 import BlankFilePdf from "pages/sv/BlankFilePdf";
+import BlankFileProof from "pages/sv/BlankFileProof";
 const IO = process.env.REACT_APP_IO;
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -245,6 +246,7 @@ function App() {
             <Route path="/excel" element={<Luckysheet />} />
             <Route path="/word" element={<GenerateDocument />} />
             <Route path="/print-pdf/:maHK" element={<BlankFilePdf />} />
+            <Route path="/print-proof/:maHK" element={<BlankFileProof />} />
           </Routes>
         </BrowserRouter>
       );

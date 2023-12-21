@@ -2,9 +2,11 @@ import { Box, Button, Grid } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import FormPhieuCham from "components/student/FormPhieuCham";
 import { generateDocument } from "utils/function/exportFormDRL";
-import { generatePdf } from "utils/function/generatePdf";
 import { AuthContext } from "context/authContext";
 import { getInfoForPhieuDiem } from "utils/getDetails/getInfoForPhieuDiem";
+import ModalV1 from "components/modal/ModalV1";
+import Modal from "components/modal/Modal";
+import SeeProof from "components/student/SeeProof";
 function calculateTotal(...values) {
   return values.reduce((acc, val) => acc + val, 0);
 }
@@ -12,6 +14,7 @@ const PhieuDRL = ({ hkItem }) => {
   const { currentUser } = useContext(AuthContext);
   const [info, setInfo] = useState();
   const nameFile = `${currentUser.maSv}_${currentUser.name}_${hkItem.name}`;
+  const [openModalProof, setOpenModalProof] = useState(false);
   const fetchData = async () => {
     try {
       const res = await getInfoForPhieuDiem(
@@ -274,7 +277,6 @@ const PhieuDRL = ({ hkItem }) => {
               sx={{
                 width: "100%",
               }}
-              // onClick={() => generatePdf(nameFile, info)}
               onClick={() => handleBlankPage()}
             >
               In file
@@ -287,8 +289,7 @@ const PhieuDRL = ({ hkItem }) => {
               sx={{
                 width: "100%",
               }}
-              // onClick={() => setOpenFormChonHocKi(true)}
-              //   onClick={generateDocument}
+              onClick={() => setOpenModalProof(true)}
             >
               Xem minh chứng
             </Button>
@@ -298,6 +299,16 @@ const PhieuDRL = ({ hkItem }) => {
       <div className="max-h-[550px] overflow-x-auto">
         <FormPhieuCham maHK={hkItem.maHK} />
       </div>
+      <Modal
+        open={openModalProof}
+        setOpen={setOpenModalProof}
+        title={`Minh Chứng - ${hkItem.name}`}
+        classNameChildren={"w-[800px]"}
+        displayButtonOk={false}
+        displayButtonCancel={false}
+      >
+        <SeeProof maHK={hkItem.maHK} />
+      </Modal>
     </Box>
   );
 };

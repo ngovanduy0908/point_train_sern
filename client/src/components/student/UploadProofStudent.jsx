@@ -73,60 +73,6 @@ const UploadProofStudent = ({
     // setChooseFiles((prev) => [...prev, ...fileUrls]);
   };
 
-  // const handleUpload = async () => {
-  //   // TODO khi file change thì mới call api upload img
-  //   let file_img = null;
-  //   let choose_file = chooseFiles;
-  //   // console.log("choose_file: ", choose_file);
-  //   if (handleChangeFile) {
-  //     const formData = new FormData();
-  //     selectedFiles.forEach((file) => {
-  //       formData.append("images", file);
-  //     });
-
-  //     try {
-  //       await axios.post(`${DOMAIN}/upload`, formData).then(async (res) => {
-  //         file_img = res.data.join(",");
-  //         choose_file = [...chooseFiles, file_img];
-  //         const values = {
-  //           name_image: choose_file.length ? choose_file.join(",") : "",
-  //           maSv: maSv,
-  //         };
-  //         console.log("values: ", choose_file);
-  //         await axios
-  //           .post(
-  //             `${DOMAIN}/proof_mark/create_or_update_proof/${maHK}`,
-  //             values,
-  //             {
-  //               withCredentials: true,
-  //             }
-  //           )
-  //           .then(async (res) => {
-  //             toast.success(res.data);
-  //           });
-  //       });
-  //     } catch (error) {
-  //       console.error("Upload error:", error);
-  //     }
-  //   } else {
-  //     try {
-  //       const values = {
-  //         name_image: chooseFiles.length ? chooseFiles.join(",") : "",
-  //         maSv: maSv,
-  //       };
-  //       await axios
-  //         .post(`${DOMAIN}/proof_mark/create_or_update_proof/${maHK}`, values, {
-  //           withCredentials: true,
-  //         })
-  //         .then(async (res) => {
-  //           toast.success(res.data);
-  //         });
-  //     } catch (error) {
-  //       console.error("Upload error:", error);
-  //     }
-  //   }
-  // };
-
   const handleClickDelete = async (index) => {
     setImages((prevFiles) => prevFiles.filter((_, i) => i !== index));
     setChooseFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
