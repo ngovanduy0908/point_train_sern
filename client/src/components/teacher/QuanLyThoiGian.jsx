@@ -21,6 +21,8 @@ import axios from "axios";
 import { getUserInLocalStorage } from "context/getCurrentUser";
 import FormDialog from "./Dialog";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
+import { formatDay } from "utils/function/formatDay";
 const DOMAIN = process.env.REACT_APP_DOMAIN;
 const QuanLyThoiGian = () => {
   // const theme = useTheme();
@@ -110,16 +112,25 @@ const QuanLyThoiGian = () => {
         enableEditing: false, //disable editing on this column
         enableSorting: false,
         size: 80,
+        Cell: ({ cell, row }) => {
+          return <div>{formatDay(row.original.start_time_student)}</div>;
+        },
       },
       {
         accessorKey: "end_time_student",
         header: "Sinh Viên Kết Thúc Chấm",
         size: 140,
+        Cell: ({ cell, row }) => {
+          return <div>{formatDay(row.original.end_time_student)}</div>;
+        },
       },
       {
         accessorKey: "end_time_monitor",
         header: "Lớp Trưởng Kết Thúc Duyệt",
         size: 140,
+        Cell: ({ cell, row }) => {
+          return <div>{formatDay(row.original.end_time_monitor)}</div>;
+        },
       },
     ],
     [tableData]

@@ -40,7 +40,7 @@ const SeeProof = ({ maHK }) => {
           }}
           onClick={() => printProof()}
         >
-          Tải file
+          In minh chứng
         </Button>
       )}
       {listProof.length > 0 ? (

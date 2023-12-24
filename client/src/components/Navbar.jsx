@@ -66,9 +66,12 @@ const Navbar = ({
   return (
     <AppBar
       sx={{
-        position: "static",
-        background: "none",
+        position: "fixed",
+        background: `${theme.palette.background.default}`,
         boxShadow: "none",
+        top: 0,
+        width: `${isSidebarOpen ? "calc(100% - 250px)" : "100%"}`,
+        zIndex: "5",
       }}
     >
       <Toolbar sx={{ justifyContent: "space-between" }}>
