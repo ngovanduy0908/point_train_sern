@@ -7,12 +7,14 @@ import { getInfoForPhieuDiem } from "utils/getDetails/getInfoForPhieuDiem";
 import ModalV1 from "components/modal/ModalV1";
 import Modal from "components/modal/Modal";
 import SeeProof from "components/student/SeeProof";
+import { getGvNote } from "utils/getDetails/getGvNote";
 function calculateTotal(...values) {
   return values.reduce((acc, val) => acc + val, 0);
 }
 const PhieuDRL = ({ hkItem }) => {
   const { currentUser } = useContext(AuthContext);
   const [info, setInfo] = useState();
+  const [note, setNote] = useState();
   const nameFile = `${currentUser.maSv}_${currentUser.name}_${hkItem.name}`;
   const [openModalProof, setOpenModalProof] = useState(false);
   const fetchData = async () => {
@@ -20,6 +22,11 @@ const PhieuDRL = ({ hkItem }) => {
       const res = await getInfoForPhieuDiem(
         `maSv=${currentUser.maSv}&maHK=${hkItem.maHK}`
       );
+      const res1 = await getGvNote(
+        `maSv=${currentUser.maSv}&maHK=${hkItem.maHK}`
+      );
+      // console.log("res: ", res.gvNote);
+      setNote(res1.gvNote);
 
       const {
         svNCKH1,
@@ -297,7 +304,7 @@ const PhieuDRL = ({ hkItem }) => {
         </Grid>
       </Box>
       <div className="max-h-[550px] overflow-x-auto">
-        <FormPhieuCham maHK={hkItem.maHK} />
+        <FormPhieuCham maHK={hkItem.maHK} note={note} />
       </div>
       <Modal
         open={openModalProof}

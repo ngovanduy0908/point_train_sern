@@ -88,8 +88,8 @@ const QuanLyThoiGian = () => {
 
   const handleDeleteRow = useCallback(
     async (row) => {
-      console.log(row);
-      if (!window.confirm(`Are you sure you want to delete deadline`)) {
+      // console.log(row);
+      if (!window.confirm(`Bạn có chắc muốn xóa thời gian không?`)) {
         return;
       }
       // console.log(row);

@@ -1,12 +1,12 @@
-import { db } from '../db.js';
+import { db } from "../db.js";
 
 export const getAllListClass = (req, res) => {
   const token = req.cookies.accessToken;
-  if (!token) return res.status(401).json('Not authenticated');
+  if (!token) return res.status(401).json("Not authenticated");
 
   const maKhoa = req.params.maKhoa;
   const q = `SELECT class.*, teacher.name as teacher_name, course.name as course_name FROM class, teacher, course WHERE class.maKhoaHoc = course.maKhoaHoc and class.maGv = teacher.maGv and class.maKhoa = '${maKhoa}'`;
-  const q1 = 'select * from course';
+  const q1 = "select * from course";
   const q2 = `select * from teacher where maKhoa='${maKhoa}'`;
   let return_data = {};
   db.query(q, (err, data) => {
@@ -28,19 +28,19 @@ export const getAllListClass = (req, res) => {
 
 export const addClass = (req, res) => {
   const token = req.cookies.accessToken;
-  if (!token) return res.status(401).json('Not authenticated');
+  if (!token) return res.status(401).json("Not authenticated");
 
   const maKhoa = req.params.maKhoa;
   const newData = req.body;
   const maLop = newData.maLop;
-  const q = 'select maLop from class where maLop=?';
+  const q = "select maLop from class where maLop=?";
   db.query(q, [maLop], (err, data) => {
     if (err) return res.status(500).json(err);
 
-    if (data.length) return res.status(409).json('Lop da ton tai');
+    if (data.length) return res.status(409).json("Lop da ton tai");
 
     const q =
-      'insert into class(maLop, class_name, maGv, maKhoaHoc, maKhoa) values(?)';
+      "insert into class(maLop, class_name, maGv, maKhoaHoc, maKhoa) values(?)";
 
     const values = [
       newData.maLop,
@@ -52,7 +52,7 @@ export const addClass = (req, res) => {
 
     db.query(q, [values], (err, data) => {
       if (err) return res.status(500).json(err);
-      return res.status(200).json('Them lop thanh cong');
+      return res.status(200).json("Them lop thanh cong");
     });
   });
 };
@@ -67,7 +67,7 @@ export const changeGV = (req, res) => {
   db.query(q, (err, data) => {
     if (err) return res.status(err).json(err);
 
-    return res.status(200).json('Thay doi giao vien chu nhiem thanh cong');
+    return res.status(200).json("Thay doi giao vien chu nhiem thanh cong");
   });
 };
 
@@ -81,13 +81,13 @@ export const changeKhoaHoc = (req, res) => {
   db.query(q, (err, data) => {
     if (err) return res.status(err).json(err);
 
-    return res.status(200).json('Thay doi khoa hoc thanh cong');
+    return res.status(200).json("Thay doi khoa hoc thanh cong");
   });
 };
 
 export const editClass = (req, res) => {
   const token = req.cookies.accessToken;
-  if (!token) return res.status(401).json('Not authenticated');
+  if (!token) return res.status(401).json("Not authenticated");
   const maLop = req.params.maLop;
 
   const updatedData = req.body;
@@ -102,11 +102,21 @@ export const editClass = (req, res) => {
 
 export const deleteClass = (req, res) => {
   const token = req.cookies.accessToken;
-  if (!token) return res.status(401).json('Not authenticated');
+  if (!token) return res.status(401).json("Not authenticated");
   const maLop = req.params.maLop;
   const maKhoa = req.params.maKhoa;
   const q = `delete from class where maLop = ? and maKhoa = ?`;
   db.query(q, [maLop, maKhoa], (err, data) => {
+    if (err) return res.status(500).json(err);
+
+    return res.status(200).json(data);
+  });
+};
+
+export const getListClassByMaGV = (req, res) => {
+  const { maGv } = req.query;
+  const q = `SELECT * FROM class WHERE maGv = '${maGv}'`;
+  db.query(q, (err, data) => {
     if (err) return res.status(500).json(err);
 
     return res.status(200).json(data);

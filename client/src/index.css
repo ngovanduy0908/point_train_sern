@@ -284,3 +284,11 @@ input {
 .highcharts-credits {
   display: none !important;
 }
+
+#outlined-multiline-flexible-label {
+  color: red;
+}
+
+#header-bar {
+  display: none;
+}

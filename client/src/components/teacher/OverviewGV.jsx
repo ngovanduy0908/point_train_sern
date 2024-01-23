@@ -27,7 +27,7 @@ const customStyles = {
     transition: "background-color 0.3s",
   }),
 };
-const Overview = () => {
+const OverviewGV = () => {
   const { currentUser } = useContext(AuthContext);
   const [maLop, setMaLop] = useState("");
   const [tiLeOrSoLuong, setTiLeOrSoLuong] = useState(1);
@@ -129,4 +129,4 @@ const Overview = () => {
   );
 };
 
-export default Overview;
+export default OverviewGV;

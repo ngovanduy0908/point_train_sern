@@ -1,16 +1,18 @@
-import express from 'express';
+import express from "express";
 import {
   addTeacher,
   deleteTeacher,
   editTeacher,
   getAllListTeacher,
-} from '../controllers/teacher.js';
+  viewExcelBC,
+} from "../controllers/teacher.js";
 
 const router = express.Router();
 
-router.get('/:maKhoa', getAllListTeacher);
-router.post('/:maKhoa', addTeacher);
-router.put('/:maKhoa/:maGv', editTeacher);
-router.delete('/:maKhoa/:maGv', deleteTeacher);
+router.get("/:maKhoa", getAllListTeacher);
+router.post("/viewExcelBC/view", viewExcelBC);
+router.post("/:maKhoa", addTeacher);
+router.put("/:maKhoa/:maGv", editTeacher);
+router.delete("/:maKhoa/:maGv", deleteTeacher);
 
 export default router;

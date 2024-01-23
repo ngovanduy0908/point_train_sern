@@ -3,12 +3,15 @@ import axios from "axios";
 import Input from "components/input/Input";
 import { AuthContext } from "context/authContext";
 import React, { useContext, useEffect, useState } from "react";
+import TextField from "@mui/material/TextField";
+
 import { getPointMonitorByMaSVAndMaHK } from "utils/getDetails/getPointMonitorByMa";
 import { getPointTeacherByMa } from "utils/getDetails/getPointTeacherByMa";
 const DOMAIN = process.env.REACT_APP_DOMAIN;
 const colSpan = 4;
 
-const FormPhieuCham = ({ maHK }) => {
+const FormPhieuCham = ({ maHK, note }) => {
+  console.log("note: ", note);
   const { currentUser } = useContext(AuthContext);
   const [studentData, setStudentData] = useState([]);
   const [data, setData] = useState([]);
@@ -2416,6 +2419,15 @@ const FormPhieuCham = ({ maHK }) => {
               </tr>
             </tbody>
           </table>
+          <TextField
+            id="outlined-multiline-flexible"
+            label="Ghi chú"
+            multiline
+            maxRows={4}
+            fullWidth
+            value={note}
+            readOnly
+          />
         </form>
       </div>
     </Box>

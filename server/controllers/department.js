@@ -12,6 +12,26 @@ export const getAllListDepartment = (req, res) => {
   });
 };
 
+export const getNameDepartmentByMa = (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not authenticated");
+  const { maKhoa } = req.params;
+  console.log("maKhoa: ", maKhoa);
+  const q = `
+  SELECT 
+  name as 'tenKhoa'
+  FROM 
+  department
+  WHERE 
+  maKhoa = '${maKhoa}'
+  `;
+  db.query(q, (err, data) => {
+    if (err) return res.status(500).json(err);
+
+    return res.status(200).json(...data);
+  });
+};
+
 export const addDepartment = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not authenticated");

@@ -44,6 +44,10 @@ import { io } from "socket.io-client";
 import DanhSachDRL from "pages/sv/DanhSachDRL";
 import BlankFilePdf from "pages/sv/BlankFilePdf";
 import BlankFileProof from "pages/sv/BlankFileProof";
+import OverviewDepartment from "components/department/OverviewDepartment";
+import ExportExcelGV from "pages/gv/ExportExcelGV";
+import OverviewSV from "components/student/Overview";
+import OverviewGV from "components/teacher/OverviewGV";
 const IO = process.env.REACT_APP_IO;
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -92,7 +96,7 @@ function App() {
               element={<LayoutKhoa theme={theme} currentUser={currentUser} />}
             >
               <Route path="/" element={<Navigate to="/overview" />} />
-              <Route path="/overview" element={<Overview />} />
+              <Route path="/overview" element={<OverviewDepartment />} />
               <Route path="/quanlygiaovien" element={<QuanLyGiaoVien />} />
               <Route path="/quanlylophoc" element={<QuanLyLopHoc />} />
               <Route path="/thongkedrl" element={<ThongKeDRL />} />
@@ -118,7 +122,7 @@ function App() {
                   )
                 }
               />
-              <Route path="/overview" element={<Overview />} />
+              <Route path="/overview" element={<OverviewGV />} />
               <Route path="/quanlythoigian" element={<QuanLyThoiGian />} />
 
               <Route
@@ -145,7 +149,9 @@ function App() {
                 path="/quanlylopchunhiem/uploadfiletbhk/:maLop/:maHK"
                 element={<QuanLyDiemTBHK />}
               />
+              <Route path="/exportexcelgv" element={<ExportExcelGV />} />
             </Route>
+
             <Route path="/change-info" element={<ChangeInfoOne />} />
             <Route path="/login" element={<Login />} />
           </Routes>
@@ -236,7 +242,7 @@ function App() {
                   mk === "123456" ? <Navigate to="/change-info" /> : <SV />
                 }
               />
-              <Route path="/" element={<SV />} />
+              <Route path="/" element={<OverviewSV />} />
               <Route path="/xemdiemrenluyen" element={<DanhSachDRL />} />
             </Route>
             <Route path="/change-info" element={<ChangeInfoOne />} />

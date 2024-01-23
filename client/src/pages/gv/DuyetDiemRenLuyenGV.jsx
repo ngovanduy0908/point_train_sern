@@ -5,9 +5,11 @@ import Input from "components/input/Input";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import TextField from "@mui/material/TextField";
 import { getPointMonitorByMaSVAndMaHK } from "utils/getDetails/getPointMonitorByMa";
 import { getPointTeacherByMa } from "utils/getDetails/getPointTeacherByMa";
 import { insertOrUpdatePointTeacher } from "utils/postDetails/insertOrUpdatePointTeacher";
+import { getGvNote } from "utils/getDetails/getGvNote";
 const DOMAIN = process.env.REACT_APP_DOMAIN;
 const colSpan = 4;
 
@@ -20,6 +22,7 @@ const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
   const [data, setData] = useState([]);
   const [pointCitizenMediumData, setCitizenMediumPointData] = useState({});
   const [pointStudentData, setPointStudentData] = useState({});
+  const [note, setNote] = useState("");
 
   //   value student
   const [values, setValues] = useState({
@@ -291,6 +294,16 @@ const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
     }
   };
 
+  const getNote = async () => {
+    try {
+      const res = await getGvNote(`maSv=${maSv}&maHK=${maHK}`);
+      // console.log("res: ", res.gvNote);
+      setNote(res.gvNote);
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
   const getPointCitizenMediumSv = async () => {
     try {
       const getCitizenMediumPoint = await axios.get(
@@ -362,49 +375,7 @@ const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
           svBonus: getStudentPoint.data.svBonus,
           svIrresponsibleMonitor: getStudentPoint.data.svIrresponsibleMonitor,
         }));
-        // setValuesLT((prev) => ({
-        //   ...prev,
-        //   // muc 1
-        //   ltDiemTBHK: getStudentPoint.data.svDiemTBHK,
-        //   ltNCKH1: getStudentPoint.data.svNCKH1,
-        //   ltNCKH2: getStudentPoint.data.svNCKH2,
-        //   ltNCKH3: getStudentPoint.data.svNCKH3,
-        //   ltOlympic1: getStudentPoint.data.svOlympic1,
-        //   ltOlympic2: getStudentPoint.data.svOlympic2,
-        //   ltOlympic3: getStudentPoint.data.svOlympic3,
-        //   ltOlympic4: getStudentPoint.data.svOlympic4,
-        //   ltNoRegulation: getStudentPoint.data.svNoRegulation,
-        //   ltOnTime: getStudentPoint.data.svOnTime,
-        //   ltAbandon: getStudentPoint.data.svAbandon,
-        //   ltUnTrueTime: getStudentPoint.data.svUnTrueTime,
 
-        //   // muc 2
-        //   ltRightRule: getStudentPoint.data.svRightRule,
-        //   ltCitizen: getStudentPoint.data.svCitizen,
-        //   ltNoFullStudy: getStudentPoint.data.svNoFullStudy,
-        //   ltNoCard: getStudentPoint.data.svNoCard,
-        //   ltNoAtivities: getStudentPoint.data.svNoAtivities,
-        //   ltNoPayFee: getStudentPoint.data.svNoPayFee,
-
-        //   // muc 3
-        //   ltFullActive: getStudentPoint.data.svFullActive,
-        //   ltAchievementCity: getStudentPoint.data.svAchievementCity,
-        //   ltAchievementSchool: getStudentPoint.data.svAchievementSchool,
-        //   ltAdvise: getStudentPoint.data.svAdvise,
-        //   ltIrresponsible: getStudentPoint.data.svIrresponsible,
-        //   ltNoCultural: getStudentPoint.data.svNoCultural,
-
-        //   // muc 4
-        //   ltPositiveStudy: getStudentPoint.data.svPositiveStudy,
-        //   ltPositiveLove: getStudentPoint.data.svPositiveLove,
-        //   ltWarn: getStudentPoint.data.svWarn,
-        //   ltNoProtect: getStudentPoint.data.svNoProtect,
-
-        //   // muc 5
-        //   ltMonitor: getStudentPoint.data.svMonitor,
-        //   ltBonus: getStudentPoint.data.svBonus,
-        //   ltIrresponsibleMonitor: getStudentPoint.data.svIrresponsibleMonitor,
-        // }));
         setCheckboxState((prev) => ({
           ...prev,
           svNoRegulation:
@@ -424,25 +395,6 @@ const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
           // svMonitor: getStudentPoint.data.svMonitor === 7 ? true : false,
           svBonus: getStudentPoint.data.svBonus === 3 ? true : false,
         }));
-        // setCheckboxStateLT((prev) => ({
-        //   ...prev,
-        //   ltNoRegulation:
-        //     getStudentPoint.data.svNoRegulation === 3 ? true : false,
-        //   ltOnTime: getStudentPoint.data.svOnTime === 2 ? true : false,
-        //   ltRightRule: getStudentPoint.data.svRightRule === 10 ? true : false,
-        //   ltNoFullStudy:
-        //     getStudentPoint.data.svNoFullStudy === -10 ? true : false,
-        //   ltNoPayFee: getStudentPoint.data.svNoPayFee === -10 ? true : false,
-        //   ltFullActive: getStudentPoint.data.svFullActive === 13 ? true : false,
-        //   ltPositiveStudy:
-        //     getStudentPoint.data.svPositiveStudy === 10 ? true : false,
-        //   ltPositiveLove:
-        //     getStudentPoint.data.svPositiveLove === 5 ? true : false,
-        //   ltWarn: getStudentPoint.data.svWarn === -5 ? true : false,
-        //   ltNoProtect: getStudentPoint.data.svNoProtect === -20 ? true : false,
-        //   // svMonitor: getStudentPoint.data.svMonitor === 7 ? true : false,
-        //   ltBonus: getStudentPoint.data.svBonus === 3 ? true : false,
-        // }));
       }
     } catch (error) {
       console.log(error.response.data);
@@ -583,6 +535,7 @@ const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
     checkExisPointMonitor();
     getSv();
     getPointCitizenMediumSv();
+    getNote();
   }, []);
 
   const checkExisPointTeacher = async () => {
@@ -1049,8 +1002,13 @@ const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
     try {
       const data = {
         ...valuesGV,
+        // note: gvNote?.trim(),
+        note,
         sum: sumgv,
       };
+      console.log("gv note: ", note);
+      console.log("gv data: ", data);
+
       await insertOrUpdatePointTeacher(`maHK=${maHK}&maSv=${maSv}`, data);
       fetchData();
       setOpen(false);
@@ -2957,6 +2915,15 @@ const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
                 </button>
               }
             </div>
+            <TextField
+              id="outlined-multiline-flexible"
+              label="Ghi chú"
+              multiline
+              maxRows={4}
+              fullWidth
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+            />
           </form>
         </div>
       </Box>

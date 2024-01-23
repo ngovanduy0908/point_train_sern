@@ -107,7 +107,6 @@ const DanhSachDRL = () => {
         open={openPhieuDRL}
         setOpen={setOpenPhieuDRL}
         title={`Chi tiết điểm rèn luyện ${hkItem?.name}`}
-        // changeHeight={true}
         displayButtonOk={false}
       >
         <PhieuDRL hkItem={hkItem} />

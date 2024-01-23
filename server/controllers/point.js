@@ -449,7 +449,7 @@ export const insertOrUpdatePointTeacher = (req, res) => {
   const { maHK, maSv } = req.query;
   // console.log("mahk va masv: ", maHK, maSv);
   const values = req.body;
-  // console.log("value: ", values);
+  console.log("value: ", values);
   const checkExisPointTeacher = `select maSv from point_teacher where maSv = '${maSv}' and maHK = '${maHK}'`;
   db.query(checkExisPointTeacher, (err, data) => {
     if (err) return res.status(500).json(err);
@@ -489,7 +489,7 @@ export const insertOrUpdatePointTeacher = (req, res) => {
                             gvBonus = '${values.gvBonus}',
                             gvIrresponsibleMonitor = '${values.gvIrresponsibleMonitor}'
                             where maSv = '${maSv}' and maHK = '${maHK}'`;
-      const q1 = `update point set point_teacher = '${values.sum}', status_teacher = 1 where maSv = '${maSv}' and maHK = '${maHK}'`;
+      const q1 = `update point set point_teacher = '${values.sum}', gvNote='${values.note}', status_teacher = 1 where maSv = '${maSv}' and maHK = '${maHK}'`;
       db.query(q, (err, data) => {
         if (err) return res.status(500).json(err);
 
@@ -569,7 +569,7 @@ export const insertOrUpdatePointTeacher = (req, res) => {
                                 '${values.gvIrresponsibleMonitor}', 
                                 '${maHK}', 
                                 '${values.gvRightRule}')`;
-      const q1 = `update point set point_teacher = '${values.sum}', status_teacher = 1 where maSv = '${maSv}' and maHK = '${maHK}'`;
+      const q1 = `update point set point_teacher = '${values.sum}', gvNote='${values.note}', status_teacher = 1 where maSv = '${maSv}' and maHK = '${maHK}'`;
 
       db.query(q, (err, data) => {
         if (err) return res.status(500).json(err);
@@ -592,5 +592,145 @@ export const getListPointByMaSV = (req, res) => {
   db.query(query, (err, data) => {
     if (err) return res.status(500).json(err);
     return res.status(200).json(data);
+  });
+};
+
+export const pointBasicChart = (req, res) => {
+  console.log(req.query);
+  const { maLop, tiLeOrSoLuong } = req.query;
+  console.log("type: ", typeof tiLeOrSoLuong);
+  let query;
+
+  if (tiLeOrSoLuong === "1") {
+    query = `
+      SELECT 
+      maHK, 
+      COUNT(*) AS 'TongSV', 
+      COUNT(CASE WHEN point_teacher >= 0 AND point_teacher < 30 THEN 1 END) AS 'KEM', 
+      COUNT(CASE WHEN point_teacher >= 30 AND point_teacher < 50 THEN 1 END) AS 'Y', 
+      COUNT(CASE WHEN point_teacher >= 50 AND point_teacher < 60 THEN 1 END) AS 'TB', 
+      COUNT(CASE WHEN point_teacher >= 60 AND point_teacher < 70 THEN 1 END) AS 'TBK', 
+      COUNT(CASE WHEN point_teacher >= 70 AND point_teacher < 80 THEN 1 END) AS 'KHA', 
+      COUNT(CASE WHEN point_teacher >= 80 AND point_teacher < 90 THEN 1 END) AS 'G', 
+      COUNT(CASE WHEN point_teacher >= 90 AND point_teacher <= 100 THEN 1 END) AS 'XS' 
+      FROM 
+      point, class, students 
+      WHERE 
+      point.maSv = students.maSv AND 
+      students.maLop = class.maLop and 
+      class.maLop = '${maLop}' and 
+      status_teacher = 1 
+      GROUP BY maHK
+    `;
+  } else {
+    query = `
+      SELECT
+      maHK,
+      COUNT(*) AS 'TongSV',
+      ROUND(COUNT(CASE WHEN point_teacher >= 0 AND point_teacher < 30 THEN 1 END) / COUNT(*) * 100, 2) AS 'KEM',
+      ROUND(COUNT(CASE WHEN point_teacher >= 30 AND point_teacher < 50 THEN 1 END) / COUNT(*) * 100, 2) AS 'Y',
+      ROUND(COUNT(CASE WHEN point_teacher >= 50 AND point_teacher < 60 THEN 1 END) / COUNT(*) * 100, 2) AS 'TB',
+      ROUND(COUNT(CASE WHEN point_teacher >= 60 AND point_teacher < 70 THEN 1 END) / COUNT(*) * 100, 2) AS 'TBK',
+      ROUND(COUNT(CASE WHEN point_teacher >= 70 AND point_teacher < 80 THEN 1 END) / COUNT(*) * 100, 2) AS 'KHA',
+      ROUND(COUNT(CASE WHEN point_teacher >= 80 AND point_teacher < 90 THEN 1 END) / COUNT(*) * 100, 2) AS 'G',
+      ROUND(COUNT(CASE WHEN point_teacher >= 90 AND point_teacher <= 100 THEN 1 END) / COUNT(*) * 100, 2) AS 'XS'
+      FROM
+      point, class, students
+      WHERE
+      point.maSv = students.maSv AND
+      students.maLop = class.maLop AND
+      class.maLop = '${maLop}' AND
+      status_teacher = 1
+      GROUP BY maHK
+    `;
+  }
+  // if(tiLeOrSoLuong === '1'){
+
+  //   const query = `
+  //   SELECT
+  //   maHK,
+  //   COUNT(*) AS 'TongSV',
+  //   COUNT(CASE WHEN point_teacher >= 0 AND point_teacher < 30 THEN 1 END) AS 'KEM',
+  //   COUNT(CASE WHEN point_teacher >= 30 AND point_teacher < 50 THEN 1 END) AS 'Y',
+  //   COUNT(CASE WHEN point_teacher >= 50 AND point_teacher < 60 THEN 1 END) AS 'TB',
+  //   COUNT(CASE WHEN point_teacher >= 60 AND point_teacher < 70 THEN 1 END) AS 'TBK',
+  //   COUNT(CASE WHEN point_teacher >= 70 AND point_teacher < 80 THEN 1 END) AS 'KHA',
+  //   COUNT(CASE WHEN point_teacher >= 80 AND point_teacher < 90 THEN 1 END) AS 'G',
+  //   COUNT(CASE WHEN point_teacher >= 90 AND point_teacher <= 100 THEN 1 END) AS 'XS'
+  //   FROM
+  //   point, class, students
+  //   WHERE
+  //   point.maSv = students.maSv AND
+  //   students.maLop = class.maLop and
+  //   class.maLop = '${maLop}' and
+  //   status_teacher = 1
+  //   GROUP BY maHK
+  //   `
+  // } else {
+  //   const query = `
+  // SELECT
+  // maHK,
+  // COUNT(*) AS 'TongSV',
+  // ROUND(COUNT(CASE WHEN point_teacher >= 0 AND point_teacher < 30 THEN 1 END) / COUNT(*) * 100, 2) AS 'KEM',
+  // ROUND(COUNT(CASE WHEN point_teacher >= 30 AND point_teacher < 50 THEN 1 END) / COUNT(*) * 100, 2) AS 'Y',
+  // ROUND(COUNT(CASE WHEN point_teacher >= 50 AND point_teacher < 60 THEN 1 END) / COUNT(*) * 100, 2) AS 'TB',
+  // ROUND(COUNT(CASE WHEN point_teacher >= 60 AND point_teacher < 70 THEN 1 END) / COUNT(*) * 100, 2) AS 'TBK',
+  // ROUND(COUNT(CASE WHEN point_teacher >= 70 AND point_teacher < 80 THEN 1 END) / COUNT(*) * 100, 2) AS 'KHA',
+  // ROUND(COUNT(CASE WHEN point_teacher >= 80 AND point_teacher < 90 THEN 1 END) / COUNT(*) * 100, 2) AS 'G',
+  // ROUND(COUNT(CASE WHEN point_teacher >= 90 AND point_teacher <= 100 THEN 1 END) / COUNT(*) * 100, 2) AS 'XS'
+  // FROM
+  // point, class, students
+  // WHERE
+  // point.maSv = students.maSv AND
+  // students.maLop = class.maLop AND
+  // class.maLop = '${maLop}' AND
+  // status_teacher = 1
+  // GROUP BY maHK
+  // `
+  // }
+  db.query(query, (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(200).json(data);
+  });
+};
+
+export const pointBasicChartPercent = (req, res) => {
+  // console.log(req.query);
+  const { maLop } = req.query;
+  const query = `
+  SELECT
+  maHK,
+  COUNT(*) AS 'TongSV',
+  ROUND(COUNT(CASE WHEN point_teacher >= 0 AND point_teacher < 30 THEN 1 END) / COUNT(*) * 100, 2) AS 'KEM',
+  ROUND(COUNT(CASE WHEN point_teacher >= 30 AND point_teacher < 50 THEN 1 END) / COUNT(*) * 100, 2) AS 'Y',
+  ROUND(COUNT(CASE WHEN point_teacher >= 50 AND point_teacher < 60 THEN 1 END) / COUNT(*) * 100, 2) AS 'TB',
+  ROUND(COUNT(CASE WHEN point_teacher >= 60 AND point_teacher < 70 THEN 1 END) / COUNT(*) * 100, 2) AS 'TBK',
+  ROUND(COUNT(CASE WHEN point_teacher >= 70 AND point_teacher < 80 THEN 1 END) / COUNT(*) * 100, 2) AS 'KHA',
+  ROUND(COUNT(CASE WHEN point_teacher >= 80 AND point_teacher < 90 THEN 1 END) / COUNT(*) * 100, 2) AS 'G',
+  ROUND(COUNT(CASE WHEN point_teacher >= 90 AND point_teacher <= 100 THEN 1 END) / COUNT(*) * 100, 2) AS 'XS'
+  FROM
+  point, class, students
+  WHERE
+  point.maSv = students.maSv AND
+  students.maLop = class.maLop AND
+  class.maLop = '${maLop}' AND
+  status_teacher = 1
+  GROUP BY maHK
+  `;
+  db.query(query, (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(200).json(data);
+  });
+};
+
+export const pointGvNote = (req, res) => {
+  const { maSv, maHK } = req.query;
+  console.log("xg day: ", maSv, maHK);
+  const query = `
+  SELECT gvNote FROM point WHERE maSv = '${maSv}' and maHK = '${maHK}'
+  `;
+  db.query(query, (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(200).json(...data);
   });
 };
