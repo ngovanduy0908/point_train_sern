@@ -5,10 +5,12 @@ import {
   addDepartment,
   deleteDepartment,
   getNameDepartmentByMa,
+  statisticalDepartment,
 } from "../controllers/department.js";
 
 const router = express.Router();
 
+router.get("/statistical", statisticalDepartment);
 router.get("/", getAllListDepartment);
 router.get("/:maKhoa", getNameDepartmentByMa);
 router.post("/", addDepartment);

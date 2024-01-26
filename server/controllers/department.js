@@ -87,3 +87,29 @@ export const deleteDepartment = (req, res) => {
     return res.status(200).json(data);
   });
 };
+
+export const statisticalDepartment = (req, res) => {
+  const { maKhoa } = req.query;
+
+  const q = `
+  SELECT 
+  COUNT(DISTINCT teacher.maGV) as 'tongGV', 
+  COUNT(DISTINCT class.maLop) as 'tongLop', 
+  COUNT(DISTINCT students.maSv) as 'tongSV' 
+FROM 
+  department
+LEFT JOIN 
+  teacher ON department.maKhoa = teacher.maKhoa
+LEFT JOIN 
+  class ON teacher.maGv = class.maGv
+LEFT JOIN 
+  students ON class.maLop = students.maLop
+WHERE 
+  department.maKhoa = '${maKhoa}'
+  `;
+  db.query(q, (err, data) => {
+    if (err) return res.status(500).json(err);
+
+    return res.status(200).json(...data);
+  });
+};
