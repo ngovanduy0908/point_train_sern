@@ -27,15 +27,15 @@ import { AuthContext } from "context/authContext";
 import { formatDay } from "utils/formatDay";
 const navItemsSV = [
   {
-    text: "Overview",
+    text: "Trang Chủ",
     icon: <ApartmentOutlinedIcon />,
     path: "home",
   },
-  {
-    text: "Xem Điểm Rèn Luyện",
-    icon: <PreviewIcon />,
-    path: "xemdiemrenluyen",
-  },
+  // {
+  //   text: "Xem Điểm Rèn Luyện",
+  //   icon: <PreviewIcon />,
+  //   path: "xemdiemrenluyen",
+  // },
 ];
 
 const SidebarSV = ({

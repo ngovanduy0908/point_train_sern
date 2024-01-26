@@ -65,7 +65,6 @@ export const editDepartment = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not authenticated");
   const maKhoa = req.params.maKhoa;
-
   const updatedData = req.body;
   const q = `update department set maKhoa='${updatedData.maKhoa}', name='${updatedData.name}', account='${updatedData.account}', password='${updatedData.password}' where maKhoa='${maKhoa}'`;
   // const values = [req.body.maKhoa]

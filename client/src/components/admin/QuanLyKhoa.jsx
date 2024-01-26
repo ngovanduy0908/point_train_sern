@@ -142,6 +142,9 @@ const QuanLyKhoa = () => {
         enableEditing: false, //disable editing on this column
         enableSorting: false,
         size: 80,
+        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
+          ...getCommonEditTextFieldProps(cell),
+        }),
       },
       {
         accessorKey: "name",

@@ -7,13 +7,13 @@ import HCMore from "highcharts/highcharts-more";
 require("highcharts/modules/exporting")(Highcharts);
 require("highcharts/modules/export-data")(Highcharts);
 HCMore(Highcharts);
-const BasicColumn = ({ seriesData, xAxis, yAxis }) => {
+const BasicColumn = ({ seriesData, xAxis, yAxis, title }) => {
   const options = {
     chart: {
       type: "column",
     },
     title: {
-      text: "Thống kê điểm rèn luyện",
+      text: title,
       align: "left",
     },
 
@@ -35,6 +35,10 @@ const BasicColumn = ({ seriesData, xAxis, yAxis }) => {
       column: {
         pointPadding: 0.2,
         borderWidth: 0,
+        dataLabels: {
+          enabled: true, // Cho phép hiển thị dữ liệu trên cột
+          format: "{point.y}", // Định dạng hiển thị dữ liệu (ở đây là giá trị y)
+        },
       },
     },
     series: seriesData,

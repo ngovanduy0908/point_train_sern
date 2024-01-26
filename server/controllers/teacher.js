@@ -77,7 +77,7 @@ export const viewExcelBC = async (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not authenticated");
   // console.log("req: ", req.body);
-  const { maLop, maHK, danhSachSV, tenGV, tenKhoa } = req.body;
+  const { maLop, maHK, danhSachSV, tenGV, tenKhoa, tenLopTruong } = req.body;
   const currentDate = new Date();
   const day = currentDate.getDate();
   const month = currentDate.getMonth() + 1; // Tháng bắt đầu từ 0, cộng thêm 1 để đổi về đúng tháng
@@ -131,11 +131,12 @@ export const viewExcelBC = async (req, res) => {
       tenVaKhoa: `LỚP: ${convertToUpperCase(
         maLop.tenLop
       )}    KHOA: ${convertToUpperCase(tenKhoa)}`,
+      tenLopTruong: tenLopTruong ? tenLopTruong : "",
       day: day,
       month: month,
       year: year,
     };
-    console.log("value: ", values);
+    // console.log("value: ", values);
     const templateDataPath = path.join(
       __dirname,
       "./public/uploads",

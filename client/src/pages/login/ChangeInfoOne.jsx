@@ -1,25 +1,23 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './login.css';
-import Header from '../../components/header/Header';
-import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
-import Footer from '../../components/footer/Footer';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-// import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-// import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-// import { AuthContext } from '../../context/authContext';
-import axios from 'axios';
-const pages = ['TRANG WEB ĐÀO TẠO', 'TRANG WEB CNTT', 'TRANG WEB HUMG'];
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./login.css";
+import Header from "../../components/header/Header";
+import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
+import Footer from "../../components/footer/Footer";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
+import SchoolIcon from "@mui/icons-material/School";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+const pages = ["TRANG WEB ĐÀO TẠO", "TRANG WEB CNTT", "TRANG WEB HUMG"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -33,11 +31,11 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static" sx={{ marginTop: '20px' }}>
+    <AppBar position="static" sx={{ marginTop: "20px" }}>
       <div className="container navbar_header">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+            <SchoolIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
             <Typography
               variant="h6"
               noWrap
@@ -45,18 +43,18 @@ function ResponsiveAppBar() {
               href="/"
               sx={{
                 mr: 2,
-                display: { xs: 'none', md: 'flex' },
-                fontFamily: 'monospace',
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
                 fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'inherit',
-                textDecoration: 'none',
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
               }}
             >
-              LOGO
+              HUMG
             </Typography>
 
-            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
               <IconButton
                 size="large"
                 aria-label="account of current user"
@@ -71,18 +69,18 @@ function ResponsiveAppBar() {
                 id="menu-appbar"
                 anchorEl={anchorElNav}
                 anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
+                  vertical: "bottom",
+                  horizontal: "left",
                 }}
                 keepMounted
                 transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'left',
+                  vertical: "top",
+                  horizontal: "left",
                 }}
                 open={Boolean(anchorElNav)}
                 onClose={handleCloseNavMenu}
                 sx={{
-                  display: { xs: 'block', md: 'none' },
+                  display: { xs: "block", md: "none" },
                 }}
               >
                 {pages.map((page) => (
@@ -92,7 +90,7 @@ function ResponsiveAppBar() {
                 ))}
               </Menu>
             </Box>
-            <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+            <SchoolIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
             <Typography
               variant="h5"
               noWrap
@@ -100,23 +98,23 @@ function ResponsiveAppBar() {
               href=""
               sx={{
                 mr: 2,
-                display: { xs: 'flex', md: 'none' },
+                display: { xs: "flex", md: "none" },
                 flexGrow: 1,
-                fontFamily: 'monospace',
+                fontFamily: "monospace",
                 fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'inherit',
-                textDecoration: 'none',
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
               }}
             >
-              LOGO
+              HUMG
             </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map((page) => (
                 <Button
                   key={page}
                   onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
+                  sx={{ my: 2, color: "white", display: "block" }}
                 >
                   {page}
                 </Button>
@@ -131,15 +129,15 @@ function ResponsiveAppBar() {
 
 const ChangeInfoOne = () => {
   const [inputs, setInputs] = useState({
-    email: '',
-    password: '',
-    phone_number: '',
+    email: "",
+    password: "",
+    phone_number: "",
   });
   const [err, setErr] = useState(null);
   const [suc, setSuc] = useState(null);
   const handleClick = () => {
     // setShouldNavigate(true);
-    navigate('/login');
+    navigate("/login");
     // console.log('a');
   };
   const navigate = useNavigate();
@@ -152,18 +150,24 @@ const ChangeInfoOne = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      const isAnyFieldEmpty = Object.values(inputs).some(
+        (value) => value === ""
+      );
+      if (isAnyFieldEmpty) {
+        // Hiển thị thông báo hoặc thực hiện logic nếu có trường bị trống
+        return toast.warn("Vui lòng điền hết các trường");
+      }
       const res = await axios.put(
-        'http://localhost:8800/api/users/update',
+        "http://localhost:8800/api/users/update",
         inputs,
         {
           withCredentials: true,
         }
       );
       setSuc(res.data);
-      localStorage.removeItem('user');
-      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+      localStorage.removeItem("user");
+      document.cookie = "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
       // console.log(data);
-      // navigate('/');
     } catch (err) {
       setErr(err.response.data);
     }
@@ -178,18 +182,7 @@ const ChangeInfoOne = () => {
           <div class="form-container sign-in-container">
             <form action="#">
               <h1>Thay đổi thông tin</h1>
-              <div class="social-container">
-                <a href="https://www.facebook.com/" class="social">
-                  <FacebookOutlinedIcon />
-                </a>
-                <a href="https://www.facebook.com/" class="social">
-                  <FacebookOutlinedIcon />
-                </a>
-                <a href="https://www.facebook.com/" class="social">
-                  <FacebookOutlinedIcon />
-                </a>
-              </div>
-              <span>or use your account</span>
+
               <input
                 type="email"
                 placeholder="Nhập email"
@@ -208,10 +201,9 @@ const ChangeInfoOne = () => {
                 name="password"
                 onChange={handleChange}
               />
-              <span className="login_err">{err && err}</span>
 
-              <p onClick={handleClick}>
-                {suc && 'Vui lòng đăng nhập lại tại đây'}
+              <p onClick={handleClick} className="cursor-pointer">
+                {suc && "Vui lòng đăng nhập lại tại đây"}
               </p>
               {/* {shouldNavigate && <Navigate to="/login" />} */}
               <button onClick={handleLogin}>Lưu</button>
@@ -229,22 +221,30 @@ const ChangeInfoOne = () => {
                   id="signIn"
                   onClick={() => {
                     const container =
-                      document.getElementById('container_login');
-                    container.classList.remove('right-panel-active');
+                      document.getElementById("container_login");
+                    container.classList.remove("right-panel-active");
                   }}
                 >
                   Đăng nhập
                 </button>
               </div>
               <div class="overlay-panel overlay-right">
-                <h1>Hello, Friend!</h1>
-                <p>Nhập email, số điện thoại và thay đổi mật khẩu tại đây.</p>
+                <h1>Xin Chào Bạn!</h1>
+                <p>Trở lại trang đăng nhập.</p>
+                <button
+                  class="ghost"
+                  id="signUp"
+                  onClick={() => navigate("/login")}
+                >
+                  Quay Lại
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
       <Footer />
+      <ToastContainer />
     </div>
   );
 };

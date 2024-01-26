@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import axios from "axios";
+import EmptyState from "components/EmptyState";
 import BasicColumn from "components/chart/BasicColumn";
 import { AuthContext } from "context/authContext";
 import React, { useContext, useEffect, useState } from "react";
@@ -27,6 +28,7 @@ const customStyles = {
     transition: "background-color 0.3s",
   }),
 };
+
 const OverviewGV = () => {
   const { currentUser } = useContext(AuthContext);
   const [maLop, setMaLop] = useState("");
@@ -35,6 +37,10 @@ const OverviewGV = () => {
   const [seriesData, setSeriesData] = useState([]);
   const [dataLop, setDataLop] = useState([]);
   const [yAxis, setYAxis] = useState("Số Lượng");
+  const [title, setTitle] = useState(
+    "Thống Kê Điểm Rèn Luyện Theo Số Lượng Sinh Viên."
+  );
+  const [valueDebut, setValueDebut] = useState();
   const getClassByMaGV = async () => {
     try {
       const res = await getListClassByMaGV(`maGv=${currentUser.maGv}`);
@@ -45,6 +51,7 @@ const OverviewGV = () => {
       // console.log("vao day: ", formatDataLop);
       setMaLop(res[0].maLop);
       setDataLop(formatDataLop);
+      setValueDebut(res[0].class_name);
     } catch (error) {
       console.log(error);
     }
@@ -62,7 +69,7 @@ const OverviewGV = () => {
 
       // console.log("chart: ", res.data);
       if (res.data.length) {
-        console.log("data tra ra: ", res);
+        // console.log("data tra ra: ", res);
 
         const keys = Object.keys(res.data[0]);
 
@@ -105,6 +112,7 @@ const OverviewGV = () => {
   const handleChangeTiLe = (e) => {
     setTiLeOrSoLuong(e.value);
     setYAxis(e.label);
+    setTitle(`Thống Kê Điểm Rèn Luyện Theo ${e.label} Sinh Viên.`);
   };
   return (
     <Box m="1.5rem 2.5rem">
@@ -114,6 +122,7 @@ const OverviewGV = () => {
             options={dataLop}
             styles={customStyles}
             onChange={(e) => handleChangeLop(e)}
+            placeholder={valueDebut ? valueDebut : "Chọn lớp học"}
           />
         </div>
         <div>
@@ -121,10 +130,20 @@ const OverviewGV = () => {
             options={optionTiLeSoLuong}
             styles={customStyles}
             onChange={(e) => handleChangeTiLe(e)}
+            placeholder="Số Lượng"
           />
         </div>
       </div>
-      <BasicColumn xAxis={xAxis} seriesData={seriesData} yAxis={yAxis} />
+      {xAxis.length ? (
+        <BasicColumn
+          title={title}
+          xAxis={xAxis}
+          seriesData={seriesData}
+          yAxis={yAxis}
+        />
+      ) : (
+        <EmptyState />
+      )}
     </Box>
   );
 };

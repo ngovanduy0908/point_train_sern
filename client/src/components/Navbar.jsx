@@ -40,7 +40,7 @@ const Navbar = ({
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorElV1, setAnchorElV1] = useState(null);
-  console.log("theme navbar: ", theme);
+  // console.log("theme navbar: ", theme);
   const isOpen = Boolean(anchorEl);
   const isOpenNoti = Boolean(anchorElV1);
   const handleClick = (event) => setAnchorEl(event.currentTarget);

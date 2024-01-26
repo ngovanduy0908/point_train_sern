@@ -48,6 +48,7 @@ import OverviewDepartment from "components/department/OverviewDepartment";
 import ExportExcelGV from "pages/gv/ExportExcelGV";
 import OverviewSV from "components/student/Overview";
 import OverviewGV from "components/teacher/OverviewGV";
+import ExportExcelLT from "pages/lt/ExportExcelLT";
 const IO = process.env.REACT_APP_IO;
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -181,8 +182,10 @@ function App() {
                     )
                   }
                 />
-                <Route path="/home" element={<LT />} />
+                <Route path="/home" element={<DanhSachDRL />} />
                 <Route path="/xetdiemrenluyen" element={<XetDiemRenLuyen />} />
+                <Route path="/exportexcellt" element={<ExportExcelLT />} />
+
                 <Route
                   path="/xetdiemrenluyen/:maHK"
                   element={<DanhSachDRLSinhVien socket={socket} />}
@@ -195,7 +198,7 @@ function App() {
                   element={<AfterMark />}
                 />
                 <Route path="/chamdiemrenluyen/:maHK" element={<Mark />} />
-                <Route path="/xemdiemrenluyen" element={<DanhSachDRL />} />
+                <Route path="/exportexcellt" element={<ExportExcelLT />} />
               </Route>
             ) : (
               <Route
@@ -217,7 +220,7 @@ function App() {
                     )
                   }
                 />
-                <Route path="/home" element={<SV />} />
+                <Route path="/home" element={<DanhSachDRL />} />
                 <Route path="/chamdiemrenluyen" element={<PhieuChamDiem />} />
                 <Route
                   path="/chamdiemrenluyen/:maHK/after_mark"
@@ -239,7 +242,11 @@ function App() {
               <Route
                 path="/"
                 element={
-                  mk === "123456" ? <Navigate to="/change-info" /> : <SV />
+                  mk === "123456" ? (
+                    <Navigate to="/change-info" />
+                  ) : (
+                    <DanhSachDRL />
+                  )
                 }
               />
               <Route path="/" element={<OverviewSV />} />

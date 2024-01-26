@@ -72,14 +72,16 @@ const QuanLyThoiGian = () => {
   };
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
-    if (!Object.keys(validationErrors).length) {
-      tableData[row.index] = values;
-      await axios.put(`${DOMAIN}/departments/${values.maKhoa}`, values, {
-        withCredentials: true,
-      });
-      setTableData([...tableData]);
-      exitEditingMode(); //required to exit editing mode and close modal
-    }
+    // if (!Object.keys(validationErrors).length) {
+    //   tableData[row.index] = values;
+    //   await axios.put(`${DOMAIN}/departments/${values.maKhoa}`, values, {
+    //     withCredentials: true,
+    //   });
+    //   console.log("values: ");
+    //   setTableData([...tableData]);
+    //   exitEditingMode(); //required to exit editing mode and close modal
+    //   toast.success("Sửa thời gian thành công");
+    // }
   };
 
   const handleCancelRowEdits = () => {
@@ -157,10 +159,7 @@ const QuanLyThoiGian = () => {
           onEditingRowSave={handleSaveRowEdits}
           onEditingRowCancel={handleCancelRowEdits}
           renderRowActions={({ row, table }) => (
-            <Box
-              sx={{ display: "flex", gap: "1rem" }}
-              onClick={() => console.log(row)}
-            >
+            <Box sx={{ display: "flex", gap: "1rem" }}>
               <Tooltip arrow placement="left" title="Sửa Thời Gian">
                 <IconButton onClick={handleClickOpen}>
                   <Edit />
@@ -226,6 +225,11 @@ export const CreateNewAccountModal = ({
   );
 
   const handleSubmit = () => {
+    const isAnyFieldEmpty = Object.values(values).some((value) => value === "");
+    if (isAnyFieldEmpty) {
+      // Hiển thị thông báo hoặc thực hiện logic nếu có trường bị trống
+      return toast.warn("Vui lòng điền hết các trường");
+    }
     onSubmit(values);
     onClose();
   };

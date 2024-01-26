@@ -5,6 +5,7 @@ import {
   editStudent,
   getClassByMaGv,
   getInfoForPhieuDiem,
+  getManyInfo,
   getStudentByMaLop,
   getSVByMaSV,
   updateRole,
@@ -12,6 +13,7 @@ import {
 
 const router = express.Router();
 router.get("/phieu/info-and-point", getInfoForPhieuDiem);
+router.get("/getManyInfo", getManyInfo);
 router.get("/get_one_sv/:maHK/:maSv", getSVByMaSV);
 router.get("/get-student/:maLop", getStudentByMaLop);
 router.get("/:maGv", getClassByMaGv);

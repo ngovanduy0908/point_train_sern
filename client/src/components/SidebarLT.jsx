@@ -16,7 +16,7 @@ import ApartmentOutlinedIcon from "@mui/icons-material/ApartmentOutlined";
 
 import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
-import PreviewIcon from "@mui/icons-material/Preview";
+import FilePresentIcon from "@mui/icons-material/FilePresent";
 
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -29,24 +29,15 @@ import Countdown from "./countdown/CountDown";
 
 const navItemsLT = [
   {
-    text: "Overview",
+    text: "Trang Chủ",
     icon: <ApartmentOutlinedIcon />,
     path: "home",
   },
-  // {
-  //   text: "Xét Điểm Rèn Luyện",
-  //   icon: <PlaylistAddCheckIcon />,
-  //   path: "xetdiemrenluyen",
-  // },
-  // {
-  //   text: "Chấm Điểm Rèn Luyện",
-  //   icon: <BorderColorIcon />,
-  //   path: "chamdiemrenluyen",
-  // },
+
   {
-    text: "Xem Điểm Rèn Luyện",
-    icon: <PreviewIcon />,
-    path: "xemdiemrenluyen",
+    text: "Xuất Báo Cáo",
+    icon: <FilePresentIcon />,
+    path: "exportexcellt",
   },
 ];
 
@@ -96,7 +87,6 @@ const SidebarLT = ({
     const b = formatDay(curDate) <= formatDay(timeEndStudentMark);
     const c = formatDay(curDate) > formatDay(timeEndStudentMark);
     const d = formatDay(curDate) <= formatDay(timeEndMonitorMark);
-    console.log("c, d: ", c, d);
     if (c && d) {
       setCheckTimeMark(true);
       const isChamDiemRenLuyenExists = navItemsLT.some(

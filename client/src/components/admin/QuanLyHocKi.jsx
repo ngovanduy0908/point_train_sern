@@ -60,6 +60,7 @@ const QuanLyHocKi = () => {
   };
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
+    console.log("vap day: ", validationErrors);
     if (!Object.keys(validationErrors).length) {
       tableData[row.index] = values;
 
@@ -117,7 +118,7 @@ const QuanLyHocKi = () => {
             //set validation error for cell if invalid
             setValidationErrors({
               ...validationErrors,
-              [cell.id]: `${cell.column.columnDef.header} is required`,
+              [cell.id]: `${cell.column.columnDef.header} không được để trống`,
             });
           } else {
             //remove validation error for cell if valid
@@ -167,6 +168,9 @@ const QuanLyHocKi = () => {
         enableColumnOrdering: false,
         enableSorting: false,
         size: 80,
+        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
+          ...getCommonEditTextFieldProps(cell),
+        }),
       },
       {
         accessorKey: "name",
@@ -181,6 +185,7 @@ const QuanLyHocKi = () => {
         header: "Trạng Thái",
         enableEditing: false,
         Cell: ({ cell, row }) => {
+          console.log("cell what: ", cell);
           return (
             <Button
               sx={{
@@ -286,6 +291,12 @@ export const CreateNewAccountModal = ({
 
   const handleSubmit = () => {
     //put your validation logic here
+    // console.log("alo: ", values);
+    // const isAnyFieldEmpty = Object.values(values).some((value) => value === "");
+    // if (isAnyFieldEmpty) {
+    //   // Hiển thị thông báo hoặc thực hiện logic nếu có trường bị trống
+    //   return toast.warn("Vui lòng điền hết các trường");
+    // }
     onSubmit(values);
     onClose();
   };
@@ -309,6 +320,7 @@ export const CreateNewAccountModal = ({
                     key={column.accessorKey}
                     label={column.header}
                     name={column.accessorKey}
+                    required
                     onChange={(e) =>
                       setValues({ ...values, [e.target.name]: e.target.value })
                     }

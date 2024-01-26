@@ -1,71 +1,48 @@
 import { Box, Button, Grid } from "@mui/material";
+import Header from "components/Header";
 import { AuthContext } from "context/authContext";
-import React, { useContext, useEffect, useState } from "react";
 import Select from "react-select";
 import { toast } from "react-toastify";
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
-
-import { getListClassByMaGV } from "utils/getMany/getListClassByMaGV";
+import React, { useContext, useEffect, useState } from "react";
+import { generateOptionsListDanhSach } from "utils/define";
+import ModalV2 from "components/modal/ModalV2";
 import { getListSemester } from "utils/getMany/getListSemesters";
+import { getManyInfoBySV } from "utils/getDetails/getManyInfoBySV";
 import {
-  downloadFile,
   generateUrlExcel,
   handleDataExportExcelGV,
 } from "utils/postDetails/handleDataExportExcelGV";
-import ModalV2 from "components/modal/ModalV2";
-import { getNameDepartmentByMa } from "utils/getDetails/getNameDepartmantByMaGv";
-import Header from "components/Header";
-import { generateOptionsListDanhSach } from "utils/define";
 import Progress from "components/Progress";
+const optionsListDanhSach = generateOptionsListDanhSach();
 const customStyles = {
   option: (provided, state) => ({
     ...provided,
     backgroundColor: state.isSelected ? "blue" : "white",
     color: state.isSelected ? "white" : "black",
     cursor: "pointer",
-    opacity: state.isFocused ? 0.8 : 1, // Opacity khi hover
+    opacity: state.isFocused ? 0.8 : 1,
     transition: "background-color 0.3s",
   }),
 };
-const optionsListDanhSach = generateOptionsListDanhSach();
-const ExportExcelGV = () => {
+const ExportExcelLT = () => {
   const { currentUser } = useContext(AuthContext);
-  const [dataLop, setDataLop] = useState([]);
   const [dataHocKi, setDataHocKi] = useState([]);
-  const [tenKhoa, setTenKhoa] = useState();
   const [url, setUrl] = useState();
   const [openModalFile, setOpenModaFile] = useState(false);
-  const [loading, setLoading] = useState();
   const [initChoose, setInitChoose] = useState({
     maLop: "",
     maHK: "",
     danhSachSV: "",
+    tenGV: "",
+    tenKhoa: "",
   });
-
-  const getOneDepartmentByMa = async () => {
+  const [loading, setLoading] = useState();
+  const fetchData = async () => {
     try {
-      const res = await getNameDepartmentByMa(`${currentUser.maKhoa}`);
-      // console.log("res khoa: ", res);
-      setTenKhoa(res.tenKhoa);
-    } catch (error) {
-      console.log("error: ", error);
-    }
-  };
-  useEffect(() => {
-    getOneDepartmentByMa();
-  }, []);
-
-  const getClassByMaGV = async () => {
-    try {
-      const res = await getListClassByMaGV(`maGv=${currentUser.maGv}`);
-      const formatDataLop = res.map((item) => ({
-        value: {
-          maLop: item.maLop,
-          tenLop: item.class_name,
-        },
-        label: item.class_name,
-      }));
-      setDataLop(formatDataLop);
+      const resManyInfo = await getManyInfoBySV(`maSv=${currentUser.maSv}`);
+      const { maLop, tenGV, tenKhoa, tenLop } = resManyInfo;
+      // console.log("resManyInfo: ", resManyInfo);
       const resSemester = await getListSemester();
       const formatDataHK = resSemester.map((item) => ({
         value: {
@@ -74,13 +51,23 @@ const ExportExcelGV = () => {
         },
         label: item.name,
       }));
+      setInitChoose((prev) => ({
+        ...prev,
+        maLop: {
+          maLop: maLop,
+          tenLop: tenLop,
+        },
+        tenGV: tenGV,
+        tenKhoa: tenKhoa,
+        tenLopTruong: currentUser.name,
+      }));
       setDataHocKi(formatDataHK);
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
-    getClassByMaGV();
+    fetchData();
   }, []);
   const handleChange = (key, value) => {
     setInitChoose((prev) => ({
@@ -90,21 +77,18 @@ const ExportExcelGV = () => {
   };
   const handleClickView = async () => {
     try {
-      if (!initChoose.maLop) return toast.warn("Vui lòng chọn lớp");
       if (!initChoose.maHK) return toast.warn("Vui lòng chọn học kì");
       if (!initChoose.danhSachSV)
         return toast.warn("Vui lòng chọn danh sách sinh viên");
+
+      // console.log("value truyen xuong: ", initChoose);
       setOpenModaFile(true);
       setLoading(true);
-      const valuePost = {
-        ...initChoose,
-        tenGV: currentUser.name,
-        tenKhoa: tenKhoa,
-      };
-      const res = await handleDataExportExcelGV(valuePost);
+      const res = await handleDataExportExcelGV(initChoose);
       const res1 = await generateUrlExcel(res.data, "text");
       setUrl(res1.filePath);
       setLoading(false);
+      // console.log("res này là gì đấy: ", res);
     } catch (error) {
       console.log("error: ", error);
     }
@@ -114,15 +98,6 @@ const ExportExcelGV = () => {
       <Header title={currentUser.name} subtitle="Xuất báo cáo" />
 
       <div class="grid grid-cols-4 gap-4">
-        <div>
-          <Select
-            options={dataLop}
-            styles={customStyles}
-            placeholder="Chọn Lớp"
-            required
-            onChange={(e) => handleChange("maLop", e.value)}
-          />
-        </div>
         <div>
           <Select
             options={dataHocKi}
@@ -169,7 +144,7 @@ const ExportExcelGV = () => {
                     sx={{
                       width: "100%",
                     }}
-                    onClick={() => downloadFile(url, "File tong hop DRL.xlsx")}
+                    // onClick={() => downloadFile(url, "File tong hop DRL.xlsx")}
                   >
                     Tải file
                   </Button>
@@ -200,4 +175,4 @@ const ExportExcelGV = () => {
   );
 };
 
-export default ExportExcelGV;
+export default ExportExcelLT;

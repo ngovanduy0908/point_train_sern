@@ -191,7 +191,31 @@ export const getInfoForPhieuDiem = (req, res) => {
   `;
   db.query(q, (err, data) => {
     if (err) return res.status(500).json(err);
-    // console.log("vao day: ", data);
+    return res.status(200).json(...data);
+  });
+};
+
+export const getManyInfo = (req, res) => {
+  const { maSv } = req.query;
+  const q = `
+  SELECT 
+  class.maLop, 
+  class.class_name as 'tenLop', 
+  department.name as 'tenKhoa', 
+  teacher.name as 'tenGV' 
+  FROM 
+  students, 
+  class, 
+  teacher, 
+  department 
+  WHERE 
+  students.maLop = class.maLop and 
+  class.maGv = teacher.maGv and 
+  teacher.maKhoa = department.maKhoa and 
+  students.maSv = '${maSv}'
+  `;
+  db.query(q, (err, data) => {
+    if (err) return res.status(500).json(err);
     return res.status(200).json(...data);
   });
 };

@@ -16,8 +16,9 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 // import Tooltip from '@mui/material/Tooltip';
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
+import SchoolIcon from "@mui/icons-material/School";
 import { AuthContext } from "../../context/authContext";
+import { ToastContainer, toast } from "react-toastify";
 const pages = ["TRANG WEB ĐÀO TẠO", "TRANG WEB CNTT", "TRANG WEB HUMG"];
 
 function ResponsiveAppBar() {
@@ -37,7 +38,7 @@ function ResponsiveAppBar() {
       <div className="container navbar_header">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+            <SchoolIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
             <Typography
               variant="h6"
               noWrap
@@ -53,7 +54,7 @@ function ResponsiveAppBar() {
                 textDecoration: "none",
               }}
             >
-              LOGO
+              HUMG
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -92,7 +93,7 @@ function ResponsiveAppBar() {
                 ))}
               </Menu>
             </Box>
-            <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+            <SchoolIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
             <Typography
               variant="h5"
               noWrap
@@ -109,7 +110,7 @@ function ResponsiveAppBar() {
                 textDecoration: "none",
               }}
             >
-              LOGO
+              HUMG
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               {pages.map((page) => (
@@ -148,13 +149,14 @@ const Login = ({ socket }) => {
     e.preventDefault();
     try {
       const value = await login(inputs);
-      console.log("value login: ", value.maSv);
+      // console.log("value login: ", value.maSv);
       if (value.maSv) {
         socket.emit("newUser", value);
       }
       navigate("/");
     } catch (err) {
-      setErr(err.response.data);
+      toast.error(err.response.data);
+      // setErr(err.response.data);
     }
   };
 
@@ -173,17 +175,7 @@ const Login = ({ socket }) => {
           <div class="form-container sign-up-container">
             <form action="#" className="form_login">
               <h1>Quên mật khẩu</h1>
-              <div class="social-container">
-                <a href="https://www.facebook.com/" class="social">
-                  <FacebookOutlinedIcon />
-                </a>
-                <a href="https://www.facebook.com/" class="social">
-                  <FacebookOutlinedIcon />
-                </a>
-                <a href="https://www.facebook.com/" class="social">
-                  <FacebookOutlinedIcon />
-                </a>
-              </div>
+
               <span>Nhập email đã đăng ký</span>
               <input type="email" placeholder="Email" />
               <button>Gửi</button>
@@ -192,18 +184,7 @@ const Login = ({ socket }) => {
           <div class="form-container sign-in-container">
             <form action="#" className="form_login">
               <h1>Đăng nhập</h1>
-              <div class="social-container">
-                <a href="https://www.facebook.com/" class="social">
-                  <FacebookOutlinedIcon />
-                </a>
-                <a href="https://www.facebook.com/" class="social">
-                  <FacebookOutlinedIcon />
-                </a>
-                <a href="https://www.facebook.com/" class="social">
-                  <FacebookOutlinedIcon />
-                </a>
-              </div>
-              <span>or use your account</span>
+
               <input
                 type="text"
                 placeholder="Tài khoản"
@@ -223,10 +204,8 @@ const Login = ({ socket }) => {
           <div class="overlay-container">
             <div class="overlay">
               <div class="overlay-panel overlay-left">
-                <h1>Welcome Back!</h1>
-                <p>
-                  To keep connected with us please login with your personal info
-                </p>
+                <h1>Xin Chào!</h1>
+                <p>Truy Cập Hệ Thống</p>
                 <button
                   class="ghost"
                   id="signIn"
@@ -259,6 +238,7 @@ const Login = ({ socket }) => {
         </div>
       </div>
       <Footer />
+      <ToastContainer />
     </div>
   );
 };

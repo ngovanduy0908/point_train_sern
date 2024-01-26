@@ -70,15 +70,12 @@ export const editDeadline = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not authenticated");
   const maGv = req.params.maGv;
-
   const updatedData = req.body;
   const q = `update deadline set start_time_student='${updatedData.start_time_student}', end_time_student='${updatedData.end_time_student}', end_time_monitor='${updatedData.end_time_monitor}' where maGv='${maGv}'`;
-  // const values = [req.body.maKhoa]
   db.query(q, (err, data) => {
     if (err) return res.status(500).json(err);
     return res.status(200).json("Thay doi thoi gian thanh cong");
   });
-  // const ma = req.body.maKhoa;
 };
 
 export const deleteDeadline = (req, res) => {
