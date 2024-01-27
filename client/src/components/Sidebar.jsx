@@ -22,7 +22,7 @@ import { ChevronLeft, ChevronRightOutlined } from "@mui/icons-material";
 
 const navItems = [
   {
-    text: "Overview",
+    text: "Trang chủ",
     icon: <ApartmentOutlinedIcon />,
     path: "overview",
   },

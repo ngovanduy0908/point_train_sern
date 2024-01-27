@@ -116,7 +116,7 @@ const OverviewGV = () => {
   };
   return (
     <Box m="1.5rem 2.5rem">
-      <div class="grid grid-cols-4 gap-4 my-2">
+      <div class="grid grid-cols-4 gap-4 my-2 items-center">
         <div>
           <Select
             options={dataLop}

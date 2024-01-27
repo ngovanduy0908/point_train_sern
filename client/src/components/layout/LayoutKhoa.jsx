@@ -28,7 +28,7 @@ const LayoutAdmin = ({ currentUser, theme }) => {
           <Outlet />
         </Box>
       </Box>
-      <ToastContainer />
+      <ToastContainer autoClose={1500} />
     </ThemeProvider>
   );
 };

@@ -292,3 +292,7 @@ input {
 #header-bar {
   display: none;
 }
+
+.highcharts-container {
+  border-radius: 10px;
+}

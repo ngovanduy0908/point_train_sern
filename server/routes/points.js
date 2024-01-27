@@ -15,6 +15,7 @@ import {
   pointBasicChart,
   pointBasicChartPercent,
   pointGvNote,
+  statisticalPieDepartment,
 } from "../controllers/point.js";
 
 const router = express.Router();
@@ -29,7 +30,7 @@ router.get("/list_point", getListPointByMaSV);
 router.get("/gvNote", pointGvNote);
 router.get("/point_basic_chart", pointBasicChart);
 router.get("/point_basic_chart_percent", pointBasicChartPercent);
-
+router.get("/point_statistical_pie_department", statisticalPieDepartment);
 router.post("/insert_or_update/:maHK/:maSv", insertOrUpdatePointStudent);
 router.post("/insert_or_update_monitor", insertOrUpdatePointStudentMonitor);
 router.post("/mark_zero", markZero);

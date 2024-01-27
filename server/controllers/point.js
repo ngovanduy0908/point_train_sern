@@ -725,11 +725,48 @@ export const pointBasicChartPercent = (req, res) => {
 
 export const pointGvNote = (req, res) => {
   const { maSv, maHK } = req.query;
-  console.log("xg day: ", maSv, maHK);
   const query = `
   SELECT gvNote FROM point WHERE maSv = '${maSv}' and maHK = '${maHK}'
   `;
   db.query(query, (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(200).json(...data);
+  });
+};
+
+export const statisticalPieDepartment = (req, res) => {
+  const { maHK, maKhoaHoc, maKhoa } = req.query;
+  const q = `
+  SELECT
+    maHK,
+    COUNT(*) AS TongSV,
+    COUNT(CASE WHEN point_teacher >= 0 AND point_teacher < 30 THEN 1 END) AS KEM,
+    COUNT(CASE WHEN point_teacher >= 30 AND point_teacher < 50 THEN 1 END) AS Y,
+    COUNT(CASE WHEN point_teacher >= 50 AND point_teacher < 60 THEN 1 END) AS TB,
+    COUNT(CASE WHEN point_teacher >= 60 AND point_teacher < 70 THEN 1 END) AS TBK,
+    COUNT(CASE WHEN point_teacher >= 70 AND point_teacher < 80 THEN 1 END) AS KHA,
+    COUNT(CASE WHEN point_teacher >= 80 AND point_teacher < 90 THEN 1 END) AS G,
+    COUNT(CASE WHEN point_teacher >= 90 AND point_teacher <= 100 THEN 1 END) AS XS,
+    ROUND(COUNT(CASE WHEN point_teacher >= 0 AND point_teacher < 30 THEN 1 END) / COUNT(*) * 100, 2) AS KEM_Percent,
+    ROUND(COUNT(CASE WHEN point_teacher >= 30 AND point_teacher < 50 THEN 1 END) / COUNT(*) * 100, 2) AS Y_Percent,
+    ROUND(COUNT(CASE WHEN point_teacher >= 50 AND point_teacher < 60 THEN 1 END) / COUNT(*) * 100, 2) AS TB_Percent,
+    ROUND(COUNT(CASE WHEN point_teacher >= 60 AND point_teacher < 70 THEN 1 END) / COUNT(*) * 100, 2) AS TBK_Percent,
+    ROUND(COUNT(CASE WHEN point_teacher >= 70 AND point_teacher < 80 THEN 1 END) / COUNT(*) * 100, 2) AS KHA_Percent,
+    ROUND(COUNT(CASE WHEN point_teacher >= 80 AND point_teacher < 90 THEN 1 END) / COUNT(*) * 100, 2) AS G_Percent,
+    ROUND(COUNT(CASE WHEN point_teacher >= 90 AND point_teacher <= 100 THEN 1 END) / COUNT(*) * 100, 2) AS XS_Percent
+FROM
+    point
+JOIN students ON point.maSv = students.maSv
+JOIN class ON students.maLop = class.maLop
+JOIN teacher on class.maGv = teacher.maGv
+JOIN department on teacher.maKhoa = department.maKhoa
+WHERE
+department.maKhoa = '${maKhoa}' and class.maKhoaHoc = '${maKhoaHoc}' AND
+point.maHK = '${maHK}' and
+    status_teacher = 1
+GROUP BY maHK
+  `;
+  db.query(q, (err, data) => {
     if (err) return res.status(500).json(err);
     return res.status(200).json(...data);
   });
