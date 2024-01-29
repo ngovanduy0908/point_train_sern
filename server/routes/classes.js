@@ -5,9 +5,6 @@ import {
   changeKhoaHoc,
   deleteClass,
   editClass,
-  //   addTeacher,
-  //   deleteTeacher,
-  //   editTeacher,
   getAllListClass,
   getListClassByMaGV,
 } from "../controllers/class.js";

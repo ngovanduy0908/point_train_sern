@@ -113,3 +113,25 @@ WHERE
     return res.status(200).json(...data);
   });
 };
+
+export const getCountManyAdmin = (req, res) => {
+  const q = `
+  SELECT
+  COUNT(DISTINCT department.maKhoa) AS tongKhoa,
+  COUNT(DISTINCT course.maKhoaHoc) AS tongKhoaHoc,
+  COUNT(DISTINCT teacher.maGV) AS tongGV,
+  COUNT(DISTINCT class.maLop) AS tongLop,
+  COUNT(DISTINCT students.maSv) AS tongSV
+FROM
+  department
+LEFT JOIN teacher ON department.maKhoa = teacher.maKhoa
+LEFT JOIN class ON teacher.maGv = class.maGv
+LEFT JOIN course ON (class.maKhoaHoc = course.maKhoaHoc OR class.maKhoaHoc IS NULL)
+LEFT JOIN students ON class.maLop = students.maLop
+  `;
+  db.query(q, (err, data) => {
+    if (err) return res.status(500).json(err);
+
+    return res.status(200).json(...data);
+  });
+};

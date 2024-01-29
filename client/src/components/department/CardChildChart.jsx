@@ -11,7 +11,7 @@ const CardChildChart = ({ icon, value, text, bg }) => {
       </div>{" "}
       <div>
         <h1 className="font-semibold text-[24px] text-[#151D48]">
-          {value.toLocaleString("vi-VN")}
+          {value?.toLocaleString("vi-VN")}
         </h1>
         <p
           className="font-medium text-[16px] text-[#425166]"
