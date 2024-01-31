@@ -28,6 +28,8 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { formatDayNotification } from "utils/formatDay";
+import Modal from "./modal/Modal";
+import InfoMember from "./InfoMember";
 const Navbar = ({
   user,
   isSidebarOpen,
@@ -35,11 +37,13 @@ const Navbar = ({
   notifications,
   socket,
 }) => {
+  // console.log("check user: ", user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorElV1, setAnchorElV1] = useState(null);
+  const [openFormInfo, setOpenFormInfo] = useState(false);
   // console.log("theme navbar: ", theme);
   const isOpen = Boolean(anchorEl);
   const isOpenNoti = Boolean(anchorElV1);
@@ -61,6 +65,15 @@ const Navbar = ({
       // console.log("remove nguoi dung");
     }
     navigate("/login");
+  };
+  const [emailData, setEmailData] = useState({
+    to: "",
+    subject: "",
+    text: "",
+  });
+
+  const handleInputChange = (e) => {
+    setEmailData({ ...emailData, [e.target.name]: e.target.value });
   };
 
   return (
@@ -209,11 +222,18 @@ const Navbar = ({
               onClose={handleClose}
               anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
             >
-              {user.role_id === 1 ? (
+              {user?.role_id === 1 || user?.tk === "humg881966" ? (
                 <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
               ) : (
                 <Box>
-                  <MenuItem onClick={handleLogout}>Thay đổi thông tin</MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      setOpenFormInfo(true);
+                      setAnchorEl(null);
+                    }}
+                  >
+                    Thay đổi thông tin
+                  </MenuItem>
                   <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
                 </Box>
               )}
@@ -221,6 +241,16 @@ const Navbar = ({
           </FlexBetween>
         </FlexBetween>
       </Toolbar>
+      <Modal
+        open={openFormInfo}
+        setOpen={setOpenFormInfo}
+        classNameChildren={"w-[800px]"}
+        displayButtonOk={false}
+        displayButtonCancel={false}
+        title="Thông Tin Cá Nhân"
+      >
+        <InfoMember user={user} setOpenFather={setOpenFormInfo} />
+      </Modal>
     </AppBar>
   );
 };

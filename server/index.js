@@ -17,6 +17,7 @@ import proofMarkRouter from "./routes/proof_mark.js";
 import { Server } from "socket.io";
 import multer from "multer";
 import xlsx from "xlsx";
+import nodemailer from "nodemailer";
 import { db } from "./db.js";
 
 const app = express();
@@ -181,6 +182,79 @@ app.post("/api/upload", upload.array("images", 10), (req, res) => {
   return res.status(200).json(uploadedFiles);
 });
 
+// node mail
+// Định cấu hình transporter của nodemailer
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "ngoduy090801@gmail.com",
+    pass: "kmwpncrgpjwgbhyr",
+  },
+});
+
+// API endpoint để gửi email
+app.post("/api/send-email", async (req, res) => {
+  try {
+    const { to, subject, text, randomNumber, svOrGv } = req.body;
+    const checkEmailExis = () => {
+      return new Promise((resolve, reject) => {
+        let q;
+        if (svOrGv === "1") {
+          q = `select email from students where email = '${to}'`;
+        } else {
+          q = `select email from teacher where email = '${to}'`;
+        }
+        db.query(q, (err, data) => {
+          if (err) return reject(err);
+          resolve(data.length > 0);
+        });
+      });
+    };
+    const updateEmail = () => {
+      return new Promise(async (resolve, reject) => {
+        const mailOptions = {
+          from: "ngoduy090801@gmail.com",
+          to,
+          subject,
+          html: `${text}: <b>${randomNumber}</b>`,
+        };
+
+        // Gửi email
+        await transporter.sendMail(mailOptions);
+        resolve();
+
+        // res.status(200).json(randomNumber);
+      });
+    };
+    try {
+      const isEmailExist = await checkEmailExis();
+      if (isEmailExist) {
+        res.status(409).json("Email đã tồn tại");
+      } else {
+        await updateEmail();
+        res.status(200).json(randomNumber);
+      }
+    } catch (error) {
+      res.status(500).json(error);
+    }
+    // console.log("ssser: ", randomNumber);
+    // Định cấu hình email options
+    // const mailOptions = {
+    //   from: "ngoduy090801@gmail.com",
+    //   to,
+    //   subject,
+    //   html: `${text}: <b>${randomNumber}</b>`,
+    // };
+
+    // // Gửi email
+    // await transporter.sendMail(mailOptions);
+
+    // res.status(200).json(randomNumber);
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+});
 // socket
 const io = new Server({
   /* options */

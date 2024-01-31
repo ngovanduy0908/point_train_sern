@@ -31,32 +31,69 @@ export const changeSemester = (req, res) => {
   });
 };
 
-export const addSemester = (req, res) => {
+export const addSemester = async (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not authenticated");
 
   const newData = req.body;
   const maHK = newData.maHK;
-  const q = "select maHK from semester where maHK=?";
-  db.query(q, [maHK], (err, data) => {
-    if (err) return res.status(500).json(err);
-
-    if (data.length) return res.status(409).json("Hoc ki da ton tai");
-
-    const q = "insert into semester(maHK, name, semester, year) values(?)";
-
-    const values = [
-      req.body.maHK,
-      req.body.name,
-      req.body.semester,
-      req.body.year,
-    ];
-
-    db.query(q, [values], (err, data) => {
-      if (err) return res.status(500).json(err);
-      return res.status(200).json("Hoc ki da tao thanh cong");
+  const checkSemesterExistence = (maHK) => {
+    return new Promise((resolve, reject) => {
+      const q = "select maHK from semester where maHK=?";
+      db.query(q, [maHK], (err, data) => {
+        if (err) return reject(err);
+        resolve(data.length > 0);
+      });
     });
-  });
+  };
+
+  const insertSemester = (values) => {
+    return new Promise((resolve, reject) => {
+      const q = "insert into semester(maHK, name, semester, year) values(?)";
+      db.query(q, [values], (err, data) => {
+        if (err) return reject(err);
+        resolve();
+      });
+    });
+  };
+
+  try {
+    const isSemesterExist = await checkSemesterExistence(maHK);
+    if (isSemesterExist) {
+      res.status(409).json("Hoc ki da ton tai");
+    } else {
+      await insertSemester([
+        req.body.maHK,
+        req.body.name,
+        req.body.semester,
+        req.body.year,
+      ]);
+      res.status(200).json("Hoc ki da tao thanh cong");
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+
+  // const q = "select maHK from semester where maHK=?";
+  // db.query(q, [maHK], (err, data) => {
+  //   if (err) return res.status(500).json(err);
+
+  //   if (data.length) return res.status(409).json("Hoc ki da ton tai");
+
+  //   const q = "insert into semester(maHK, name, semester, year) values(?)";
+
+  //   const values = [
+  //     req.body.maHK,
+  //     req.body.name,
+  //     req.body.semester,
+  //     req.body.year,
+  //   ];
+
+  //   db.query(q, [values], (err, data) => {
+  //     if (err) return res.status(500).json(err);
+  //     return res.status(200).json("Hoc ki da tao thanh cong");
+  //   });
+  // });
 };
 
 export const editSemester = (req, res) => {

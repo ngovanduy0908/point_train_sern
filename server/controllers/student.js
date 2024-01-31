@@ -219,3 +219,88 @@ export const getManyInfo = (req, res) => {
     return res.status(200).json(...data);
   });
 };
+
+export const changeInfoEmail = async (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not authenticated");
+
+  // const maSv = req.params.maSv;
+  const { maGv, maSv, svOrGv } = req.query;
+  const { email } = req.body;
+  const checkEmailExis = () => {
+    return new Promise((resolve, reject) => {
+      let q;
+      if (svOrGv === "1") {
+        q = `select email from students where email = '${email}'`;
+      } else {
+        q = `select email from teacher where email = '${email}'`;
+      }
+      db.query(q, (err, data) => {
+        if (err) return reject(err);
+        resolve(data.length > 0);
+      });
+    });
+  };
+  const updateEmail = () => {
+    return new Promise((resolve, reject) => {
+      let q;
+      if (svOrGv === "1") {
+        q = `update students set email='${email}' where maSV='${maSv}'`;
+      } else {
+        q = `update teacher set email='${email}' where maGv='${maGv}'`;
+      }
+      // const values = [req.body.maKhoa]
+
+      db.query(q, (err, data) => {
+        if (err) return res.status(500).json(err);
+        resolve();
+        // return res.status(200).json("Thay doi sinh vien thanh cong");
+      });
+    });
+  };
+  try {
+    const isEmailExist = await checkEmailExis();
+    if (isEmailExist) {
+      res.status(409).json("Email đã tồn tại");
+    } else {
+      await updateEmail();
+      res.status(200).json("Thay đổi thông tin email thành công");
+    }
+  } catch (error) {
+    res.status(500).json(error);
+  }
+  // let q;
+  // if (svOrGv === "1") {
+  //   q = `update students set email='${email}' where maSV='${maSv}'`;
+  // } else {
+  //   q = `update teacher set email='${email}' where maGv='${maGv}'`;
+  // }
+  // // const values = [req.body.maKhoa]
+
+  // db.query(q, (err, data) => {
+  //   if (err) return res.status(500).json(err);
+  //   return res.status(200).json("Thay doi sinh vien thanh cong");
+  // });
+};
+
+export const changeInfoPhone = (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not authenticated");
+
+  // const maSv = req.params.maSv;
+  const { maGv, maSv, svOrGv } = req.query;
+  const { phone } = req.body;
+
+  let q;
+  if (svOrGv === "1") {
+    q = `update students set phone_number='${phone}' where maSV='${maSv}'`;
+  } else {
+    q = `update teacher set phone_number='${phone}' where maGv='${maGv}'`;
+  }
+  // const values = [req.body.maKhoa]
+
+  db.query(q, (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(200).json("Thay doi sinh vien thanh cong");
+  });
+};
