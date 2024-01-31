@@ -8,6 +8,7 @@ const ValidatedTextField = ({
   isEmail,
   value,
   onChange,
+  type = "text",
   ...props
 }) => {
   const [error, setError] = useState("");
@@ -15,9 +16,9 @@ const ValidatedTextField = ({
   const handleBlur = () => {
     // Kiểm tra điều kiện validate
     if (isRequired && value.trim() === "") {
-      setError("This field is required");
+      setError("Trường này không được để trống");
     } else if (isEmail && !isValidEmail(value)) {
-      setError("Invalid email address");
+      setError("Vui lòng nhập đúng định dạng email");
     } else {
       setError("");
     }
@@ -47,6 +48,7 @@ const ValidatedTextField = ({
       onBlur={handleBlur}
       error={Boolean(error)}
       helperText={error}
+      type={type}
       {...props}
     />
   );

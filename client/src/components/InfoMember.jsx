@@ -5,13 +5,14 @@ import ChangeEmail from "./changeInfo/ChangeEmail";
 import { AuthContext } from "context/authContext";
 import ChangePhone from "./changeInfo/ChangePhone";
 import Progress from "./Progress";
+import VerifyPass from "./changeInfo/VerifyPass";
 
 const InfoMember = ({ user, setOpenFather }) => {
   //   const { currentUser } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [openFormInfoEmail, setOpenFormInfoEmail] = useState(false);
   const [openFormInfoPhone, setOpenFormInfoPhone] = useState(false);
-  // const [openFor]
+  const [openFormVerifyPassword, setOpenFormVerifyPassword] = useState(false);
   const [currentUser, setCurrentUser] = useState(
     JSON.parse(localStorage.getItem("user"))
   );
@@ -86,6 +87,17 @@ const InfoMember = ({ user, setOpenFather }) => {
               Thay đổi
             </Button>
           </div>
+
+          <div className="mt-2">
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => setOpenFormVerifyPassword(true)}
+              //   startIcon={<RemoveRedEyeIcon />}
+            >
+              Thay đổi mật khẩu
+            </Button>
+          </div>
         </div>
       )}
 
@@ -115,6 +127,15 @@ const InfoMember = ({ user, setOpenFather }) => {
           setOpen={setOpenFormInfoPhone}
           setOpenFather={setOpenFather}
         />
+      </Modal>
+      <Modal
+        open={openFormVerifyPassword}
+        setOpen={setOpenFormVerifyPassword}
+        classNameChildren={"w-[500px]"}
+        displayButtonOk={false}
+        displayButtonCancel={false}
+      >
+        <VerifyPass setOpen={setOpenFormVerifyPassword} />
       </Modal>
     </div>
   );

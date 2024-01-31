@@ -304,3 +304,46 @@ export const changeInfoPhone = (req, res) => {
     return res.status(200).json("Thay doi sinh vien thanh cong");
   });
 };
+
+export const getPass = (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not authenticated");
+
+  // const maSv = req.params.maSv;
+  const { maGv, maSv, svOrGv } = req.query;
+
+  let q;
+  if (svOrGv === "1") {
+    q = `select password from students where maSv='${maSv}'`;
+  } else {
+    q = `select password from teacher where maGv='${maGv}'`;
+  }
+  // const values = [req.body.maKhoa]
+
+  db.query(q, (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(200).json(...data);
+  });
+};
+
+export const changeInfoPass = (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not authenticated");
+
+  // const maSv = req.params.maSv;
+  const { maGv, maSv, svOrGv } = req.query;
+  const { pass } = req.body;
+
+  let q;
+  if (svOrGv === "1") {
+    q = `update students set password='${pass}' where maSV='${maSv}'`;
+  } else {
+    q = `update teacher set password='${pass}' where maGv='${maGv}'`;
+  }
+  // const values = [req.body.maKhoa]
+
+  db.query(q, (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(200).json("Thay doi sinh vien thanh cong");
+  });
+};
