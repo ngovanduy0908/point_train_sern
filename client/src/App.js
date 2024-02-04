@@ -49,6 +49,7 @@ import ExportExcelGV from "pages/gv/ExportExcelGV";
 import OverviewSV from "components/student/Overview";
 import OverviewGV from "components/teacher/OverviewGV";
 import ExportExcelLT from "pages/lt/ExportExcelLT";
+import QuanLyChuyenNganh from "components/admin/QuanLyChuyenNganh";
 const IO = process.env.REACT_APP_IO;
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -84,6 +85,10 @@ function App() {
               <Route path="/quanlykhoa" element={<QuanLyKhoa />} />
               <Route path="/quanlykhoahoc" element={<QuanLyKhoaHoc />} />
               <Route path="/quanlyhocki" element={<QuanLyHocKi />} />
+              <Route
+                path="/quanlychuyennganh"
+                element={<QuanLyChuyenNganh />}
+              />
             </Route>
             <Route path="/login" element={<Login />} />
           </Routes>

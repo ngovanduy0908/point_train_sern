@@ -11,7 +11,7 @@ const DOMAIN = process.env.REACT_APP_DOMAIN;
 const colSpan = 4;
 
 const FormPhieuCham = ({ maHK, note }) => {
-  console.log("note: ", note);
+  // console.log("note: ", note);
   const { currentUser } = useContext(AuthContext);
   const [studentData, setStudentData] = useState([]);
   const [data, setData] = useState([]);
@@ -516,12 +516,12 @@ const FormPhieuCham = ({ maHK, note }) => {
       ? 5
       : 0;
 
-    setValuesGV((prev) => ({
-      ...prev,
-      gvDiemTBHK: changeValueTBHK,
-      gvCitizen: changeValueCitizen,
-      gvMonitor: changeSvMonitor,
-    }));
+    // setValuesGV((prev) => ({
+    //   ...prev,
+    //   gvDiemTBHK: changeValueTBHK,
+    //   gvCitizen: changeValueCitizen,
+    //   gvMonitor: changeSvMonitor,
+    // }));
   }, [pointCitizenMediumData, studentData]);
 
   // start sum diem sinh vien
@@ -974,7 +974,7 @@ const FormPhieuCham = ({ maHK, note }) => {
                     type="number"
                     name="ltDiemTBHK"
                     id=""
-                    value={values.svDiemTBHK}
+                    value={valuesLT.ltDiemTBHK}
                     readOnly
                   />
                 </td>
@@ -983,7 +983,7 @@ const FormPhieuCham = ({ maHK, note }) => {
                     type="number"
                     name="gvDiemTBHK"
                     id=""
-                    value={valuesLT.ltDiemTBHK}
+                    value={valuesGV.gvDiemTBHK}
                     readOnly
                   />
                 </td>
@@ -1538,7 +1538,7 @@ const FormPhieuCham = ({ maHK, note }) => {
                     type="number"
                     name="ltCitizen"
                     id=""
-                    value={values.svCitizen}
+                    value={valuesLT.ltCitizen}
                     readOnly
                   />
                 </td>
@@ -1547,7 +1547,7 @@ const FormPhieuCham = ({ maHK, note }) => {
                     type="number"
                     name="gvCitizen"
                     id=""
-                    value={valuesLT.ltCitizen}
+                    value={valuesGV.gvCitizen}
                     readOnly
                   />
                 </td>
@@ -2421,7 +2421,7 @@ const FormPhieuCham = ({ maHK, note }) => {
           </table>
           <TextField
             id="outlined-multiline-flexible"
-            label="Ghi chú"
+            label={note ? "" : "Ghi chú"}
             multiline
             maxRows={4}
             fullWidth

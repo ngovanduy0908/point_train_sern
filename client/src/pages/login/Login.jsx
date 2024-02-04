@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./login.css";
 import Header from "../../components/header/Header";
-import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
 import Footer from "../../components/footer/Footer";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -19,8 +18,10 @@ import MenuItem from "@mui/material/MenuItem";
 import SchoolIcon from "@mui/icons-material/School";
 import { AuthContext } from "../../context/authContext";
 import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
+import { generateRandomNumberString } from "utils/function/randomNumber";
 const pages = ["TRANG WEB ĐÀO TẠO", "TRANG WEB CNTT", "TRANG WEB HUMG"];
-
+const DOMAIN = process.env.REACT_APP_DOMAIN;
 function ResponsiveAppBar() {
   // console.log("trang login : ", socket);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -135,6 +136,7 @@ const Login = ({ socket }) => {
   const [inputs, setInputs] = useState({
     tk: "",
     mk: "",
+    email: "",
   });
   const [err, setErr] = useState(null);
 
@@ -160,6 +162,27 @@ const Login = ({ socket }) => {
     }
   };
 
+  const getPassForget = async (e) => {
+    e.preventDefault();
+    try {
+      if (!inputs?.email) return toast.error("Vui lòng không để trống");
+      const number = generateRandomNumberString();
+      const values = {
+        to: inputs.email,
+        subject: "Thư cấp lại mật khẩu",
+        text: number,
+      };
+      await axios.post(`${DOMAIN}/forget-pass`, values, {
+        withCredentials: true,
+      });
+      toast.success(
+        "Mật khẩu đã được cấp trong email. Vui lòng đăng nhập lại."
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -177,8 +200,13 @@ const Login = ({ socket }) => {
               <h1>Quên mật khẩu</h1>
 
               <span>Nhập email đã đăng ký</span>
-              <input type="email" placeholder="Email" />
-              <button>Gửi</button>
+              <input
+                type="email"
+                placeholder="Email"
+                name="email"
+                onChange={handleChange}
+              />
+              <button onClick={getPassForget}>Gửi</button>
             </form>
           </div>
           <div class="form-container sign-in-container">

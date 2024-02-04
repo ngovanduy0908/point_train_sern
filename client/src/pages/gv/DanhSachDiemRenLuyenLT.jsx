@@ -5,6 +5,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import PreviewIcon from "@mui/icons-material/Preview";
+import DoNotStepIcon from "@mui/icons-material/DoNotStep";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { getPointStudentTeacherByMaLopAndMaHK } from "utils/getMany/getPointStudentTeacherByMaLopAndMaHK";
 import SwipeLeftIcon from "@mui/icons-material/SwipeLeft";
 import MaterialReactTable from "material-react-table";
@@ -22,6 +24,7 @@ const DanhSachDiemRenLuyenLT = () => {
   const [sinhVienItem, setSinhVienItem] = useState();
   const [openFormDRL, setOpenFormDRL] = useState(false);
   const [openFormMinhChung, setOpenFormMinhChung] = useState(false);
+  const [openFormConfirm, setOpenFormConfirm] = useState(false);
   //   console.log("maLop: ", maLop);
   //   console.log("maHK: ", maHK);
   const navigate = useNavigate();
@@ -127,6 +130,16 @@ const DanhSachDiemRenLuyenLT = () => {
                   <PreviewIcon />
                 </IconButton>
               </Tooltip>
+              <Tooltip title="Xét điểm = 0 do SV không sinh hoạt lớp">
+                <IconButton
+                  onClick={() => {
+                    setSinhVienItem(row.original);
+                    setOpenFormConfirm(true);
+                  }}
+                >
+                  <DoNotStepIcon />
+                </IconButton>
+              </Tooltip>
             </Box>
           );
         },
@@ -203,6 +216,26 @@ const DanhSachDiemRenLuyenLT = () => {
       setHandleChangeFile(false);
     }
   }, [openFormMinhChung]);
+  const handleConfirm = async () => {
+    try {
+      const values = {
+        text: "Không sinh hoạt lớp",
+      };
+      const res = await axios.post(
+        `${DOMAIN}/points/confirm_zero?maSv=${sinhVienItem?.maSv}&maHK=${maHK}`,
+        values,
+        {
+          withCredentials: true,
+        }
+      );
+      // console.log("res:", res);
+      toast.success("Thay đổi điểm thành công");
+      fetchData();
+      setOpenFormConfirm(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   // end minh chung
   return (
     <Box m="1.5rem 2.5rem">
@@ -273,6 +306,46 @@ const DanhSachDiemRenLuyenLT = () => {
             setChooseFiles={setChooseFiles}
             handleUpload={handleUpload}
           />
+        </Modal>
+      )}
+
+      {sinhVienItem && (
+        <Modal
+          open={openFormConfirm}
+          setOpen={setOpenFormConfirm}
+          // title={"Xét Duyệt Minh Chứng"}
+          displayButtonOk={false}
+          displayButtonCancel={false}
+          classNameChildren={"w-[400px]"}
+        >
+          <div className="text-center">
+            <CheckCircleIcon
+              sx={{
+                height: "40px",
+                width: "40px",
+              }}
+            />
+          </div>
+          <p>
+            Bạn có chắc muốn xét điểm rèn luyện cho sinh viên{" "}
+            <b>{sinhVienItem?.name}</b> = 0 hay không?
+          </p>
+          <div className="flex justify-around gap-2">
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => handleConfirm()}
+            >
+              Đồng Ý
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => setOpenFormConfirm(false)}
+            >
+              Thoát
+            </Button>
+          </div>
         </Modal>
       )}
     </Box>

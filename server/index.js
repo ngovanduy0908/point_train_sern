@@ -14,6 +14,7 @@ import pointCitizenRouter from "./routes/point_citizens.js";
 import pointMediumRouter from "./routes/point_mediums.js";
 import pointMarkRouter from "./routes/points.js";
 import proofMarkRouter from "./routes/proof_mark.js";
+import majorRouter from "./routes/major.js";
 import { Server } from "socket.io";
 import multer from "multer";
 import xlsx from "xlsx";
@@ -46,6 +47,7 @@ app.use("/api/point_citizen", pointCitizenRouter);
 app.use("/api/point_medium", pointMediumRouter);
 app.use("/api/points", pointMarkRouter);
 app.use("/api/proof_mark", proofMarkRouter);
+app.use("/api/major", majorRouter);
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -250,6 +252,37 @@ app.post("/api/send-email", async (req, res) => {
     // await transporter.sendMail(mailOptions);
 
     // res.status(200).json(randomNumber);
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+});
+
+app.post("/api/forget-pass", async (req, res) => {
+  try {
+    const { to, subject, text } = req.body;
+    // Định cấu hình email options
+    const mailOptions = {
+      from: "ngoduy090801@gmail.com",
+      to,
+      subject,
+      html: `Mật khẩu mới là: ${text}`,
+    };
+
+    // Gửi email
+    await transporter.sendMail(mailOptions);
+    const q = `update students set password='${text}' where email='${to}'`;
+
+    // const values = [req.body.maKhoa]
+
+    db.query(q, (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.status(200).json("Thay doi sinh vien thanh cong");
+    });
+
+    // res.status(200).json("pass");
+
+    // console.log("ssser: ", randomNumber);
   } catch (error) {
     console.error("Error sending email:", error);
     res.status(500).json({ success: false, message: "Internal Server Error" });

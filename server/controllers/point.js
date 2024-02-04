@@ -584,6 +584,145 @@ export const insertOrUpdatePointTeacher = (req, res) => {
   });
 };
 
+export const updatePointTeacherZero = (req, res) => {
+  const { maHK, maSv } = req.query;
+  // console.log("mahk va masv: ", maHK, maSv);
+  const values = req.body;
+  // console.log("value: ", values);
+  const checkExisPointTeacher = `select maSv from point_teacher where maSv = '${maSv}' and maHK = '${maHK}'`;
+  db.query(checkExisPointTeacher, (err, data) => {
+    if (err) return res.status(500).json(err);
+    // console.log("data: ", data);
+    if (data.length) {
+      const q = `
+      update point_teacher set
+                            gvDiemTBHK = 0,
+                            gvNCKH1  = 0,
+                            gvNCKH2 = 0,
+                            gvNCKH3 = 0,
+                            gvOlympic1 = 0,
+                            gvOlympic2 = 0,
+                            gvOlympic3 = 0,
+                            gvOlympic4 = 0,
+                            gvNoRegulation = 0,
+                            gvOnTime = 0,
+                            gvAbandon = 0,
+                            gvUnTrueTime = 0,
+                            gvRightRule = 0,
+                            gvCitizen = 0,
+                            gvNoFullStudy = 0,
+                            gvNoCard = 0,
+                            gvNoAtivities = 0,
+                            gvNoPayFee = 0,
+                            gvFullActive = 0,
+                            gvAchievementSchool = 0,
+                            gvAchievementCity = 0,
+                            gvAdvise = 0,
+                            gvIrresponsible = 0,
+                            gvNoCultural = 0,
+                            gvPositiveStudy = 0,
+                            gvPositiveLove = 0,
+                            gvWarn = 0,
+                            gvNoProtect = 0,
+                            gvMonitor = 0,
+                            gvBonus = 0,
+                            gvIrresponsibleMonitor = 0
+                            where maSv = '${maSv}' and maHK = '${maHK}'`;
+      const q1 = `update point set point_teacher = 0, gvNote='Không sinh hoạt lớp', status_teacher = 1 where maSv = '${maSv}' and maHK = '${maHK}'`;
+      db.query(q, (err, data) => {
+        if (err) return res.status(500).json(err);
+
+        db.query(q1, (err, data) => {
+          if (err) return res.status(500).json(err);
+
+          return res.status(200).json("Giáo viên cập nhật điểm thành công");
+        });
+      });
+    } else {
+      const q = `
+      INSERT INTO point_teacher 
+                                (maSv, 
+                                gvDiemTBHK, 
+                                gvCitizen, 
+                                gvMonitor, 
+                                gvNCKH1, 
+                                gvNCKH2, 
+                                gvNCKH3, 
+                                gvOlympic1, 
+                                gvOlympic2, 
+                                gvOlympic3, 
+                                gvOlympic4, 
+                                gvNoRegulation, 
+                                gvOnTime, 
+                                gvAbandon, 
+                                gvUnTrueTime, 
+                                gvNoFullStudy, 
+                                gvNoCard, 
+                                gvNoAtivities, 
+                                gvNoPayFee, 
+                                gvFullActive, 
+                                gvAchievementSchool, 
+                                gvAchievementCity, 
+                                gvAdvise, 
+                                gvIrresponsible, 
+                                gvNoCultural, 
+                                gvPositiveStudy, 
+                                gvPositiveLove, 
+                                gvWarn, 
+                                gvNoProtect, 
+                                gvBonus, 
+                                gvIrresponsibleMonitor, 
+                                maHK, 
+                                gvRightRule)
+                            VALUES 
+                                ('${maSv}', 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                '${maHK}', 
+                                0)`;
+      const q1 = `update point set point_teacher = 0, gvNote='Không sinh hoạt lớp', status_teacher = 1 where maSv = '${maSv}' and maHK = '${maHK}'`;
+
+      db.query(q, (err, data) => {
+        if (err) return res.status(500).json(err);
+
+        db.query(q1, (err, data) => {
+          if (err) return res.status(500).json(err);
+
+          return res.status(200).json("Giáo viên duyệt thành công");
+        });
+      });
+    }
+  });
+};
+
 // danh sách điểm rèn luyện
 export const getListPointByMaSV = (req, res) => {
   const { maSv } = req.query;

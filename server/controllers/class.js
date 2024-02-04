@@ -33,14 +33,17 @@ export const addClass = (req, res) => {
   const maKhoa = req.params.maKhoa;
   const newData = req.body;
   const maLop = newData.maLop;
+  // console.log("value: ", newData);
+  // const testValue = newData?.maCN ? newData.maCN : null;
+  // console.log("test: ", testValue);
   const q = "select maLop from class where maLop=?";
   db.query(q, [maLop], (err, data) => {
     if (err) return res.status(500).json(err);
 
-    if (data.length) return res.status(409).json("Lop da ton tai");
+    if (data.length) return res.status(409).json("Lớp đã tồn tại");
 
     const q =
-      "insert into class(maLop, class_name, maGv, maKhoaHoc, maKhoa) values(?)";
+      "insert into class(maLop, class_name, maGv, maKhoaHoc, maKhoa, maCN) values(?)";
 
     const values = [
       newData.maLop,
@@ -48,6 +51,7 @@ export const addClass = (req, res) => {
       newData.maGv,
       newData.maKhoaHoc,
       maKhoa,
+      newData?.maCN,
     ];
 
     db.query(q, [values], (err, data) => {
@@ -91,7 +95,7 @@ export const editClass = (req, res) => {
   const maLop = req.params.maLop;
 
   const updatedData = req.body;
-  const q = `update class set maLop='${updatedData.maLop}', class_name='${updatedData.class_name}' where maLop='${maLop}'`;
+  const q = `update class set maLop='${updatedData.maLop}', class_name='${updatedData.class_name}', maCN='${updatedData.maCN}' where maLop='${maLop}'`;
   // const values = [req.body.maKhoa]
   db.query(q, (err, data) => {
     if (err) return res.status(500).json(err);

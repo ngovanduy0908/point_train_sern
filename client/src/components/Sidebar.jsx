@@ -15,6 +15,7 @@ import {
 import ApartmentOutlinedIcon from "@mui/icons-material/ApartmentOutlined";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
+import HouseIcon from "@mui/icons-material/House";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
@@ -23,13 +24,18 @@ import { ChevronLeft, ChevronRightOutlined } from "@mui/icons-material";
 const navItems = [
   {
     text: "Trang chủ",
-    icon: <ApartmentOutlinedIcon />,
+    icon: <HouseIcon />,
     path: "overview",
   },
   {
     text: "Quản lý khoa",
     icon: <ApartmentOutlinedIcon />,
     path: "quanlykhoa",
+  },
+  {
+    text: "Quản lý chuyên ngành",
+    icon: <ApartmentOutlinedIcon />,
+    path: "quanlychuyennganh",
   },
   {
     text: "Quản lý khóa học",

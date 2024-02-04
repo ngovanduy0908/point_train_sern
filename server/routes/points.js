@@ -17,6 +17,7 @@ import {
   pointGvNote,
   statisticalPieDepartment,
   statisticalStackChartAdmin,
+  updatePointTeacherZero,
 } from "../controllers/point.js";
 
 const router = express.Router();
@@ -36,5 +37,6 @@ router.get("/point_statistical_stack_admin", statisticalStackChartAdmin);
 router.post("/insert_or_update/:maHK/:maSv", insertOrUpdatePointStudent);
 router.post("/insert_or_update_monitor", insertOrUpdatePointStudentMonitor);
 router.post("/mark_zero", markZero);
+router.post("/confirm_zero", updatePointTeacherZero);
 router.post("/insert_or_update_teacher", insertOrUpdatePointTeacher);
 export default router;
