@@ -187,6 +187,7 @@ const QuanLyHocSinh = () => {
               id="demo-simple-select"
               value={row.original.role_id}
               onChange={(e) => handleChangeChucVu(e, row.original)}
+              placeholder="Sinh Viên"
             >
               {roleData.map(
                 (item) =>

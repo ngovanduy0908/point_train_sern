@@ -1003,11 +1003,9 @@ const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
       const data = {
         ...valuesGV,
         // note: gvNote?.trim(),
-        note,
+        note: note ? note : null,
         sum: sumgv,
       };
-      console.log("gv note: ", note);
-      console.log("gv data: ", data);
 
       await insertOrUpdatePointTeacher(`maHK=${maHK}&maSv=${maSv}`, data);
       fetchData();
@@ -1183,7 +1181,7 @@ const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
                       type="number"
                       name="gvDiemTBHK"
                       id=""
-                      value={valuesLT.ltDiemTBHK}
+                      value={values.svDiemTBHK}
                       readOnly
                     />
                   </td>

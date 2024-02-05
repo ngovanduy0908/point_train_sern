@@ -64,11 +64,11 @@ export const generateOptionsListDanhSach = () => [
     },
   },
   {
-    label: "Sinh Viên DRL >= 70",
+    label: "Sinh Viên DRL >= 70 và <= 79",
     value: {
       title: "BẢNG TỔNG HỢP ĐIỂM RÈN LUYỆN SINH VIÊN CÓ ĐIỂM RÈN LUYỆN >= 70",
       min: 70,
-      max: 100,
+      max: 79,
     },
   },
   {

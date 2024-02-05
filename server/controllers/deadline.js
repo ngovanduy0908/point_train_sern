@@ -49,7 +49,7 @@ export const addDeadline = (req, res) => {
   const maGv = req.params.maGv;
 
   const newData = req.body;
-
+  console.log("body ne: ", req.body);
   const q =
     "insert into deadline(maGv, start_time_student, end_time_student, end_time_monitor) values(?)";
 

@@ -105,8 +105,8 @@ const OverviewGV = () => {
   const handleChangeLop = (e) => {
     // console.log(e);
     setMaLop(e.value);
-    if (xAxis.length) {
-      toast.warn("Không có dữ liệu");
+    if (!seriesData.length) {
+      return toast.warn("Không có dữ liệu");
     }
   };
   const handleChangeTiLe = (e) => {

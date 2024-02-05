@@ -59,6 +59,7 @@ const QuanLyThoiGian = () => {
 
   const handleCreateNewRow = async (values) => {
     try {
+      console.log("value ne: ", values);
       await axios.post(`${DOMAIN}/deadlines/${currentUser.maGv}`, values, {
         withCredentials: true,
       });
@@ -115,7 +116,7 @@ const QuanLyThoiGian = () => {
         enableSorting: false,
         size: 80,
         Cell: ({ cell, row }) => {
-          return <div>{formatDay(row.original.start_time_student)}</div>;
+          return <div>{formatDay(row?.original?.start_time_student)}</div>;
         },
       },
       {
@@ -123,7 +124,7 @@ const QuanLyThoiGian = () => {
         header: "Sinh Viên Kết Thúc Chấm",
         size: 140,
         Cell: ({ cell, row }) => {
-          return <div>{formatDay(row.original.end_time_student)}</div>;
+          return <div>{formatDay(row?.original?.end_time_student)}</div>;
         },
       },
       {
@@ -131,7 +132,7 @@ const QuanLyThoiGian = () => {
         header: "Lớp Trưởng Kết Thúc Duyệt",
         size: 140,
         Cell: ({ cell, row }) => {
-          return <div>{formatDay(row.original.end_time_monitor)}</div>;
+          return <div>{formatDay(row?.original?.end_time_monitor)}</div>;
         },
       },
     ],
