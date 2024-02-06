@@ -72,29 +72,36 @@ app.post("/api/excel/students/:maLop", upload.single("file"), (req, res) => {
   const sheetName = workbook.SheetNames[0];
   const sheet = workbook.Sheets[sheetName];
   const data = xlsx.utils.sheet_to_json(sheet, { header: 1, range: 1 });
-  // console.log(data);
+  // console.log("datas ne: ", data.length);
   // console.log(maLop);
-  for (let i = 0; i < data.length; i++) {
+  for (let i = 1; i <= data.length; i++) {
     const record = data[i];
-    // console.log(record);
-    db.query(
-      `SELECT maSv FROM students WHERE maSv = '${record[0]}'`,
-      (err, data) => {
-        if (data.length > 0) {
-          db.query("UPDATE students SET name = ?, maLop = ? WHERE maSv = ?", [
-            record[1],
-            maLop,
-            data[0].maSv,
-          ]);
-        } else {
-          db.query(
-            "INSERT INTO students (maSv, name, maLop) VALUES (?, ?, ?)",
-            [record[0], record[1], maLop]
-          );
+    // console.log("record: ", record[1]);
+    if (record && record[1] !== undefined && record[1] !== null) {
+      // console.log("record: ", record);
+      const name = `${record[2]} ${record[3]}`;
+
+      // console.log("name: ", name);
+      db.query(
+        `SELECT maSv FROM students WHERE maSv = '${record[1]}'`,
+        (err, data) => {
+          if (data.length > 0) {
+            db.query("UPDATE students SET name = ?, maLop = ? WHERE maSv = ?", [
+              name,
+              maLop,
+              data[0].maSv,
+            ]);
+          } else {
+            db.query(
+              "INSERT INTO students (maSv, name, maLop) VALUES (?, ?, ?)",
+              [record[1], name, maLop]
+            );
+          }
         }
-      }
-    );
+      );
+    }
   }
+  return res.status(200).json("Thanh cong");
 });
 
 app.post(

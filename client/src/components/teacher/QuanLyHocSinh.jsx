@@ -27,7 +27,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import Modal from "components/modal/Modal";
 import XetDiemRenLuyenMonitor from "pages/gv/XetDiemRenLuyenMonitor";
 import { toast } from "react-toastify";
+import { downloadFile } from "utils/postDetails/handleDataExportExcelGV";
 const DOMAIN = process.env.REACT_APP_DOMAIN;
+const url =
+  "https://wxutuelmzidfloowaugx.supabase.co/storage/v1/object/public/files/excel/DS-class-template.xlsx?t=2024-02-05T16%3A29%3A19.996Z";
 const QuanLyHocSinh = () => {
   const { maLop } = useParams();
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -318,6 +321,7 @@ const QuanLyHocSinh = () => {
           open={createUploadFileStudent}
           onClose={() => setCreateUploadFileStudent(false)}
           maLop={maLop}
+          getAllClass={getAllClass}
         />
 
         <CreateChooseSemesterModel
@@ -400,11 +404,18 @@ export const CreateNewAccountModal = ({ err, open, onClose, onSubmit }) => {
   );
 };
 
-export const CreateUploadFileSV = ({ err, open, onClose, maLop }) => {
+export const CreateUploadFileSV = ({
+  err,
+  open,
+  onClose,
+  maLop,
+  getAllClass,
+}) => {
   const [file, setFile] = useState(null);
 
   // console.log(maLop);
   function handleFileUpload(event) {
+    // console.log(event.target.files[0]);
     setFile(event.target.files[0]);
   }
   // console.log(file);
@@ -414,11 +425,15 @@ export const CreateUploadFileSV = ({ err, open, onClose, maLop }) => {
 
     const formData = new FormData();
     formData.append("file", file);
+
     // console.log(formData);
     try {
-      axios.post(`${DOMAIN}/excel/students/${maLop}`, formData, {
+      await axios.post(`${DOMAIN}/excel/students/${maLop}`, formData, {
         withCredentials: true,
       });
+      getAllClass();
+      onClose();
+      // console.log("value: ", res);
     } catch (error) {
       console.log(error);
     }
@@ -428,6 +443,13 @@ export const CreateUploadFileSV = ({ err, open, onClose, maLop }) => {
     <Dialog open={open}>
       <DialogTitle textAlign="center">Upload Danh Sách Sinh Viên</DialogTitle>
       <DialogContent>
+        <Button
+          variant="text"
+          color="secondary"
+          onClick={() => downloadFile(url, "File template DS Lop.xlsx")}
+        >
+          Tải File Template
+        </Button>
         <form onSubmit={handleSubmit}>
           <TextField type="file" onChange={handleFileUpload} />
           <Button
