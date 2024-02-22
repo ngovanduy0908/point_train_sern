@@ -94,7 +94,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       );
-    } else if (tk.includes("humg")) {
+    } else if (tk?.includes("humg")) {
       return (
         <BrowserRouter>
           <Routes>
@@ -111,7 +111,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       );
-    } else if (tk.includes("-")) {
+    } else if (tk?.includes("-")) {
       return (
         <BrowserRouter>
           <Routes>
