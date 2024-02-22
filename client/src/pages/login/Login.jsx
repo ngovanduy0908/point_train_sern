@@ -20,18 +20,24 @@ import { AuthContext } from "../../context/authContext";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { generateRandomNumberString } from "utils/function/randomNumber";
+import ModalV2 from "components/modal/ModalV2";
+import ViewTable from "components/viewPointTable/ViewTable";
 const pages = ["TRANG WEB ĐÀO TẠO", "TRANG WEB CNTT", "TRANG WEB HUMG"];
 const DOMAIN = process.env.REACT_APP_DOMAIN;
 function ResponsiveAppBar() {
   // console.log("trang login : ", socket);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
-
+  const [openModal, setOpenModal] = React.useState(false);
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+  };
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
   };
 
   return (
@@ -124,8 +130,25 @@ function ResponsiveAppBar() {
                 </Button>
               ))}
             </Box>
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+              <Button
+                onClick={handleOpenModal}
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                Modal
+              </Button>
+            </Box>
           </Toolbar>
         </Container>
+        <ModalV2
+          open={openModal}
+          setOpen={setOpenModal}
+          title={"FILE TỔNG HỢP ĐIỂM RÈN LUYỆN"}
+        >
+          <div className="p-5">
+            <ViewTable />
+          </div>
+        </ModalV2>
       </div>
     </AppBar>
   );
