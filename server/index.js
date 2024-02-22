@@ -118,26 +118,30 @@ app.post(
     const data = xlsx.utils.sheet_to_json(sheet, { header: 1, range: 1 });
     // console.log(data);
     // console.log(maLop);
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 1; i < data.length; i++) {
       const record = data[i];
       // console.log(record);
-      db.query(
-        `SELECT maSv FROM point_citizen WHERE maSv = '${record[0]}' and maHK='${maHK}'`,
-        (err, data) => {
-          if (data.length > 0) {
-            db.query(
-              "UPDATE point_citizen SET point = ?, maHK = ? WHERE maSv = ? and maHK = ?",
-              [record[1], maHK, data[0].maSv, maHK]
-            );
-          } else {
-            db.query(
-              "INSERT INTO point_citizen (maSv, maHK, point) VALUES (?, ?, ?)",
-              [record[0], maHK, record[1]]
-            );
+      if (record && record[1] !== undefined && record[1] !== null) {
+        const point = record[4];
+        db.query(
+          `SELECT maSv FROM point_citizen WHERE maSv = '${record[1]}' and maHK='${maHK}'`,
+          (err, data) => {
+            if (data.length > 0) {
+              db.query(
+                "UPDATE point_citizen SET point = ?, maHK = ? WHERE maSv = ? and maHK = ?",
+                [point, maHK, data[0].maSv, maHK]
+              );
+            } else {
+              db.query(
+                "INSERT INTO point_citizen (maSv, maHK, point) VALUES (?, ?, ?)",
+                [record[1], maHK, point]
+              );
+            }
           }
-        }
-      );
+        );
+      }
     }
+    return res.status(200).json("Thanh cong");
   }
 );
 
@@ -155,26 +159,31 @@ app.post(
     const data = xlsx.utils.sheet_to_json(sheet, { header: 1, range: 1 });
     // console.log(data);
     // console.log(maLop);
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 1; i < data.length; i++) {
       const record = data[i];
-      // console.log(record);
-      db.query(
-        `SELECT maSv FROM point_medium WHERE maSv = '${record[0]}' and maHK='${maHK}'`,
-        (err, data) => {
-          if (data.length > 0) {
-            db.query(
-              "UPDATE point_medium SET point_average = ?, maHK = ? WHERE maSv = ? and maHK = ?",
-              [record[1], maHK, data[0].maSv, maHK]
-            );
-          } else {
-            db.query(
-              "INSERT INTO point_medium (maSv, maHK, point_average) VALUES (?, ?, ?)",
-              [record[0], maHK, record[1]]
-            );
+      // console.log("record: ", record);
+      if (record && record[0] !== undefined && record[0] !== null) {
+        // console.log("record: ", typeof record[5]);
+        const diemTBHK = record[5];
+        db.query(
+          `SELECT maSv FROM point_medium WHERE maSv = '${record[0]}' and maHK='${maHK}'`,
+          (err, data) => {
+            if (data.length > 0) {
+              db.query(
+                "UPDATE point_medium SET point_average = ?, maHK = ? WHERE maSv = ? and maHK = ?",
+                [diemTBHK, maHK, data[0].maSv, maHK]
+              );
+            } else {
+              db.query(
+                "INSERT INTO point_medium (maSv, maHK, point_average) VALUES (?, ?, ?)",
+                [record[0], maHK, diemTBHK]
+              );
+            }
           }
-        }
-      );
+        );
+      }
     }
+    return res.status(200).json("Thanh cong");
   }
 );
 

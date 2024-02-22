@@ -74,8 +74,8 @@ export const deleteTeacher = (req, res) => {
 };
 
 export const viewExcelBC = async (req, res) => {
-  const token = req.cookies.accessToken;
-  if (!token) return res.status(401).json("Not authenticated");
+  // const token = req.cookies.accessToken;
+  // if (!token) return res.status(401).json("Not authenticated");
   // console.log("req: ", req.body);
   const { maLop, maHK, danhSachSV, tenGV, tenKhoa, tenLopTruong } = req.body;
   const currentDate = new Date();

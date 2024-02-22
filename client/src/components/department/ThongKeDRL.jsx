@@ -142,7 +142,7 @@ const ThongKeDRL = () => {
     } else {
       setOpenModaFile(true);
       setLoading(true);
-      console.log("value:", initChoose);
+      // console.log("value:", initChoose);
       const newValues = {
         ...initChoose,
         tenKhoa: tenKhoa,
@@ -263,23 +263,25 @@ const ThongKeDRL = () => {
                 </Grid>
               </Grid>
             </Box>
-            <DocViewer
-              documents={[
-                {
-                  uri: url,
-                  fileType: "docx",
-                },
-              ]}
-              style={{ height: 560 }}
-              config={{
-                header: {
-                  disableHeader: false,
-                  disableFileName: false,
-                  retainURLParams: false,
-                },
-              }}
-              pluginRenderers={DocViewerRenderers}
-            />
+            {url && (
+              <DocViewer
+                documents={[
+                  {
+                    uri: url,
+                    fileType: "docx",
+                  },
+                ]}
+                style={{ height: 560 }}
+                config={{
+                  header: {
+                    disableHeader: false,
+                    disableFileName: false,
+                    retainURLParams: false,
+                  },
+                }}
+                pluginRenderers={DocViewerRenderers}
+              />
+            )}
           </>
         )}
       </ModalV2>

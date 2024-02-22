@@ -4,7 +4,7 @@ export const getAllListMajor = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not authenticated");
 
-  const q = "select * from major where isRemoved = false";
+  const q = "select * from major";
   db.query(q, (err, data) => {
     if (err) return res.status(500).json(err);
 

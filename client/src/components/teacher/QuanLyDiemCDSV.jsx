@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import Header from '../Header';
-import MaterialReactTable from 'material-react-table';
-import '../admin/admin.css';
-import { getUserInLocalStorage } from '../../context/getCurrentUser.js';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import Header from "../Header";
+import MaterialReactTable from "material-react-table";
+import "../admin/admin.css";
+import { getUserInLocalStorage } from "../../context/getCurrentUser.js";
 import {
   Box,
   Button,
@@ -14,17 +14,18 @@ import {
   Stack,
   TextField,
   Tooltip,
-} from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
-import SwipeLeftIcon from '@mui/icons-material/SwipeLeft';
-import axios from 'axios';
-import { useLocation, useNavigate } from 'react-router-dom';
-
+} from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
+import SwipeLeftIcon from "@mui/icons-material/SwipeLeft";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+import { downloadFile } from "utils/postDetails/handleDataExportExcelGV";
+const url =
+  "https://wxutuelmzidfloowaugx.supabase.co/storage/v1/object/public/files/excel/DS-diem-tuan-cdsv-template.xlsx";
 const QuanLyDiemCDSV = () => {
-  const { pathname } = useLocation();
   const navigate = useNavigate();
-  const maLop = pathname.split('/')[3];
-  const maHK = pathname.split('/')[4];
+  const { maLop, maHK } = useParams();
+
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [createUploadFileStudent, setCreateUploadFileStudent] = useState(false);
 
@@ -47,8 +48,9 @@ const QuanLyDiemCDSV = () => {
           withCredentials: true,
         }
       );
+      console.log("allClass.data: ", allClass.data);
       setTableData(allClass.data);
-      // console.log(tableData);
+      // console.log("call lai khong");
     } catch (error) {
       console.log(error.response.data);
     }
@@ -70,7 +72,8 @@ const QuanLyDiemCDSV = () => {
       );
       tableData.push(values);
       setTableData([...tableData]);
-      window.location.href = `http://localhost:3000/quanlylopchunhiem/uploadfilecdsv/${maLop}/${maHK}`;
+      getAllClass();
+      // window.location.href = `http://localhost:3000/quanlylopchunhiem/uploadfilecdsv/${maLop}/${maHK}`;
     } catch (error) {
       setErr(error.response.data);
     }
@@ -97,7 +100,7 @@ const QuanLyDiemCDSV = () => {
     async (row) => {
       if (
         !window.confirm(
-          `Are you sure you want to delete ${row.getValue('name')}`
+          `Are you sure you want to delete ${row.getValue("name")}`
         )
       ) {
         return;
@@ -123,9 +126,9 @@ const QuanLyDiemCDSV = () => {
         helperText: validationErrors[cell.id],
         onBlur: (event) => {
           const isValid =
-            cell.column.id === 'email'
+            cell.column.id === "email"
               ? validateEmail(event.target.value)
-              : cell.column.id === 'age'
+              : cell.column.id === "age"
               ? validateAge(+event.target.value)
               : validateRequired(event.target.value);
           if (!isValid) {
@@ -150,16 +153,16 @@ const QuanLyDiemCDSV = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'maSv',
-        header: 'Ma Sinh Vien',
+        accessorKey: "maSv",
+        header: "Ma Sinh Vien",
         enableColumnOrdering: false,
         enableEditing: false, //disable editing on this column
         enableSorting: false,
         size: 80,
       },
       {
-        accessorKey: 'name',
-        header: 'Ho Va Ten',
+        accessorKey: "name",
+        header: "Họ Và Tên",
         size: 140,
         enableEditing: false,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
@@ -167,12 +170,12 @@ const QuanLyDiemCDSV = () => {
         }),
       },
       {
-        accessorKey: 'point',
-        header: 'Diem Tuan CDSV',
+        accessorKey: "point",
+        header: "Điểm Tuần CDSV",
         size: 140,
       },
     ],
-    [getCommonEditTextFieldProps]
+    [getCommonEditTextFieldProps, tableData]
   );
 
   return (
@@ -184,9 +187,9 @@ const QuanLyDiemCDSV = () => {
       <Box mt="40px">
         <MaterialReactTable
           displayColumnDefOptions={{
-            'mrt-row-actions': {
+            "mrt-row-actions": {
               muiTableHeadCellProps: {
-                align: 'center',
+                align: "center",
               },
               size: 120,
             },
@@ -199,7 +202,7 @@ const QuanLyDiemCDSV = () => {
           onEditingRowSave={handleSaveRowEdits}
           onEditingRowCancel={handleCancelRowEdits}
           renderRowActions={({ row, table }) => (
-            <Box sx={{ display: 'flex', gap: '1rem' }}>
+            <Box sx={{ display: "flex", gap: "1rem" }}>
               <Tooltip arrow placement="left" title="Edit">
                 <IconButton onClick={() => table.setEditingRow(row)}>
                   <Edit />
@@ -246,6 +249,7 @@ const QuanLyDiemCDSV = () => {
           open={createModalOpen}
           onClose={() => setCreateModalOpen(false)}
           onSubmit={handleCreateNewRow}
+          getAllClass={getAllClass}
         />
 
         <CreateUploadFileSV
@@ -254,16 +258,23 @@ const QuanLyDiemCDSV = () => {
           onClose={() => setCreateUploadFileStudent(false)}
           maLop={maLop}
           maHK={maHK}
+          getAllClass={getAllClass}
         />
       </Box>
     </Box>
   );
 };
 
-export const CreateNewAccountModal = ({ err, open, onClose, onSubmit }) => {
+export const CreateNewAccountModal = ({
+  err,
+  open,
+  onClose,
+  onSubmit,
+  getAllClass,
+}) => {
   const [values, setValues] = useState({
-    maSv: '',
-    point: '',
+    maSv: "",
+    point: "",
   });
 
   const handleChange = (e) => {
@@ -288,9 +299,9 @@ export const CreateNewAccountModal = ({ err, open, onClose, onSubmit }) => {
         <form onSubmit={(e) => e.preventDefault()}>
           <Stack
             sx={{
-              width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
+              width: "100%",
+              minWidth: { xs: "300px", sm: "360px", md: "400px" },
+              gap: "1.5rem",
             }}
           >
             <TextField
@@ -311,7 +322,7 @@ export const CreateNewAccountModal = ({ err, open, onClose, onSubmit }) => {
         </form>
         {err && err}
       </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
+      <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
           Cancel
         </Button>
@@ -323,7 +334,14 @@ export const CreateNewAccountModal = ({ err, open, onClose, onSubmit }) => {
   );
 };
 
-export const CreateUploadFileSV = ({ err, open, onClose, maLop, maHK }) => {
+export const CreateUploadFileSV = ({
+  err,
+  open,
+  onClose,
+  maLop,
+  maHK,
+  getAllClass,
+}) => {
   const [file, setFile] = useState(null);
 
   // console.log(maLop);
@@ -336,16 +354,18 @@ export const CreateUploadFileSV = ({ err, open, onClose, maLop, maHK }) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append("file", file);
     // console.log(formData);
     try {
-      axios.post(
+      await axios.post(
         `http://localhost:8800/api/excel/students/diemtuancdsv/${maLop}/${maHK}`,
         formData,
         {
           withCredentials: true,
         }
       );
+      await getAllClass();
+      onClose();
     } catch (error) {
       console.log(error);
     }
@@ -355,13 +375,22 @@ export const CreateUploadFileSV = ({ err, open, onClose, maLop, maHK }) => {
     <Dialog open={open}>
       <DialogTitle textAlign="center">Upload file Diem Tuan CDSV</DialogTitle>
       <DialogContent>
+        <Button
+          variant="text"
+          color="secondary"
+          onClick={() =>
+            downloadFile(url, "File template DS Diem Tuan CDSV.xlsx")
+          }
+        >
+          Tải File Template
+        </Button>
         <form onSubmit={handleSubmit}>
           <TextField type="file" onChange={handleFileUpload} />
           <Button type="submit">Upload</Button>
         </form>
         {err && err}
       </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
+      <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
           Cancel
         </Button>

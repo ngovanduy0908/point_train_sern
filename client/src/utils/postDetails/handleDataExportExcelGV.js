@@ -29,12 +29,12 @@ export const generateUrlExcel = async (arrBuffer, tenFile) => {
       formData.append("file", file);
       const { data, errorMsg } = await supabase.storage
         .from("files")
-        .upload(`excel/${Date.now()}.xlsx`, file);
+        .upload(`excel_gv/${tenFile}_${new Date().getTime()}.xlsx`, file);
       if (errorMsg) {
         toast.error("Có Lỗi");
       }
       const url = supabase.storage.from("files").getPublicUrl(data.path);
-      console.log("data supbase: ", url.data.publicUrl);
+      console.log("data supbase: ", url.data);
       //   console.log('formData: ', formData);
       const filePath = url.data.publicUrl;
       resolve({ filePath, name: file.name });

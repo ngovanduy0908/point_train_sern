@@ -33,7 +33,7 @@ const ExportExcelGV = () => {
   const [dataLop, setDataLop] = useState([]);
   const [dataHocKi, setDataHocKi] = useState([]);
   const [tenKhoa, setTenKhoa] = useState();
-  const [url, setUrl] = useState();
+  const [url, setUrl] = useState(null);
   const [openModalFile, setOpenModaFile] = useState(false);
   const [loading, setLoading] = useState();
   const [initChoose, setInitChoose] = useState({
@@ -94,17 +94,21 @@ const ExportExcelGV = () => {
       if (!initChoose.maHK) return toast.warn("Vui lòng chọn học kì");
       if (!initChoose.danhSachSV)
         return toast.warn("Vui lòng chọn danh sách sinh viên");
-      setOpenModaFile(true);
-      setLoading(true);
+      // setLoading(true);
       const valuePost = {
         ...initChoose,
         tenGV: currentUser.name,
         tenKhoa: tenKhoa,
       };
+      // console.log("click vao day khong nao: ", valuePost);
       const res = await handleDataExportExcelGV(valuePost);
-      const res1 = await generateUrlExcel(res.data, "text");
+      // console.log("res: ", res);
+      const res1 = await generateUrlExcel(res.data, "excel_gv");
+      // console.log("vao day: ", res1);
       setUrl(res1.filePath);
-      setLoading(false);
+      setOpenModaFile(true);
+
+      // setLoading(false);
     } catch (error) {
       console.log("error: ", error);
     }
@@ -150,15 +154,16 @@ const ExportExcelGV = () => {
           </Button>
         </div>
       </div>
-      <ModalV2
-        open={openModalFile}
-        setOpen={setOpenModaFile}
-        title={`FILE TỔNG HỢP ĐIỂM RÈN LUYỆN`}
-        displayButtonOk={false}
-      >
-        {loading ? (
+      {
+        <ModalV2
+          open={openModalFile}
+          setOpen={setOpenModaFile}
+          title={`FILE TỔNG HỢP ĐIỂM RÈN LUYỆN`}
+          displayButtonOk={false}
+        >
+          {/* {loading ? (
           <Progress />
-        ) : (
+        ) : ( */}
           <>
             <Box sx={{ flexGrow: 1 }} m="10px">
               <Grid container spacing={2}>
@@ -194,8 +199,9 @@ const ExportExcelGV = () => {
               pluginRenderers={DocViewerRenderers}
             />
           </>
-        )}
-      </ModalV2>
+          {/* )} */}
+        </ModalV2>
+      }
     </Box>
   );
 };
