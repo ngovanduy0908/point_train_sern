@@ -17,6 +17,7 @@ import MenuItem from "@mui/material/MenuItem";
 import SchoolIcon from "@mui/icons-material/School";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
+import { isValidEmail } from "utils/function/validateValue";
 const pages = ["TRANG WEB ĐÀO TẠO", "TRANG WEB CNTT", "TRANG WEB HUMG"];
 
 function ResponsiveAppBar() {
@@ -150,13 +151,17 @@ const ChangeInfoOne = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const isAnyFieldEmpty = Object.values(inputs).some(
-        (value) => value === ""
-      );
-      if (isAnyFieldEmpty) {
-        // Hiển thị thông báo hoặc thực hiện logic nếu có trường bị trống
-        return toast.warn("Vui lòng điền hết các trường");
+      const result = isValidEmail(inputs.email);
+      if (!result) {
+        return toast.warn("Vui lòng nhập đúng định dạng email");
       }
+      if (!inputs.password) {
+        return toast.warn("Vui lòng nhập mật khẩu");
+      }
+      if (inputs.password === "123456") {
+        return toast.warn("Vui lòng nhập mật khẩu khác mật khẩu mặc định");
+      }
+
       const res = await axios.put(
         "http://localhost:8800/api/users/update",
         inputs,
@@ -167,7 +172,7 @@ const ChangeInfoOne = () => {
       setSuc(res.data);
       localStorage.removeItem("user");
       document.cookie = "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-      // console.log(data);
+      toast.success("Thay đổi thành công. Vui lòng đăng nhập lại");
     } catch (err) {
       setErr(err.response.data);
     }
@@ -202,7 +207,10 @@ const ChangeInfoOne = () => {
                 onChange={handleChange}
               />
 
-              <p onClick={handleClick} className="cursor-pointer">
+              <p
+                onClick={handleClick}
+                className="cursor-pointer font-bold hover:opacity-80"
+              >
                 {suc && "Vui lòng đăng nhập lại tại đây"}
               </p>
               {/* {shouldNavigate && <Navigate to="/login" />} */}
@@ -244,7 +252,7 @@ const ChangeInfoOne = () => {
         </div>
       </div>
       <Footer />
-      <ToastContainer />
+      <ToastContainer autoClose={1500} />
     </div>
   );
 };

@@ -130,7 +130,7 @@ export const viewExcelBC = async (req, res) => {
       tenKhoa: convertToUpperCase(tenKhoa),
       tenVaKhoa: `LỚP: ${convertToUpperCase(
         maLop.tenLop
-      )}    KHOA: ${convertToUpperCase(tenKhoa)}`,
+      )} - KHOA: ${convertToUpperCase(tenKhoa)}`,
       tenLopTruong: tenLopTruong ? tenLopTruong : "",
       day: day,
       month: month,
@@ -154,6 +154,11 @@ export const viewExcelBC = async (req, res) => {
       compression: "DEFLATE",
     });
     // console.log("return: ", outputData);
-    return res.status(200).json(outputData);
+    // console.log("tra ra object vay: ", values);
+    const resultData = {
+      data: values,
+      dataBuffer: outputData,
+    };
+    return res.status(200).json(resultData);
   });
 };

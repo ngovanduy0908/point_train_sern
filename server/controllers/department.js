@@ -165,7 +165,7 @@ export const viewExcelBC = async (req, res) => {
   const year = currentDate.getFullYear();
   // let q;
   if (isClass) {
-    console.log("trng nay: ", req.body);
+    // console.log("trng nay: ", req.body);
     const q = `
     select 
   students.name,
@@ -235,7 +235,11 @@ export const viewExcelBC = async (req, res) => {
         compression: "DEFLATE",
       });
       // console.log("return: ", outputData);
-      return res.status(200).json(outputData);
+      const resultData = {
+        data: values,
+        dataBuffer: outputData,
+      };
+      return res.status(200).json(resultData);
     });
   } else {
     const q = `
@@ -286,8 +290,8 @@ export const viewExcelBC = async (req, res) => {
         hk: maHK ? convertToUpperCase(maHK?.tenHK) : "",
         tenKhoa: convertToUpperCase(tenKhoa),
         tenVaKhoa: `${convertToUpperCase(
-          maCN.tenCN
-        )} KHOA: ${convertToUpperCase(tenKhoa)}`,
+          maCN?.tenCN
+        )} - KHOA: ${convertToUpperCase(tenKhoa)}`,
         tenLopTruong: tenLopTruong ? tenLopTruong : "",
         day: day,
         month: month,
@@ -311,7 +315,11 @@ export const viewExcelBC = async (req, res) => {
         compression: "DEFLATE",
       });
       // console.log("return: ", outputData);
-      return res.status(200).json(outputData);
+      const resultData = {
+        data: values,
+        dataBuffer: outputData,
+      };
+      return res.status(200).json(resultData);
     });
   }
 };

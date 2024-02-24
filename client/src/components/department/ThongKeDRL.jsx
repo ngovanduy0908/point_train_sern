@@ -11,13 +11,13 @@ import { handleDataExportExcelKhoa } from "utils/postDetails/handleDataExportExc
 import { getListMajor } from "utils/getMany/getListMajor";
 import ModalV2 from "components/modal/ModalV2";
 import Progress from "components/Progress";
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import {
   downloadFile,
   generateUrlExcel,
 } from "utils/postDetails/handleDataExportExcelGV";
 import { toast } from "react-toastify";
 import { isCheckSomeFieldEmpty } from "utils/function/validateValue";
+import ViewTable from "components/viewPointTable/ViewTable";
 
 const optionsListDanhSach = generateOptionsListDanhSach();
 
@@ -47,6 +47,8 @@ const ThongKeDRL = () => {
   const [dataHocKi, setDataHocKi] = useState([]);
   const [dataCourse, setDataCourse] = useState([]);
   const [dataMajor, setDataMajor] = useState([]);
+  const [data, setData] = useState(null);
+
   const [tenKhoa, setTenKhoa] = useState();
   const [url, setUrl] = useState();
   const [openModalFile, setOpenModaFile] = useState(false);
@@ -150,8 +152,11 @@ const ThongKeDRL = () => {
       };
       try {
         const res = await handleDataExportExcelKhoa(newValues);
-        const res1 = await generateUrlExcel(res.data, "text");
+        const res1 = await generateUrlExcel(res.dataBuffer.data, "excel_khoa");
+        // console.log("ress: ", res);
+        setData(res.data);
         setUrl(res1.filePath);
+
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -263,7 +268,10 @@ const ThongKeDRL = () => {
                 </Grid>
               </Grid>
             </Box>
-            {url && (
+            <div className="h-[560px]">
+              <ViewTable dataTable={data} />
+            </div>
+            {/* {url && (
               <DocViewer
                 documents={[
                   {
@@ -281,7 +289,7 @@ const ThongKeDRL = () => {
                 }}
                 pluginRenderers={DocViewerRenderers}
               />
-            )}
+            )} */}
           </>
         )}
       </ModalV2>

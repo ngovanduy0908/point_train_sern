@@ -3,7 +3,6 @@ import { AuthContext } from "context/authContext";
 import React, { useContext, useEffect, useState } from "react";
 import Select from "react-select";
 import { toast } from "react-toastify";
-import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 
 import { getListClassByMaGV } from "utils/getMany/getListClassByMaGV";
 import { getListSemester } from "utils/getMany/getListSemesters";
@@ -17,6 +16,7 @@ import { getNameDepartmentByMa } from "utils/getDetails/getNameDepartmantByMaGv"
 import Header from "components/Header";
 import { generateOptionsListDanhSach } from "utils/define";
 import Progress from "components/Progress";
+import ViewTable from "components/viewPointTable/ViewTable";
 const customStyles = {
   option: (provided, state) => ({
     ...provided,
@@ -36,6 +36,7 @@ const ExportExcelGV = () => {
   const [url, setUrl] = useState(null);
   const [openModalFile, setOpenModaFile] = useState(false);
   const [loading, setLoading] = useState();
+  const [data, setData] = useState(null);
   const [initChoose, setInitChoose] = useState({
     maLop: "",
     maHK: "",
@@ -94,7 +95,9 @@ const ExportExcelGV = () => {
       if (!initChoose.maHK) return toast.warn("Vui lòng chọn học kì");
       if (!initChoose.danhSachSV)
         return toast.warn("Vui lòng chọn danh sách sinh viên");
-      // setLoading(true);
+      setOpenModaFile(true);
+
+      setLoading(true);
       const valuePost = {
         ...initChoose,
         tenGV: currentUser.name,
@@ -103,12 +106,12 @@ const ExportExcelGV = () => {
       // console.log("click vao day khong nao: ", valuePost);
       const res = await handleDataExportExcelGV(valuePost);
       // console.log("res: ", res);
-      const res1 = await generateUrlExcel(res.data, "excel_gv");
+      const res1 = await generateUrlExcel(res.dataBuffer.data, "excel_gv");
+      setData(res.data);
       // console.log("vao day: ", res1);
-      setUrl(res1.filePath);
-      setOpenModaFile(true);
 
-      // setLoading(false);
+      setUrl(res1.filePath);
+      setLoading(false);
     } catch (error) {
       console.log("error: ", error);
     }
@@ -161,27 +164,33 @@ const ExportExcelGV = () => {
           title={`FILE TỔNG HỢP ĐIỂM RÈN LUYỆN`}
           displayButtonOk={false}
         >
-          {/* {loading ? (
-          <Progress />
-        ) : ( */}
-          <>
-            <Box sx={{ flexGrow: 1 }} m="10px">
-              <Grid container spacing={2}>
-                <Grid item xs={1}>
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    sx={{
-                      width: "100%",
-                    }}
-                    onClick={() => downloadFile(url, "File tong hop DRL.xlsx")}
-                  >
-                    Tải file
-                  </Button>
+          {loading ? (
+            <Progress />
+          ) : (
+            <>
+              <Box sx={{ flexGrow: 1 }} m="10px">
+                <Grid container spacing={2}>
+                  <Grid item xs={1}>
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      sx={{
+                        width: "100%",
+                      }}
+                      onClick={() =>
+                        downloadFile(url, "File tong hop DRL.xlsx")
+                      }
+                    >
+                      Tải file
+                    </Button>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Box>
-            <DocViewer
+              </Box>
+              <div className="h-[560px]">
+                <ViewTable dataTable={data} />
+              </div>
+
+              {/* <DocViewer
               documents={[
                 {
                   uri: url,
@@ -197,9 +206,9 @@ const ExportExcelGV = () => {
                 },
               }}
               pluginRenderers={DocViewerRenderers}
-            />
-          </>
-          {/* )} */}
+            /> */}
+            </>
+          )}
         </ModalV2>
       }
     </Box>
