@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import axios from "axios";
 import Header from "components/Header";
 import { getUserInLocalStorage } from "context/getCurrentUser";
@@ -437,7 +437,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
     // console.log("choose_file: ", choose_file);
     if (handleChangeFile) {
       try {
-        console.log("change file: ", selectedFiles);
+        // console.log("change file: ", selectedFiles);
         // console.log("change file v1: ", selectedFiles);
 
         const formData = new FormData();
@@ -474,7 +474,7 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
           name_image: chooseFiles.length ? chooseFiles.join(",") : "",
           maSv: maSv,
         };
-        console.log("values moi: ", values);
+        // console.log("values moi: ", values);
         await axios
           .post(`${DOMAIN}/proof_mark/create_or_update_proof/${maHK}`, values, {
             withCredentials: true,
@@ -1622,6 +1622,41 @@ Tiếp theo, ta sử dụng setSumOne để tính lại giá trị của sumOne.
                 </tr>
               </tbody>
             </table>
+            <Button
+              disableElevation={true}
+              variant="contained"
+              color="secondary"
+              style={{
+                position: "fixed",
+                top: "75px",
+                right: 0,
+                cursor: "default",
+              }}
+            >
+              TBHK:{" "}
+              {pointCitizenMediumData?.point_average
+                ? pointCitizenMediumData?.point_average
+                : ""}{" "}
+              <br />
+              CDSV:
+              {pointCitizenMediumData?.point
+                ? pointCitizenMediumData?.point
+                : ""}
+            </Button>
+            <Button
+              disableElevation={true}
+              variant="contained"
+              color="secondary"
+              style={{
+                position: "fixed",
+                bottom: "50px",
+                right: 0,
+                cursor: "default",
+                padding: "9px 23px",
+              }}
+            >
+              Tổng:{sum}
+            </Button>
             <button
               type="button"
               className="btn btn-success btn_save bg-[#19d1ca]"

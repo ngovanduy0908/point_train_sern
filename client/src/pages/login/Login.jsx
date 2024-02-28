@@ -21,6 +21,7 @@ import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { generateRandomNumberString } from "utils/function/randomNumber";
 const pages = ["TRANG WEB ĐÀO TẠO", "TRANG WEB CNTT", "TRANG WEB HUMG"];
+
 const DOMAIN = process.env.REACT_APP_DOMAIN;
 function ResponsiveAppBar() {
   // console.log("trang login : ", socket);

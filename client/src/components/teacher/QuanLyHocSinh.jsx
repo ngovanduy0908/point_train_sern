@@ -106,7 +106,7 @@ const QuanLyHocSinh = () => {
     if (!Object.keys(validationErrors).length) {
       tableData[row.index] = values;
       // console.log(values);
-      axios.put(
+      await axios.put(
         `${DOMAIN}/students/change-student/${row.original.maSv}`,
         values,
         {

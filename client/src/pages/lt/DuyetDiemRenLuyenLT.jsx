@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import axios from "axios";
 import Header from "components/Header";
 // import { getUserInLocalStorage } from "context/getCurrentUser";
@@ -474,8 +474,8 @@ const DuyetDiemRenLuyenLT = ({
 
     setValuesLT((prev) => ({
       ...prev,
-      ltDiemTBHK: changeValueTBHK,
-      ltCitizen: changeValueCitizen,
+      // ltDiemTBHK: changeValueTBHK,
+      // ltCitizen: changeValueCitizen,
       ltMonitor: changeSvMonitor,
     }));
   }, [pointCitizenMediumData, studentData]);
@@ -670,7 +670,7 @@ const DuyetDiemRenLuyenLT = ({
   // start sum lop truong
   useEffect(() => {
     const sum1 =
-      parseInt(valuesLT.ltDiemTBHK) +
+      parseInt(values.svDiemTBHK) +
       parseInt(valuesLT.ltNCKH1) +
       parseInt(valuesLT.ltNCKH2) +
       parseInt(valuesLT.ltNCKH3) +
@@ -686,7 +686,7 @@ const DuyetDiemRenLuyenLT = ({
 
     const sum2 =
       parseInt(valuesLT.ltRightRule) +
-      parseInt(valuesLT.ltCitizen) +
+      parseInt(values.svCitizen) +
       parseInt(valuesLT.ltNoFullStudy) +
       parseInt(valuesLT.ltNoCard) +
       parseInt(valuesLT.ltNoAtivities) +
@@ -2233,7 +2233,54 @@ const DuyetDiemRenLuyenLT = ({
                 // onClick={handleDuyet}
               />
             </span> */}
-
+            <Button
+              disableElevation={true}
+              variant="contained"
+              color="secondary"
+              style={{
+                position: "fixed",
+                top: "75px",
+                right: "10px",
+                cursor: "default",
+              }}
+            >
+              TBHK:{" "}
+              {pointCitizenMediumData?.point_average
+                ? pointCitizenMediumData?.point_average
+                : ""}
+              <br /> CDSV:
+              {pointCitizenMediumData?.point
+                ? pointCitizenMediumData?.point
+                : ""}
+            </Button>
+            <Button
+              disableElevation={true}
+              variant="contained"
+              color="secondary"
+              style={{
+                position: "fixed",
+                bottom: "120px",
+                right: "15px",
+                cursor: "default",
+                padding: "9px 23px",
+              }}
+            >
+              Tổng:{sum}
+            </Button>
+            <Button
+              disableElevation={true}
+              variant="contained"
+              color="secondary"
+              style={{
+                position: "fixed",
+                bottom: "70px",
+                right: "15px",
+                cursor: "default",
+                padding: "9px 15px",
+              }}
+            >
+              TổngLT:{sumlt}
+            </Button>
             <div
               className={`flex justify-end bg-[#191f4589] px-4 py-3 w-full absolute bottom-0`}
             >
