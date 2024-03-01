@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.css";
-const ViewTable = ({ dataTable }) => {
+const ViewTable = ({ dataTable, isLop }) => {
   // console.log("data table: ", dataTable);
   const {
     dssv,
@@ -15,6 +15,7 @@ const ViewTable = ({ dataTable }) => {
     tenVaKhoa,
     title,
   } = dataTable;
+  console.log("xuong day:", isLop);
   return (
     <div className="bg-white p-2  text-[#000] h-full">
       <div className="p-3 border-shadow h-full overflow-auto">
@@ -38,7 +39,7 @@ const ViewTable = ({ dataTable }) => {
             {title} - {hk}
           </h1>
         </div>
-        <div className="mb-3">
+        <div className="mb-3 text-center">
           <h1 className=" font-semibold uppercase">{tenVaKhoa}</h1>
         </div>
         <div>
@@ -48,13 +49,19 @@ const ViewTable = ({ dataTable }) => {
                 <th class="border border-slate-600 border-solid align-middle">
                   STT
                 </th>
-                <th class="border border-slate-600 border-solid align-middle">
+                <th class="border border-slate-600 border-solid align-middle w-[10%]">
                   MSSV
                 </th>
-                <th class="border border-slate-600 border-solid align-middle w-[15%]">
+                <th class="border border-slate-600 border-solid align-middle w-[18%]">
                   Họ và tên
                 </th>
-                <th class="border border-slate-600 border-solid text-center w-[30%] h-full">
+                {isLop === 1 && (
+                  <th class="border border-slate-600 border-solid align-middle w-[10%]">
+                    Lớp
+                  </th>
+                )}
+
+                <th class="border border-slate-600 border-solid text-center w-[25%] h-full">
                   ĐRL được đánh giá
                   <tr className="w-auto h-full flex">
                     <th class="border border-slate-600 border-solid w-[30%] py-2 border-b-0 border-l-0">
@@ -72,7 +79,7 @@ const ViewTable = ({ dataTable }) => {
                     <th class="border border-slate-600 border-solid w-[30%] py-2 border-b-0 border-l-0">
                       (5)
                     </th>
-                    <th class="border border-slate-600 border-solid text-center w-full border-b-0 border-l-0 border-r-0">
+                    <th class="border border-slate-600 border-solid text-center w-[30%] border-b-0 border-l-0 border-r-0">
                       Cộng điểm
                     </th>
                   </tr>
@@ -86,7 +93,7 @@ const ViewTable = ({ dataTable }) => {
                 <th class="border border-slate-600 border-solid align-middle w-[10%]">
                   SĐT
                 </th>
-                <th class="border border-slate-600 border-solid align-middle w-[20%]">
+                <th class="border border-slate-600 border-solid align-middle w-[13%]">
                   Ghi chú
                 </th>
               </tr>
@@ -105,6 +112,13 @@ const ViewTable = ({ dataTable }) => {
                       {item?.name}
                     </span>
                   </td>
+                  {isLop === 1 && (
+                    <td class="border border-slate-600 border-solid ">
+                      <span className=" line-clamp-1 text-left px-2 text-base">
+                        {item?.tenLop}
+                      </span>
+                    </td>
+                  )}
                   <td class="border border-slate-600 border-solid border-t-0">
                     <tr className="flex">
                       <td class="border border-slate-600 border-solid  w-[30%] py-1 border-b-0 border-t-0 border-l-0">
@@ -122,7 +136,7 @@ const ViewTable = ({ dataTable }) => {
                       <td class="border border-slate-600 border-solid  w-[30%] py-1 border-b-0 border-t-0 border-l-0">
                         {item?.sum5}
                       </td>
-                      <td class="border border-slate-600 border-solid text-center w-full border-b-0 border-t-0 border-l-0 border-r-0">
+                      <td class="border border-slate-600 border-solid text-center w-[30%] border-b-0 border-t-0 border-l-0 border-r-0">
                         {item?.sum}
                       </td>
                     </tr>
@@ -156,7 +170,7 @@ const ViewTable = ({ dataTable }) => {
                     <td class="border border-slate-600 border-solid  w-[30%] py-1 border-b-0 border-t-0 border-l-0"></td>
                     <td class="border border-slate-600 border-solid  w-[30%] py-1 border-b-0 border-t-0 border-l-0"></td>
                     <td class="border border-slate-600 border-solid  w-[30%] py-1 border-b-0 border-t-0 border-l-0"></td>
-                    <td class="border border-slate-600 border-solid text-center w-full border-b-0 border-t-0 border-l-0 border-r-0"></td>
+                    <td class="border border-slate-600 border-solid text-center w-[30%] border-b-0 border-t-0 border-l-0 border-r-0"></td>
                   </tr>
                 </td>
                 <td class="border border-slate-600 border-solid"></td>

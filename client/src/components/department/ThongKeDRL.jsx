@@ -269,7 +269,7 @@ const ThongKeDRL = () => {
               </Grid>
             </Box>
             <div className="h-[560px]">
-              <ViewTable dataTable={data} />
+              <ViewTable dataTable={data} isLop={initChoose.isLop} />
             </div>
             {/* {url && (
               <DocViewer

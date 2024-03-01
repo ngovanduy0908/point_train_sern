@@ -104,19 +104,24 @@ const QuanLyHocSinh = () => {
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     if (!Object.keys(validationErrors).length) {
-      tableData[row.index] = values;
-      // console.log(values);
-      await axios.put(
-        `${DOMAIN}/students/change-student/${row.original.maSv}`,
-        values,
-        {
-          withCredentials: true,
-        }
-      );
-      //send/receive api updates here, then refetch or update local table data for re-render
-      setTableData([...tableData]);
-      exitEditingMode(); //required to exit editing mode and close modal
-      toast.success("Sửa thông tin thành công");
+      try {
+        tableData[row.index] = values;
+        // console.log(values);
+        await axios.put(
+          `${DOMAIN}/students/change-student/${row.original.maSv}`,
+          values,
+          {
+            withCredentials: true,
+          }
+        );
+        //send/receive api updates here, then refetch or update local table data for re-render
+        setTableData([...tableData]);
+        exitEditingMode(); //required to exit editing mode and close modal
+        toast.success("Sửa thông tin thành công");
+      } catch (error) {
+        // console.log("tại sao: ", error);
+        toast.error("Mã sinh viên này đã tồn tại.");
+      }
     }
   };
 
@@ -158,8 +163,6 @@ const QuanLyHocSinh = () => {
       toast.success("Thay đổi thành công");
     } catch (error) {
       toast.warn(error.response.data);
-
-      console.log(error);
     }
   };
 
