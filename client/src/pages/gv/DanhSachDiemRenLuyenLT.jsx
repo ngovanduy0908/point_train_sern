@@ -221,7 +221,7 @@ const DanhSachDiemRenLuyenLT = () => {
       const values = {
         text: "Không sinh hoạt lớp",
       };
-      const res = await axios.post(
+      await axios.post(
         `${DOMAIN}/points/confirm_zero?maSv=${sinhVienItem?.maSv}&maHK=${maHK}`,
         values,
         {

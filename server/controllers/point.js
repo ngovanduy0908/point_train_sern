@@ -584,13 +584,13 @@ export const insertOrUpdatePointTeacher = (req, res) => {
   });
 };
 
-export const updatePointTeacherZero = (req, res) => {
+export const updatePointTeacherZero = async (req, res) => {
   const { maHK, maSv } = req.query;
   // console.log("mahk va masv: ", maHK, maSv);
   const values = req.body;
   // console.log("value: ", values);
   const checkExisPointTeacher = `select maSv from point_teacher where maSv = '${maSv}' and maHK = '${maHK}'`;
-  db.query(checkExisPointTeacher, (err, data) => {
+  db.query(checkExisPointTeacher, async (err, data) => {
     if (err) return res.status(500).json(err);
     // console.log("data: ", data);
     if (data.length) {
@@ -628,16 +628,121 @@ export const updatePointTeacherZero = (req, res) => {
                             gvBonus = 0,
                             gvIrresponsibleMonitor = 0
                             where maSv = '${maSv}' and maHK = '${maHK}'`;
-      const q1 = `update point set point_teacher = 0, gvNote='Không sinh hoạt lớp', status_teacher = 1 where maSv = '${maSv}' and maHK = '${maHK}'`;
-      db.query(q, (err, data) => {
-        if (err) return res.status(500).json(err);
+      const q2 = `
+      update point_student set
+                            svDiemTBHK = 0,
+                            svNCKH1  = 0,
+                            svNCKH2 = 0,
+                            svNCKH3 = 0,
+                            svOlympic1 = 0,
+                            svOlympic2 = 0,
+                            svOlympic3 = 0,
+                            svOlympic4 = 0,
+                            svNoRegulation = 0,
+                            svOnTime = 0,
+                            svAbandon = 0,
+                            svUnTrueTime = 0,
+                            svRightRule = 0,
+                            svCitizen = 0,
+                            svNoFullStudy = 0,
+                            svNoCard = 0,
+                            svNoAtivities = 0,
+                            svNoPayFee = 0,
+                            svFullActive = 0,
+                            svAchievementSchool = 0,
+                            svAchievementCity = 0,
+                            svAdvise = 0,
+                            svIrresponsible = 0,
+                            svNoCultural = 0,
+                            svPositiveStudy = 0,
+                            svPositiveLove = 0,
+                            svWarn = 0,
+                            svNoProtect = 0,
+                            svMonitor = 0,
+                            svBonus = 0,
+                            svIrresponsibleMonitor = 0
+                            where maSv = '${maSv}' and maHK = '${maHK}'`;
+      const q3 = `
+                            update point_monitor set
+                                                  ltDiemTBHK = 0,
+                                                  ltNCKH1  = 0,
+                                                  ltNCKH2 = 0,
+                                                  ltNCKH3 = 0,
+                                                  ltOlympic1 = 0,
+                                                  ltOlympic2 = 0,
+                                                  ltOlympic3 = 0,
+                                                  ltOlympic4 = 0,
+                                                  ltNoRegulation = 0,
+                                                  ltOnTime = 0,
+                                                  ltAbandon = 0,
+                                                  ltUnTrueTime = 0,
+                                                  ltRightRule = 0,
+                                                  ltCitizen = 0,
+                                                  ltNoFullStudy = 0,
+                                                  ltNoCard = 0,
+                                                  ltNoAtivities = 0,
+                                                  ltNoPayFee = 0,
+                                                  ltFullActive = 0,
+                                                  ltAchievementSchool = 0,
+                                                  ltAchievementCity = 0,
+                                                  ltAdvise = 0,
+                                                  ltIrresponsible = 0,
+                                                  ltNoCultural = 0,
+                                                  ltPositiveStudy = 0,
+                                                  ltPositiveLove = 0,
+                                                  ltWarn = 0,
+                                                  ltNoProtect = 0,
+                                                  ltMonitor = 0,
+                                                  ltBonus = 0,
+                                                  ltIrresponsibleMonitor = 0
+                                                  where maSv = '${maSv}' and maHK = '${maHK}'`;
+      const q1 = `update point set point_teacher = 0, point_monitor = 0, point_student = 0, gvNote='Không sinh hoạt lớp', status_teacher = 1 where maSv = '${maSv}' and maHK = '${maHK}'`;
+      // db.query(q, (err, data) => {
+      //   if (err) return res.status(500).json(err);
 
-        db.query(q1, (err, data) => {
-          if (err) return res.status(500).json(err);
+      //   db.query(q1, (err, data) => {
+      //     if (err) return res.status(500).json(err);
 
-          return res.status(200).json("Giáo viên cập nhật điểm thành công");
+      //     return res.status(200).json("Giáo viên cập nhật điểm thành công");
+      //   });
+      // });
+      try {
+        await new Promise((resolve, reject) => {
+          db.query(q, (err, data) => {
+            if (err) reject(err);
+            resolve();
+          });
         });
-      });
+
+        await new Promise((resolve, reject) => {
+          db.query(q1, (err, data) => {
+            if (err) reject(err);
+            resolve();
+          });
+        });
+        await new Promise((resolve, reject) => {
+          db.query(q2, (err, data) => {
+            if (err) reject(err);
+            resolve();
+          });
+        });
+        await new Promise((resolve, reject) => {
+          db.query(q3, (err, data) => {
+            if (err) reject(err);
+            resolve();
+          });
+        });
+        await new Promise((resolve, reject) => {
+          db.query(q3, (err, data) => {
+            if (err) reject(err);
+            resolve();
+          });
+        });
+
+        return res.status(200).json("Giáo viên cập nhật điểm thành công");
+      } catch (error) {
+        return error;
+      }
     } else {
       const q = `
       INSERT INTO point_teacher 
@@ -710,15 +815,34 @@ export const updatePointTeacherZero = (req, res) => {
                                 0)`;
       const q1 = `update point set point_teacher = 0, gvNote='Không sinh hoạt lớp', status_teacher = 1 where maSv = '${maSv}' and maHK = '${maHK}'`;
 
-      db.query(q, (err, data) => {
-        if (err) return res.status(500).json(err);
+      // db.query(q, (err, data) => {
+      //   if (err) return res.status(500).json(err);
 
-        db.query(q1, (err, data) => {
-          if (err) return res.status(500).json(err);
+      //   db.query(q1, (err, data) => {
+      //     if (err) return res.status(500).json(err);
 
-          return res.status(200).json("Giáo viên duyệt thành công");
+      //     return res.status(200).json("Giáo viên duyệt thành công");
+      //   });
+      // });
+      try {
+        await new Promise((resolve, reject) => {
+          db.query(q, (err, data) => {
+            if (err) reject(err);
+            resolve();
+          });
         });
-      });
+
+        await new Promise((resolve, reject) => {
+          db.query(q1, (err, data) => {
+            if (err) reject(err);
+            resolve();
+          });
+        });
+
+        return res.status(200).json("Giáo viên cập nhật điểm thành công");
+      } catch (error) {
+        return error;
+      }
     }
   });
 };
