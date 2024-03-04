@@ -21,7 +21,6 @@ import axios from "axios";
 import { getUserInLocalStorage } from "context/getCurrentUser";
 import FormDialog from "./Dialog";
 import { toast } from "react-toastify";
-import dayjs from "dayjs";
 import { formatDay } from "utils/function/formatDay";
 const DOMAIN = process.env.REACT_APP_DOMAIN;
 const QuanLyThoiGian = () => {
@@ -267,7 +266,7 @@ export const CreateNewAccountModal = ({
       </DialogContent>
       <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
-          Cancel
+          Thoát
         </Button>
         <Button color="secondary" onClick={handleSubmit} variant="contained">
           Thêm Mới

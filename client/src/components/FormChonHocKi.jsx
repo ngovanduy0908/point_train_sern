@@ -64,12 +64,12 @@ const FormChonHocKi = ({ onSubmit, value, setValue }) => {
             }}
           >
             <FormControl fullWidth required={true}>
-              <InputLabel id="demo-simple-select-label">Chon Hoc Ki</InputLabel>
+              <InputLabel id="demo-simple-select-label">Chọn Học Kì</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={value}
-                label="Chon Hoc Ki"
+                label="Chọn Học Kì"
                 name="maHK"
                 onChange={handleChange}
               >
@@ -87,7 +87,7 @@ const FormChonHocKi = ({ onSubmit, value, setValue }) => {
             variant="contained"
             sx={{ mt: "10px" }}
           >
-            Chon
+            Chọn
           </Button>
         </form>
       </Box>

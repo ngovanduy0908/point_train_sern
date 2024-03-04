@@ -185,7 +185,7 @@ const QuanLyHocKi = () => {
         header: "Trạng Thái",
         enableEditing: false,
         Cell: ({ cell, row }) => {
-          console.log("cell what: ", cell);
+          // console.log("cell what: ", cell);
           return (
             <Button
               sx={{

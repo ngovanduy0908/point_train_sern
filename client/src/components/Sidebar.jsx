@@ -16,7 +16,9 @@ import ApartmentOutlinedIcon from "@mui/icons-material/ApartmentOutlined";
 import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
 import HouseIcon from "@mui/icons-material/House";
+import GroupsIcon from "@mui/icons-material/Groups";
 import { useEffect, useState } from "react";
+import BusinessIcon from "@mui/icons-material/Business";
 import { useLocation, useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
 import { ChevronLeft, ChevronRightOutlined } from "@mui/icons-material";
@@ -34,7 +36,7 @@ const navItems = [
   },
   {
     text: "Quản lý chuyên ngành",
-    icon: <ApartmentOutlinedIcon />,
+    icon: <BusinessIcon />,
     path: "quanlychuyennganh",
   },
   {
@@ -46,6 +48,11 @@ const navItems = [
     text: "Quản lý học kì",
     icon: <AssignmentOutlinedIcon />,
     path: "quanlyhocki",
+  },
+  {
+    text: "Sinh hoạt bổ sung",
+    icon: <GroupsIcon />,
+    path: "sinhhoatbosung",
   },
 ];
 
@@ -112,29 +119,26 @@ const Sidebar = ({
                         setActive(`${path}`);
                       }}
                       sx={{
-                        backgroundColor:
-                          active === path
-                            ? theme.palette.secondary[300]
-                            : "transparent",
-                        color:
-                          active === path
-                            ? theme.palette.primary[600]
-                            : theme.palette.secondary[100],
+                        backgroundColor: active.includes(path)
+                          ? theme.palette.secondary[300]
+                          : "transparent",
+                        color: active.includes(path)
+                          ? theme.palette.primary[600]
+                          : theme.palette.secondary[100],
                       }}
                     >
                       <ListItemIcon
                         sx={{
                           ml: "1rem",
-                          color:
-                            active === path
-                              ? theme.palette.primary[600]
-                              : theme.palette.secondary[200],
+                          color: active.includes(path)
+                            ? theme.palette.primary[600]
+                            : theme.palette.secondary[200],
                         }}
                       >
                         {icon}
                       </ListItemIcon>
                       <ListItemText primary={text} />
-                      {active === path && (
+                      {active.includes(path) && (
                         <ChevronRightOutlined sx={{ ml: "auto" }} />
                       )}
                     </ListItemButton>

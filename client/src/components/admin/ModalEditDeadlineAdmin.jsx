@@ -10,32 +10,28 @@ import {
   TextField,
 } from "@mui/material";
 import { toast } from "react-toastify";
-
-export default function FormDialog({
+const DOMAIN = process.env.REACT_APP_DOMAIN;
+export default function ModalEditDeadlineAdmin({
   open,
   handleClose,
   data,
-  currentUser,
   setOpen,
   fetchData,
 }) {
-  // console.log("data deadline: ", data);
-  const { start_time_student, end_time_student, end_time_monitor } = data;
+  // console.log("data deadline admin: ", data);
+  const { start_time_student, end_time_student, maHK } = data;
   const [startTimeStudent, setStartTimeStudent] = useState(
     start_time_student || ""
   );
   const [endTimeStudent, setEndTimeStudent] = useState(end_time_student || "");
-  const [endTimeMonitor, setEndTimeMonitor] = useState(end_time_monitor || "");
   const handleSubmit = async () => {
     try {
       const values = {
         start_time_student: startTimeStudent,
         end_time_student: endTimeStudent,
-        end_time_monitor: endTimeMonitor,
       };
       const start_time_student_ss = new Date(startTimeStudent);
       const end_time_student_ss = new Date(endTimeStudent);
-      const end_time_monitor_ss = new Date(endTimeMonitor);
 
       if (end_time_student_ss <= start_time_student_ss) {
         return toast.warn(
@@ -43,19 +39,14 @@ export default function FormDialog({
         );
       }
 
-      if (end_time_monitor_ss <= end_time_student_ss) {
-        return toast.warn(
-          "Thời gian duyệt của lớp trưởng phải lớn hơn thời gian kết thúc của sinh viên"
-        );
-      }
+      const newValues = {
+        ...values,
+        maHK: maHK,
+      };
 
-      await axios.put(
-        `http://localhost:8800/api/deadlines/${currentUser.maGv}`,
-        values,
-        {
-          withCredentials: true,
-        }
-      );
+      await axios.put(`${DOMAIN}/deadlines_admin`, newValues, {
+        withCredentials: true,
+      });
       fetchData();
       setOpen(false);
       toast.success("Sửa thời gian thành công");
@@ -106,7 +97,7 @@ export default function FormDialog({
               type="date"
               required
             />
-            <TextField
+            {/* <TextField
               name="end_time_monitor"
               value={endTimeMonitor}
               onChange={(e) => setEndTimeMonitor(e.target.value)}
@@ -116,7 +107,7 @@ export default function FormDialog({
               fullWidth
               type="date"
               required
-            />
+            /> */}
           </form>
         </DialogContent>
         <DialogActions>

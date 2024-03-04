@@ -53,7 +53,6 @@ const Overview = () => {
   const [data, setData] = useState([]);
   const [dataHocKi, setDataHocKi] = useState([]);
   const [dataKhoaHoc, setDataKhoaHoc] = useState([]);
-  const [tiLeOrSoLuong, setTiLeOrSoLuong] = useState(1);
   const [title, setTitle] = useState("Thống kê điểm rèn luyện");
   const [xAxis, setXAxis] = useState([
     "KEM",
