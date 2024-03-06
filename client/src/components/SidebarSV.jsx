@@ -15,7 +15,7 @@ import {
 import ApartmentOutlinedIcon from "@mui/icons-material/ApartmentOutlined";
 
 import BorderColorIcon from "@mui/icons-material/BorderColor";
-import PreviewIcon from "@mui/icons-material/Preview";
+// import PreviewIcon from "@mui/icons-material/Preview";
 
 import { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -25,6 +25,7 @@ import CountDown from "./countdown/CountDown";
 import { getDeadlineBySinhVien } from "utils/getDetails/getDealineBySinhVien";
 import { AuthContext } from "context/authContext";
 import { formatDay } from "utils/formatDay";
+import { getAllDeadlineAdmin } from "utils/getMany/getDealineAdmin";
 const navItemsSV = [
   {
     text: "Trang Chủ",
@@ -45,7 +46,7 @@ const SidebarSV = ({
   setIsSidebarOpen,
   isNonMobile,
 }) => {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, handleSetMaHKAdmin } = useContext(AuthContext);
   const { pathname } = useLocation();
   const [active, setActive] = useState("");
   const navigate = useNavigate();
@@ -54,35 +55,67 @@ const SidebarSV = ({
   const [navList, setNavList] = useState(navItemsSV);
   const [timeStartStudentMark, setTimeStartStudentMark] = useState(null);
   const [timeEndStudentMark, setTimeEndStudentMark] = useState(null);
+  const [timeStartStudentMarkAdmin, setTimeStartStudentMarkAdmin] =
+    useState(null);
+  const [timeEndStudentMarkAdmin, setTimeEndStudentMarkAdmin] = useState(null);
   const [timeEndMonitorMark, setTimeEndMonitorMark] = useState(null);
   const [checkTimePoint, setCheckTimePoint] = useState(false);
+  // const [maHKAdmin, setMaHKAdmin] = useState(null);
   const curDate = new Date();
-
+  // console.log("a nho: ", handleSetMaHKAdmin);
   useEffect(() => {
     setActive(pathname.substring(1));
   }, [pathname]);
 
   const getDeadlineByMaLop = async () => {
     try {
-      const res = await getDeadlineBySinhVien(`${currentUser.maLop}`);
+      const [res, resAdmin] = await Promise.all([
+        getDeadlineBySinhVien(currentUser.maLop),
+        getAllDeadlineAdmin(),
+      ]);
+
+      // console.log("a loi: ", res);
+      // console.log("a loi admin: ", resAdmin);
+
       setTimeStartStudentMark(res.start_time_student);
       setTimeEndStudentMark(res.end_time_student);
       setTimeEndMonitorMark(res.end_time_monitor);
+      if (resAdmin?.end_time_student) {
+        setTimeEndStudentMark(resAdmin?.end_time_student);
+      }
+      setTimeStartStudentMarkAdmin(resAdmin?.start_time_student);
+      setTimeEndStudentMarkAdmin(resAdmin?.end_time_student);
+      // setMaHKAdmin(resAdmin?.maHK);
+      handleSetMaHKAdmin(resAdmin?.maHK);
     } catch (error) {
       console.log(error.message);
     }
   };
 
+  // const getDeadlineAdmin = async () => {
+  //   try {
+  //     const res = await getAllDeadlineAdmin();
+  //     // console.log("res client: ", res);
+  //   } catch (error) {
+  //     console.log("error: ", error);
+  //   }
+  // };
+
   useEffect(() => {
     getDeadlineByMaLop();
+    // getDeadlineAdmin();
   }, []);
 
   useEffect(() => {
     const a = formatDay(curDate) >= formatDay(timeStartStudentMark);
     const b = formatDay(curDate) <= formatDay(timeEndStudentMark);
+    const c = formatDay(curDate) >= formatDay(timeStartStudentMarkAdmin);
+    const d = formatDay(curDate) <= formatDay(timeEndStudentMarkAdmin);
     // console.log("a va b: ", a, b);
-    if (a && b) {
+    // console.log("timeStartStudentMark:", c, d);
+    if ((a && b) || (c && d)) {
       setCheckTimePoint(true);
+      // setTimeEndStudentMark(timeEndStudentMarkAdmin);
       const isChamDiemRenLuyenExists = navItemsSV.some(
         (item) => item.path === "chamdiemrenluyen"
       );

@@ -36,6 +36,27 @@ export const getDeadlineAdmin = (req, res) => {
   });
 };
 
+export const getAllDeadlineAdmin = (req, res) => {
+  // const token = req.cookies.accessToken;
+  // if (!token) return res.status(401).json("Not authenticated");
+  // const { maHK } = req.params;
+  // console.log("xg day khong: ", maHK);
+  // let returnData = {};
+  const q = `SELECT 
+    deadline_admin.start_time_student,
+    deadline_admin.end_time_student,
+    deadline_admin.maHK FROM deadline_admin, 
+    semester 
+    WHERE 
+    deadline_admin.maHK = semester.maHK 
+    ORDER by semester.rank DESC LIMIT 1`;
+  db.query(q, (err, data) => {
+    if (err) return res.status(500).json(err);
+    // console.log("datane: ", data);
+    // return res.status(200).json(...data);
+    return res.status(200).json(...data);
+  });
+};
 export const addDeadlineAdmin = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not authenticated");
@@ -66,12 +87,12 @@ export const editDeadlineAdmin = (req, res) => {
   });
 };
 
-export const deleteDeadline = (req, res) => {
+export const deleteDeadlineAdmin = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not authenticated");
-  const maGv = req.params.maGv;
+  const { maHK } = req.params;
 
-  const q = `delete from deadline where maGv = '${maGv}'`;
+  const q = `delete from deadline_admin where maHK = '${maHK}'`;
   db.query(q, (err, data) => {
     if (err) return res.status(500).json(err);
 

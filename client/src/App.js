@@ -29,7 +29,6 @@ import QuanLyLopChuNhiem from "components/teacher/QuanLyLopChuNhiem";
 import QuanLyHocSinh from "components/teacher/QuanLyHocSinh";
 import QuanLyDiemCDSV from "components/teacher/QuanLyDiemCDSV";
 import QuanLyDiemTBHK from "components/teacher/QuanLyDiemTBHK";
-import LT from "pages/lt/LT";
 import PhieuChamDiem from "components/student/PhieuChamDiem";
 import Mark from "components/student/Mark";
 import AfterMark from "components/student/AfterMark";

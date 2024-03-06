@@ -10,6 +10,10 @@ export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(
     JSON.parse(localStorage.getItem("user")) || null
   );
+  const [maHKAdmin, setMaHKAdmin] = useState(null);
+  const handleSetMaHKAdmin = (value) => {
+    setMaHKAdmin(value);
+  };
 
   const login = async (inputs) => {
     const res = await axios.post(
@@ -29,7 +33,9 @@ export const AuthContextProvider = ({ children }) => {
   }, [currentUser]);
 
   return (
-    <AuthContext.Provider value={{ currentUser, login }}>
+    <AuthContext.Provider
+      value={{ currentUser, login, maHKAdmin, handleSetMaHKAdmin }}
+    >
       {children}
     </AuthContext.Provider>
   );

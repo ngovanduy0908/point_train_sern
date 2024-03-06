@@ -2,6 +2,7 @@ import express from "express";
 import {
   getCitizenMediumByMaSv,
   getListPointByMaSV,
+  getPointByMaAdmin,
   getPointMonitorByMa,
   getPointStudentByMa,
   getPointStudentByMaLopAndMaHK,
@@ -34,6 +35,7 @@ router.get("/point_basic_chart", pointBasicChart);
 router.get("/point_basic_chart_percent", pointBasicChartPercent);
 router.get("/point_statistical_pie_department", statisticalPieDepartment);
 router.get("/point_statistical_stack_admin", statisticalStackChartAdmin);
+router.get("/point_by_ma", getPointByMaAdmin);
 router.post("/insert_or_update/:maHK/:maSv", insertOrUpdatePointStudent);
 router.post("/insert_or_update_monitor", insertOrUpdatePointStudentMonitor);
 router.post("/mark_zero", markZero);

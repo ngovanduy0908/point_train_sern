@@ -20,7 +20,8 @@ import { formatDay } from "utils/function/formatDay";
 import { getDeadlineAdmin } from "utils/getMany/getDealineAdmin";
 import { insertDeadlineAdmin } from "utils/postDetails/insertDeadlineAdmin";
 import ModalEditDeadlineAdmin from "./ModalEditDeadlineAdmin";
-
+import axios from "axios";
+const DOMAIN = process.env.REACT_APP_DOMAIN;
 const DeadlineAdmin = ({ maHK }) => {
   const [tableData, setTableData] = useState([]);
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -65,17 +66,17 @@ const DeadlineAdmin = ({ maHK }) => {
   };
   const handleDeleteRow = useCallback(
     async (row) => {
-      // // console.log(row);
-      // if (!window.confirm(`Bạn có chắc muốn xóa thời gian không?`)) {
-      //   return;
-      // }
-      // // console.log(row);
-      // //send api delete request here, then refetch or update local table data for re-render
-      // await axios.delete(`${DOMAIN}/deadlines/${currentUser.maGv}`, {
-      //   withCredentials: true,
-      // });
-      // tableData.splice(row.index, 1);
-      // setTableData([...tableData]);
+      // console.log(row);
+      if (!window.confirm(`Bạn có chắc muốn xóa thời gian không?`)) {
+        return;
+      }
+      // console.log(row);
+      //send api delete request here, then refetch or update local table data for re-render
+      await axios.delete(`${DOMAIN}/deadlines_admin/${maHK}`, {
+        withCredentials: true,
+      });
+      tableData.splice(row.index, 1);
+      setTableData([...tableData]);
     },
     [tableData]
   );
@@ -139,14 +140,14 @@ const DeadlineAdmin = ({ maHK }) => {
                     <Edit />
                   </IconButton>
                 </Tooltip>
-                {/* <Tooltip arrow placement="right" title="Xóa Thời Gian">
+                <Tooltip arrow placement="right" title="Xóa Thời Gian">
                   <IconButton
                     color="error"
                     onClick={() => handleDeleteRow(row)}
                   >
                     <Delete />
                   </IconButton>
-                </Tooltip> */}
+                </Tooltip>
               </Box>
             )}
           />

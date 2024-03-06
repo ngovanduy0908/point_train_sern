@@ -993,7 +993,7 @@ GROUP BY maHK
 
 export const statisticalStackChartAdmin = (req, res) => {
   const { maHK, maKhoaHoc, tiLeOrSoLuong } = req.query;
-  console.log("query: ", req.query.tiLeOrSoLuong);
+  // console.log("query: ", req.query.tiLeOrSoLuong);
   let q;
   if (tiLeOrSoLuong === "1") {
     q = `
@@ -1047,5 +1047,21 @@ export const statisticalStackChartAdmin = (req, res) => {
   db.query(q, (err, data) => {
     if (err) return res.status(500).json(err);
     return res.status(200).json(data);
+  });
+};
+
+export const getPointByMaAdmin = (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not authenticated");
+
+  const { maSv, maHK } = req.query;
+  console.log("xuong day: ", req.query);
+  const q = `
+  SELECT * FROM point WHERE maSv = '${maSv}' and maHK = '${maHK}'
+    `;
+  db.query(q, (err, data) => {
+    if (err) return res.status(500).json(err);
+
+    return res.status(200).json(...data);
   });
 };
