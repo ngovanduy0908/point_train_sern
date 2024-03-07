@@ -1,13 +1,20 @@
-import { Box, IconButton, Tooltip } from "@mui/material";
+import { Box, Button, IconButton, Tooltip } from "@mui/material";
 import Badge from "components/Badge";
 import React, { useEffect, useMemo, useState } from "react";
 import { getListPointStudentAdmin } from "utils/getMany/getListPointStudentAdmin";
 import EditIcon from "@mui/icons-material/Edit";
 import PreviewIcon from "@mui/icons-material/Preview";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DoNotStepIcon from "@mui/icons-material/DoNotStep";
 import MaterialReactTable from "material-react-table";
 import Header from "components/Header";
-
+import Modal from "components/modal/Modal";
+import UploadProofStudent from "components/student/UploadProofStudent";
+import axios from "axios";
+import { toast } from "react-toastify";
+import ModalV1 from "components/modal/ModalV1";
+import DuyetDiemRenLuyenAdmin from "./DuyetDiemRenLuyenAdmin";
+const DOMAIN = process.env.REACT_APP_DOMAIN;
 const DanhSachSinhVienSHL = ({ maHK }) => {
   const [danhSachDiemSinhVien, setDanhSachDiemSinhVien] = useState([]);
   const [sinhVienItem, setSinhVienItem] = useState();
@@ -118,7 +125,7 @@ const DanhSachSinhVienSHL = ({ maHK }) => {
                   <PreviewIcon />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Xét điểm = 0 do SV không sinh hoạt lớp">
+              <Tooltip title="Xét điểm = 0 do SV không sinh hoạt lớp bổ sung">
                 <IconButton
                   onClick={() => {
                     setSinhVienItem(row.original);
@@ -154,27 +161,27 @@ const DanhSachSinhVienSHL = ({ maHK }) => {
         selectedFiles.forEach((file) => {
           formData.append("images", file);
         });
-        // await axios.post(`${DOMAIN}/upload`, formData).then(async (res) => {
-        //   file_img = res.data.join(",");
-        //   // choose_file = [...chooseFiles, file_img];
-        //   choose_file = [file_img];
-        //   const values = {
-        //     name_image: choose_file.length ? choose_file.join(",") : "",
-        //     maSv: sinhVienItem?.maSv,
-        //   };
-        //   // console.log("values: ", choose_file);
-        //   await axios
-        //     .post(
-        //       `${DOMAIN}/proof_mark/create_or_update_proof/${maHK}`,
-        //       values,
-        //       {
-        //         withCredentials: true,
-        //       }
-        //     )
-        //     .then(async (res) => {
-        //       toast.success(res.data);
-        //     });
-        // });
+        await axios.post(`${DOMAIN}/upload`, formData).then(async (res) => {
+          file_img = res.data.join(",");
+          // choose_file = [...chooseFiles, file_img];
+          choose_file = [file_img];
+          const values = {
+            name_image: choose_file.length ? choose_file.join(",") : "",
+            maSv: sinhVienItem?.maSv,
+          };
+          // console.log("values: ", choose_file);
+          await axios
+            .post(
+              `${DOMAIN}/proof_mark/create_or_update_proof/${maHK}`,
+              values,
+              {
+                withCredentials: true,
+              }
+            )
+            .then(async (res) => {
+              toast.success(res.data);
+            });
+        });
       } catch (error) {
         console.error("Upload error:", error);
       }
@@ -185,13 +192,13 @@ const DanhSachSinhVienSHL = ({ maHK }) => {
           maSv: sinhVienItem?.maSv,
         };
         // console.log("values moi: ", values);
-        // await axios
-        //   .post(`${DOMAIN}/proof_mark/create_or_update_proof/${maHK}`, values, {
-        //     withCredentials: true,
-        //   })
-        //   .then(async (res) => {
-        //     toast.success(res.data);
-        //   });
+        await axios
+          .post(`${DOMAIN}/proof_mark/create_or_update_proof/${maHK}`, values, {
+            withCredentials: true,
+          })
+          .then(async (res) => {
+            toast.success(res.data);
+          });
       } catch (error) {
         console.error("Upload error:", error);
       }
@@ -206,19 +213,20 @@ const DanhSachSinhVienSHL = ({ maHK }) => {
   const handleConfirm = async () => {
     try {
       const values = {
-        text: "Không sinh hoạt lớp",
+        text: "Không sinh hoạt lớp bổ sung",
+        status_admin: 1,
       };
-      //   await axios.post(
-      //     `${DOMAIN}/points/confirm_zero?maSv=${sinhVienItem?.maSv}&maHK=${maHK}`,
-      //     values,
-      //     {
-      //       withCredentials: true,
-      //     }
-      //   );
-      //   // console.log("res:", res);
-      //   toast.success("Thay đổi điểm thành công");
-      //   fetchData();
-      //   setOpenFormConfirm(false);
+      await axios.post(
+        `${DOMAIN}/points/confirm_zero?maSv=${sinhVienItem?.maSv}&maHK=${maHK}`,
+        values,
+        {
+          withCredentials: true,
+        }
+      );
+      // console.log("res:", res);
+      toast.success("Thay đổi điểm thành công");
+      fetchData();
+      setOpenFormConfirm(false);
     } catch (error) {
       console.log(error);
     }
@@ -240,6 +248,82 @@ const DanhSachSinhVienSHL = ({ maHK }) => {
         editingMode="modal"
         enableColumnOrdering
       />
+      {sinhVienItem && (
+        <ModalV1
+          open={openFormDRL}
+          setOpen={setOpenFormDRL}
+          title={`Điểm rèn luyện của ${sinhVienItem?.name} `}
+          changeHeight={true}
+          displayButtonOk={false}
+        >
+          <DuyetDiemRenLuyenAdmin
+            sinhVienItem={sinhVienItem}
+            fetchData={fetchData}
+            setOpen={setOpenFormDRL}
+          />
+        </ModalV1>
+      )}
+      {sinhVienItem && (
+        <Modal
+          open={openFormMinhChung}
+          setOpen={setOpenFormMinhChung}
+          title={"Xét Duyệt Minh Chứng"}
+          displayButtonOk={false}
+          displayButtonCancel={false}
+          classNameChildren={"w-[800px]"}
+        >
+          <UploadProofStudent
+            maHK={maHK}
+            maSv={sinhVienItem.maSv}
+            selectedFiles={selectedFiles}
+            setSelectedFiles={setSelectedFiles}
+            handleChangeFile={handleChangeFile}
+            setHandleChangeFile={setHandleChangeFile}
+            chooseFiles={chooseFiles}
+            setChooseFiles={setChooseFiles}
+            handleUpload={handleUpload}
+          />
+        </Modal>
+      )}
+      {sinhVienItem && (
+        <Modal
+          open={openFormConfirm}
+          setOpen={setOpenFormConfirm}
+          // title={"Xét Duyệt Minh Chứng"}
+          displayButtonOk={false}
+          displayButtonCancel={false}
+          classNameChildren={"w-[400px]"}
+        >
+          <div className="text-center">
+            <CheckCircleIcon
+              sx={{
+                height: "40px",
+                width: "40px",
+              }}
+            />
+          </div>
+          <p>
+            Bạn có chắc muốn xét điểm rèn luyện cho sinh viên{" "}
+            <b>{sinhVienItem?.name}</b> = 0 hay không?
+          </p>
+          <div className="flex justify-around gap-2">
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => handleConfirm()}
+            >
+              Đồng Ý
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => setOpenFormConfirm(false)}
+            >
+              Thoát
+            </Button>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

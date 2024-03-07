@@ -643,7 +643,7 @@ const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
       ...prev,
       // gvDiemTBHK: changeValueTBHK,
       // gvCitizen: changeValueCitizen,
-      gvMonitor: changeSvMonitor,
+      // gvMonitor: changeSvMonitor,
     }));
   }, [pointCitizenMediumData, studentData]);
 
@@ -931,7 +931,7 @@ const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
     setSumFourlt(sum4);
 
     const sum5 =
-      parseInt(valuesLT.ltMonitor) +
+      parseInt(values.svMonitor) +
       parseInt(valuesLT.ltBonus) +
       parseInt(valuesLT.ltIrresponsibleMonitor);
     setSumFivelt(sum5);
@@ -986,7 +986,7 @@ const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
     setSumFourgv(sum4);
 
     const sum5 =
-      parseInt(valuesGV.gvMonitor) +
+      parseInt(values.svMonitor) +
       parseInt(valuesGV.gvBonus) +
       parseInt(valuesGV.gvIrresponsibleMonitor);
     setSumFivegv(sum5);
@@ -2678,7 +2678,8 @@ const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
                       type="radio"
                       name="ltMonitor"
                       id=""
-                      checked={valuesLT?.ltMonitor === 7}
+                      // checked={valuesLT?.ltMonitor === 7}
+                      checked={values?.svMonitor === 7}
                       value="7"
                       readOnly
                     />
@@ -2688,7 +2689,8 @@ const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
                       type="radio"
                       name="gvMonitor"
                       id=""
-                      checked={valuesGV?.gvMonitor === 7}
+                      // checked={valuesGV?.gvMonitor === 7}
+                      checked={valuesLT?.ltMonitor === 7}
                       value="7"
                       readOnly
                     />

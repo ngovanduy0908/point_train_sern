@@ -122,7 +122,7 @@ const SidebarLT = ({
       setCheckTimePoint(false);
       setNavList((prev) => [...prev]);
     }
-    if ((a && b) || (c && d)) {
+    if ((a && b) || (e && f)) {
       setCheckTimePoint(true);
       const isChamDiemRenLuyenExists = navItemsLT.some(
         (item) => item.path === "chamdiemrenluyen"

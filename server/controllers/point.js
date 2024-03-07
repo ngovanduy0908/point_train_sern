@@ -587,7 +587,7 @@ export const insertOrUpdatePointTeacher = (req, res) => {
 export const updatePointTeacherZero = async (req, res) => {
   const { maHK, maSv } = req.query;
   // console.log("mahk va masv: ", maHK, maSv);
-  const values = req.body;
+  const { text, status_admin } = req.body;
   // console.log("value: ", values);
   const checkExisPointTeacher = `select maSv from point_teacher where maSv = '${maSv}' and maHK = '${maHK}'`;
   db.query(checkExisPointTeacher, async (err, data) => {
@@ -696,16 +696,24 @@ export const updatePointTeacherZero = async (req, res) => {
                                                   ltBonus = 0,
                                                   ltIrresponsibleMonitor = 0
                                                   where maSv = '${maSv}' and maHK = '${maHK}'`;
-      const q1 = `update point set point_teacher = 0, point_monitor = 0, point_student = 0, gvNote='Không sinh hoạt lớp', status_teacher = 1 where maSv = '${maSv}' and maHK = '${maHK}'`;
-      // db.query(q, (err, data) => {
-      //   if (err) return res.status(500).json(err);
+      const q1 = `update 
+      point set point_teacher = 0, 
+      point_monitor = 0, 
+      point_student = 0, 
+      gvNote='${text}', 
+      status_teacher = 1,
+      status_admin = ${status_admin === 1 ? 1 : 0}
+      where 
+      maSv = '${maSv}' and maHK = '${maHK}'`;
+      db.query(q, (err, data) => {
+        if (err) return res.status(500).json(err);
 
-      //   db.query(q1, (err, data) => {
-      //     if (err) return res.status(500).json(err);
+        db.query(q1, (err, data) => {
+          if (err) return res.status(500).json(err);
 
-      //     return res.status(200).json("Giáo viên cập nhật điểm thành công");
-      //   });
-      // });
+          return res.status(200).json("Giáo viên cập nhật điểm thành công");
+        });
+      });
       try {
         await new Promise((resolve, reject) => {
           db.query(q, (err, data) => {
