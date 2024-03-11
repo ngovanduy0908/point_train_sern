@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Checkbox, FormControlLabel } from "@mui/material";
 import axios from "axios";
 import Header from "components/Header";
 import Input from "components/input/Input";
@@ -11,7 +11,7 @@ import { getPointTeacherByMa } from "utils/getDetails/getPointTeacherByMa";
 import { insertOrUpdatePointTeacher } from "utils/postDetails/insertOrUpdatePointTeacher";
 import { getGvNote } from "utils/getDetails/getGvNote";
 const DOMAIN = process.env.REACT_APP_DOMAIN;
-const colSpan = 4;
+const colSpan = 3;
 
 const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
   const maSv = sinhVienItem.maSv;
@@ -401,138 +401,138 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
     }
   };
 
-  const checkExisPointMonitor = async () => {
-    try {
-      const getMonitorPoint = await getPointMonitorByMaSVAndMaHK(
-        `maHK=${maHK}&maSv=${maSv}`
-      );
-      if (getMonitorPoint) {
-        const pointMonitor = getMonitorPoint;
-        // console.log("pointMonitor: ", pointMonitor);
-        setValuesLT((prev) => ({
-          ...prev,
-          // muc 1
-          ltDiemTBHK: pointMonitor.ltDiemTBHK,
-          ltNCKH1: pointMonitor.ltNCKH1,
-          ltNCKH2: pointMonitor.ltNCKH2,
-          ltNCKH3: pointMonitor.ltNCKH3,
-          ltOlympic1: pointMonitor.ltOlympic1,
-          ltOlympic2: pointMonitor.ltOlympic2,
-          ltOlympic3: pointMonitor.ltOlympic3,
-          ltOlympic4: pointMonitor.ltOlympic4,
-          ltNoRegulation: pointMonitor.ltNoRegulation,
-          ltOnTime: pointMonitor.ltOnTime,
-          ltAbandon: pointMonitor.ltAbandon,
-          ltUnTrueTime: pointMonitor.ltUnTrueTime,
+  // const checkExisPointMonitor = async () => {
+  //   try {
+  //     const getMonitorPoint = await getPointMonitorByMaSVAndMaHK(
+  //       `maHK=${maHK}&maSv=${maSv}`
+  //     );
+  //     if (getMonitorPoint) {
+  //       const pointMonitor = getMonitorPoint;
+  //       // console.log("pointMonitor: ", pointMonitor);
+  //       setValuesLT((prev) => ({
+  //         ...prev,
+  //         // muc 1
+  //         ltDiemTBHK: pointMonitor.ltDiemTBHK,
+  //         ltNCKH1: pointMonitor.ltNCKH1,
+  //         ltNCKH2: pointMonitor.ltNCKH2,
+  //         ltNCKH3: pointMonitor.ltNCKH3,
+  //         ltOlympic1: pointMonitor.ltOlympic1,
+  //         ltOlympic2: pointMonitor.ltOlympic2,
+  //         ltOlympic3: pointMonitor.ltOlympic3,
+  //         ltOlympic4: pointMonitor.ltOlympic4,
+  //         ltNoRegulation: pointMonitor.ltNoRegulation,
+  //         ltOnTime: pointMonitor.ltOnTime,
+  //         ltAbandon: pointMonitor.ltAbandon,
+  //         ltUnTrueTime: pointMonitor.ltUnTrueTime,
 
-          // muc 2
-          ltRightRule: pointMonitor.ltRightRule,
-          ltCitizen: pointMonitor.ltCitizen,
-          ltNoFullStudy: pointMonitor.ltNoFullStudy,
-          ltNoCard: pointMonitor.ltNoCard,
-          ltNoAtivities: pointMonitor.ltNoAtivities,
-          ltNoPayFee: pointMonitor.ltNoPayFee,
+  //         // muc 2
+  //         ltRightRule: pointMonitor.ltRightRule,
+  //         ltCitizen: pointMonitor.ltCitizen,
+  //         ltNoFullStudy: pointMonitor.ltNoFullStudy,
+  //         ltNoCard: pointMonitor.ltNoCard,
+  //         ltNoAtivities: pointMonitor.ltNoAtivities,
+  //         ltNoPayFee: pointMonitor.ltNoPayFee,
 
-          // muc 3
-          ltFullActive: pointMonitor.ltFullActive,
-          ltAchievementCity: pointMonitor.ltAchievementCity,
-          ltAchievementSchool: pointMonitor.ltAchievementSchool,
-          ltAdvise: pointMonitor.ltAdvise,
-          ltIrresponsible: pointMonitor.ltIrresponsible,
-          ltNoCultural: pointMonitor.ltNoCultural,
+  //         // muc 3
+  //         ltFullActive: pointMonitor.ltFullActive,
+  //         ltAchievementCity: pointMonitor.ltAchievementCity,
+  //         ltAchievementSchool: pointMonitor.ltAchievementSchool,
+  //         ltAdvise: pointMonitor.ltAdvise,
+  //         ltIrresponsible: pointMonitor.ltIrresponsible,
+  //         ltNoCultural: pointMonitor.ltNoCultural,
 
-          // muc 4
-          ltPositiveStudy: pointMonitor.ltPositiveStudy,
-          ltPositiveLove: pointMonitor.ltPositiveLove,
-          ltWarn: pointMonitor.ltWarn,
-          ltNoProtect: pointMonitor.ltNoProtect,
+  //         // muc 4
+  //         ltPositiveStudy: pointMonitor.ltPositiveStudy,
+  //         ltPositiveLove: pointMonitor.ltPositiveLove,
+  //         ltWarn: pointMonitor.ltWarn,
+  //         ltNoProtect: pointMonitor.ltNoProtect,
 
-          // muc 5
-          ltMonitor: pointMonitor.ltMonitor,
-          ltBonus: pointMonitor.ltBonus,
-          ltIrresponsibleMonitor: pointMonitor.ltIrresponsibleMonitor,
-        }));
-        setValuesGV((prev) => ({
-          ...prev,
-          // muc 1
-          gvDiemTBHK: pointMonitor.ltDiemTBHK,
-          gvNCKH1: pointMonitor.ltNCKH1,
-          gvNCKH2: pointMonitor.ltNCKH2,
-          gvNCKH3: pointMonitor.ltNCKH3,
-          gvOlympic1: pointMonitor.ltOlympic1,
-          gvOlympic2: pointMonitor.ltOlympic2,
-          gvOlympic3: pointMonitor.ltOlympic3,
-          gvOlympic4: pointMonitor.ltOlympic4,
-          gvNoRegulation: pointMonitor.ltNoRegulation,
-          gvOnTime: pointMonitor.ltOnTime,
-          gvAbandon: pointMonitor.ltAbandon,
-          gvUnTrueTime: pointMonitor.ltUnTrueTime,
+  //         // muc 5
+  //         ltMonitor: pointMonitor.ltMonitor,
+  //         ltBonus: pointMonitor.ltBonus,
+  //         ltIrresponsibleMonitor: pointMonitor.ltIrresponsibleMonitor,
+  //       }));
+  //       setValuesGV((prev) => ({
+  //         ...prev,
+  //         // muc 1
+  //         gvDiemTBHK: pointMonitor.ltDiemTBHK,
+  //         gvNCKH1: pointMonitor.ltNCKH1,
+  //         gvNCKH2: pointMonitor.ltNCKH2,
+  //         gvNCKH3: pointMonitor.ltNCKH3,
+  //         gvOlympic1: pointMonitor.ltOlympic1,
+  //         gvOlympic2: pointMonitor.ltOlympic2,
+  //         gvOlympic3: pointMonitor.ltOlympic3,
+  //         gvOlympic4: pointMonitor.ltOlympic4,
+  //         gvNoRegulation: pointMonitor.ltNoRegulation,
+  //         gvOnTime: pointMonitor.ltOnTime,
+  //         gvAbandon: pointMonitor.ltAbandon,
+  //         gvUnTrueTime: pointMonitor.ltUnTrueTime,
 
-          // muc 2
-          gvRightRule: pointMonitor.ltRightRule,
-          gvCitizen: pointMonitor.ltCitizen,
-          gvNoFullStudy: pointMonitor.ltNoFullStudy,
-          gvNoCard: pointMonitor.ltNoCard,
-          gvNoAtivities: pointMonitor.ltNoAtivities,
-          gvNoPayFee: pointMonitor.ltNoPayFee,
+  //         // muc 2
+  //         gvRightRule: pointMonitor.ltRightRule,
+  //         gvCitizen: pointMonitor.ltCitizen,
+  //         gvNoFullStudy: pointMonitor.ltNoFullStudy,
+  //         gvNoCard: pointMonitor.ltNoCard,
+  //         gvNoAtivities: pointMonitor.ltNoAtivities,
+  //         gvNoPayFee: pointMonitor.ltNoPayFee,
 
-          // muc 3
-          gvFullActive: pointMonitor.ltFullActive,
-          gvAchievementCity: pointMonitor.ltAchievementCity,
-          gvAchievementSchool: pointMonitor.ltAchievementSchool,
-          gvAdvise: pointMonitor.ltAdvise,
-          gvIrresponsible: pointMonitor.ltIrresponsible,
-          gvNoCultural: pointMonitor.ltNoCultural,
+  //         // muc 3
+  //         gvFullActive: pointMonitor.ltFullActive,
+  //         gvAchievementCity: pointMonitor.ltAchievementCity,
+  //         gvAchievementSchool: pointMonitor.ltAchievementSchool,
+  //         gvAdvise: pointMonitor.ltAdvise,
+  //         gvIrresponsible: pointMonitor.ltIrresponsible,
+  //         gvNoCultural: pointMonitor.ltNoCultural,
 
-          // muc 4
-          gvPositiveStudy: pointMonitor.ltPositiveStudy,
-          gvPositiveLove: pointMonitor.ltPositiveLove,
-          gvWarn: pointMonitor.ltWarn,
-          gvNoProtect: pointMonitor.ltNoProtect,
+  //         // muc 4
+  //         gvPositiveStudy: pointMonitor.ltPositiveStudy,
+  //         gvPositiveLove: pointMonitor.ltPositiveLove,
+  //         gvWarn: pointMonitor.ltWarn,
+  //         gvNoProtect: pointMonitor.ltNoProtect,
 
-          // muc 5
-          gvMonitor: pointMonitor.ltMonitor,
-          gvBonus: pointMonitor.ltBonus,
-          gvIrresponsibleMonitor: pointMonitor.ltIrresponsibleMonitor,
-        }));
-        setCheckboxStateLT((prev) => ({
-          ...prev,
-          ltNoRegulation: pointMonitor.ltNoRegulation === 3 ? true : false,
-          ltOnTime: pointMonitor.ltOnTime === 2 ? true : false,
-          ltRightRule: pointMonitor.ltRightRule === 10 ? true : false,
-          ltNoFullStudy: pointMonitor.ltNoFullStudy === -10 ? true : false,
-          ltNoPayFee: pointMonitor.ltNoPayFee === -10 ? true : false,
-          ltFullActive: pointMonitor.ltFullActive === 13 ? true : false,
-          ltPositiveStudy: pointMonitor.ltPositiveStudy === 10 ? true : false,
-          ltPositiveLove: pointMonitor.ltPositiveLove === 5 ? true : false,
-          ltWarn: pointMonitor.ltWarn === -5 ? true : false,
-          ltNoProtect: pointMonitor.ltNoProtect === -20 ? true : false,
-          ltBonus: pointMonitor.ltBonus === 3 ? true : false,
-        }));
-        setCheckboxStateGV((prev) => ({
-          ...prev,
-          gvNoRegulation: pointMonitor.ltNoRegulation === 3 ? true : false,
-          gvOnTime: pointMonitor.ltOnTime === 2 ? true : false,
-          gvRightRule: pointMonitor.ltRightRule === 10 ? true : false,
-          gvNoFullStudy: pointMonitor.ltNoFullStudy === -10 ? true : false,
-          gvNoPayFee: pointMonitor.ltNoPayFee === -10 ? true : false,
-          gvFullActive: pointMonitor.ltFullActive === 13 ? true : false,
-          gvPositiveStudy: pointMonitor.ltPositiveStudy === 10 ? true : false,
-          gvPositiveLove: pointMonitor.ltPositiveLove === 5 ? true : false,
-          gvWarn: pointMonitor.ltWarn === -5 ? true : false,
-          gvNoProtect: pointMonitor.ltNoProtect === -20 ? true : false,
-          gvBonus: pointMonitor.ltBonus === 3 ? true : false,
-        }));
-        // console.log("pointMonitor: ", pointMonitor);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  //         // muc 5
+  //         gvMonitor: pointMonitor.ltMonitor,
+  //         gvBonus: pointMonitor.ltBonus,
+  //         gvIrresponsibleMonitor: pointMonitor.ltIrresponsibleMonitor,
+  //       }));
+  //       setCheckboxStateLT((prev) => ({
+  //         ...prev,
+  //         ltNoRegulation: pointMonitor.ltNoRegulation === 3 ? true : false,
+  //         ltOnTime: pointMonitor.ltOnTime === 2 ? true : false,
+  //         ltRightRule: pointMonitor.ltRightRule === 10 ? true : false,
+  //         ltNoFullStudy: pointMonitor.ltNoFullStudy === -10 ? true : false,
+  //         ltNoPayFee: pointMonitor.ltNoPayFee === -10 ? true : false,
+  //         ltFullActive: pointMonitor.ltFullActive === 13 ? true : false,
+  //         ltPositiveStudy: pointMonitor.ltPositiveStudy === 10 ? true : false,
+  //         ltPositiveLove: pointMonitor.ltPositiveLove === 5 ? true : false,
+  //         ltWarn: pointMonitor.ltWarn === -5 ? true : false,
+  //         ltNoProtect: pointMonitor.ltNoProtect === -20 ? true : false,
+  //         ltBonus: pointMonitor.ltBonus === 3 ? true : false,
+  //       }));
+  //       setCheckboxStateGV((prev) => ({
+  //         ...prev,
+  //         gvNoRegulation: pointMonitor.ltNoRegulation === 3 ? true : false,
+  //         gvOnTime: pointMonitor.ltOnTime === 2 ? true : false,
+  //         gvRightRule: pointMonitor.ltRightRule === 10 ? true : false,
+  //         gvNoFullStudy: pointMonitor.ltNoFullStudy === -10 ? true : false,
+  //         gvNoPayFee: pointMonitor.ltNoPayFee === -10 ? true : false,
+  //         gvFullActive: pointMonitor.ltFullActive === 13 ? true : false,
+  //         gvPositiveStudy: pointMonitor.ltPositiveStudy === 10 ? true : false,
+  //         gvPositiveLove: pointMonitor.ltPositiveLove === 5 ? true : false,
+  //         gvWarn: pointMonitor.ltWarn === -5 ? true : false,
+  //         gvNoProtect: pointMonitor.ltNoProtect === -20 ? true : false,
+  //         gvBonus: pointMonitor.ltBonus === 3 ? true : false,
+  //       }));
+  //       // console.log("pointMonitor: ", pointMonitor);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   useEffect(() => {
     checkExisPoint();
-    checkExisPointMonitor();
+    // checkExisPointMonitor();
     getSv();
     getPointCitizenMediumSv();
     getNote();
@@ -546,7 +546,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
         setValuesGV((prev) => ({
           ...prev,
           // muc 1
-          gvDiemTBHK: res.gvDiemTBHK,
+          gvDiemTBHK: values.svDiemTBHK,
           gvNCKH1: res.gvNCKH1,
           gvNCKH2: res.gvNCKH2,
           gvNCKH3: res.gvNCKH3,
@@ -643,7 +643,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
       ...prev,
       // gvDiemTBHK: changeValueTBHK,
       // gvCitizen: changeValueCitizen,
-      gvMonitor: changeSvMonitor,
+      // gvMonitor: changeSvMonitor,
     }));
   }, [pointCitizenMediumData, studentData]);
 
@@ -826,7 +826,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
 
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
-    console.log("name: ", name);
+    // console.log("name: ", name);
     setValuesGV((prevValues) => ({
       ...prevValues,
       [name]: value ? value : 0,
@@ -986,7 +986,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
     setSumFourgv(sum4);
 
     const sum5 =
-      parseInt(valuesGV.gvMonitor) +
+      parseInt(values.svMonitor) +
       parseInt(valuesGV.gvBonus) +
       parseInt(valuesGV.gvIrresponsibleMonitor);
     setSumFivegv(sum5);
@@ -1005,17 +1005,140 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
         // note: gvNote?.trim(),
         note: note ? note : null,
         sum: sumgv,
+        status_admin: 1,
       };
-
+      // console.log("data: ", data);
       await insertOrUpdatePointTeacher(`maHK=${maHK}&maSv=${maSv}`, data);
       fetchData();
       setOpen(false);
       toast.success("Duyệt Điểm Rèn Luyện Thành Công", {
         autoClose: 2000,
       });
-      // console.log("vao day: ", values);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleClickDuyet = async (e) => {
+    // console.log("vao day: ", e.target.checked);
+    // console.log("alo: ", values);
+    if (e.target.checked) {
+      setValuesGV((prev) => ({
+        ...prev,
+        // muc 1
+        gvDiemTBHK: values.svDiemTBHK,
+        gvNCKH1: values.svNCKH1,
+        gvNCKH2: values.svNCKH2,
+        gvNCKH3: values.svNCKH3,
+        gvOlympic1: values.svOlympic1,
+        gvOlympic2: values.svOlympic2,
+        gvOlympic3: values.svOlympic3,
+        gvOlympic4: values.svOlympic4,
+        gvNoRegulation: values.svNoRegulation,
+        gvOnTime: values.svOnTime,
+        gvAbandon: values.svAbandon,
+        gvUnTrueTime: values.svUnTrueTime,
+
+        // muc 2
+        gvRightRule: values.svRightRule,
+        gvCitizen: values.svCitizen,
+        gvNoFullStudy: values.svNoFullStudy,
+        gvNoCard: values.svNoCard,
+        gvNoAtivities: values.svNoAtivities,
+        gvNoPayFee: values.svNoPayFee,
+
+        // muc 3
+        gvFullActive: values.svFullActive,
+        gvAchievementCity: values.svAchievementCity,
+        gvAchievementSchool: values.svAchievementSchool,
+        gvAdvise: values.svAdvise,
+        gvIrvaluesponsible: values.svIrvaluesponsible,
+        gvNoCultural: values.svNoCultural,
+
+        // muc 4
+        gvPositiveStudy: values.svPositiveStudy,
+        gvPositiveLove: values.svPositiveLove,
+        gvWarn: values.svWarn,
+        gvNoProtect: values.svNoProtect,
+
+        // muc 5
+        gvMonitor: values.svMonitor,
+        gvBonus: values.svBonus,
+        gvIrresponsibleMonitor: values.svIrresponsibleMonitor,
+      }));
+      setCheckboxStateGV((prev) => ({
+        ...prev,
+        gvNoRegulation: values.svNoRegulation === 3 ? true : false,
+        gvOnTime: values.svOnTime === 2 ? true : false,
+        gvRightRule: values.svRightRule === 10 ? true : false,
+        gvNoFullStudy: values.svNoFullStudy === -10 ? true : false,
+        gvNoPayFee: values.svNoPayFee === -10 ? true : false,
+        gvFullActive: values.svFullActive === 13 ? true : false,
+        gvPositiveStudy: values.svPositiveStudy === 10 ? true : false,
+        gvPositiveLove: values.svPositiveLove === 5 ? true : false,
+        gvWarn: values.svWarn === -5 ? true : false,
+        gvNoProtect: values.svNoProtect === -20 ? true : false,
+        gvBonus: values.svBonus === 3 ? true : false,
+      }));
+    } else {
+      // setValuesGV((prev) => ({
+      //   ...prev,
+      //   // muc 1
+      //   // gvDiemTBHK: 0,
+      //   gvNCKH1: 0,
+      //   gvNCKH2: 0,
+      //   gvNCKH3: 0,
+      //   gvOlympic1: 0,
+      //   gvOlympic2: 0,
+      //   gvOlympic3: 0,
+      //   gvOlympic4: 0,
+      //   gvNoRegulation: 0,
+      //   gvOnTime: 0,
+      //   gvAbandon: 0,
+      //   gvUnTrueTime: 0,
+
+      //   // muc 2
+      //   gvRightRule: 0,
+      //   // gvCitizen: 0,
+      //   gvNoFullStudy: 0,
+      //   gvNoCard: 0,
+      //   gvNoAtivities: 0,
+      //   gvNoPayFee: 0,
+
+      //   // muc 3
+      //   gvFullActive: 0,
+      //   gvAchievementCity: 0,
+      //   gvAchievementSchool: 0,
+      //   gvAdvise: 0,
+      //   gvIrvaluesponsible: 0,
+      //   gvNoCultural: 0,
+
+      //   // muc 4
+      //   gvPositiveStudy: 0,
+      //   gvPositiveLove: 0,
+      //   gvWarn: 0,
+      //   gvNoProtect: 0,
+
+      //   // muc 5
+      //   // gvMonitor: 0,
+      //   gvBonus: 0,
+      //   gvIrresponsibleMonitor: 0,
+      // }));
+      // setCheckboxStateGV((prev) => ({
+      //   ...prev,
+      //   gvNoRegulation: values.svNoRegulation === 3 ? true : false,
+      //   gvOnTime: values.svOnTime === 2 ? true : false,
+      //   gvRightRule: values.svRightRule === 10 ? true : false,
+      //   gvNoFullStudy: values.svNoFullStudy === -10 ? true : false,
+      //   gvNoPayFee: values.svNoPayFee === -10 ? true : false,
+      //   gvFullActive: values.svFullActive === 13 ? true : false,
+      //   gvPositiveStudy: values.svPositiveStudy === 10 ? true : false,
+      //   gvPositiveLove: values.svPositiveLove === 5 ? true : false,
+      //   gvWarn: values.svWarn === -5 ? true : false,
+      //   gvNoProtect: values.svNoProtect === -20 ? true : false,
+      //   gvBonus: values.svBonus === 3 ? true : false,
+      // }));
+      checkExisPointTeacher();
     }
   };
 
@@ -1100,7 +1223,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                     Nội dung đánh giá
                   </th>
                   <th>Điểm do sinh viên tự đánh giá</th>
-                  <th>Điểm do lớp đánh giá</th>
+                  {/* <th>Điểm do lớp đánh giá</th> */}
                   <th>Điểm do hội đồng Khoa đánh giá</th>
 
                   {/* <th className="textCenter" style={{ width: '10%' }}>
@@ -1167,7 +1290,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       readOnly
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="number"
                       name="ltDiemTBHK"
@@ -1175,7 +1298,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       value={values.svDiemTBHK}
                       readOnly
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="number"
@@ -1214,7 +1337,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeInput}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="number"
                       name="ltNCKH1"
@@ -1224,7 +1347,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       value={valuesLT.ltNCKH1}
                       onChange={handleChangeInput}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="number"
@@ -1254,7 +1377,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeInput}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <Input
                       type="number"
                       name="ltNCKH2"
@@ -1264,7 +1387,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       value={valuesLT.ltNCKH2}
                       handleChangeInput={handleChangeInput}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <Input
                       type="number"
@@ -1293,7 +1416,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeInput}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <Input
                       type="number"
                       name="ltNCKH3"
@@ -1303,7 +1426,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       value={valuesLT.ltNCKH3}
                       handleChangeInput={handleChangeInput}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <Input
                       type="number"
@@ -1333,7 +1456,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeInput}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <Input
                       type="number"
                       name="ltOlympic1"
@@ -1343,7 +1466,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       value={valuesLT.ltOlympic1}
                       handleChangeInput={handleChangeInput}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <Input
                       type="number"
@@ -1373,7 +1496,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeInput}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <Input
                       type="number"
                       name="ltOlympic2"
@@ -1383,7 +1506,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       value={valuesLT.ltOlympic2}
                       handleChangeInput={handleChangeInput}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <Input
                       type="number"
@@ -1413,7 +1536,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeInput}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="number"
                       name="ltOlympic3"
@@ -1423,7 +1546,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       value={valuesLT.ltOlympic3}
                       onChange={handleChangeInput}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="number"
@@ -1453,7 +1576,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeInput}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <Input
                       type="number"
                       name="ltOlympic4"
@@ -1463,7 +1586,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       value={valuesLT.ltOlympic4}
                       handleChangeInput={handleChangeInput}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <Input
                       type="number"
@@ -1498,7 +1621,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       checked={values.svNoRegulation === 3}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="checkbox"
                       name="ltNoRegulation"
@@ -1507,7 +1630,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeValue}
                       checked={checkboxStateLT.ltNoRegulation}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="checkbox"
@@ -1535,7 +1658,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                         checked={checkboxState.svOnTime}
                       />
                     </td>
-                    <td>
+                    {/* <td>
                       <input
                         type="checkbox"
                         name="ltOnTime"
@@ -1544,7 +1667,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                         onChange={handleChangeValue}
                         checked={checkboxStateLT.ltOnTime}
                       />
-                    </td>
+                    </td> */}
                     <td>
                       <input
                         type="checkbox"
@@ -1590,7 +1713,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeInput}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <Input
                       type="number"
                       name="ltAbandon"
@@ -1600,7 +1723,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       value={valuesLT.ltAbandon}
                       handleChangeInput={handleChangeInput}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <Input
                       type="number"
@@ -1634,7 +1757,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       ))}
                     </select>
                   </td>
-                  <td>
+                  {/* <td>
                     <select
                       name="ltUnTrueTime"
                       id="ltUnTrueTime"
@@ -1648,7 +1771,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                         </option>
                       ))}
                     </select>
-                  </td>
+                  </td> */}
                   <td>
                     <select
                       name="gvUnTrueTime"
@@ -1679,7 +1802,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       readOnly
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="number"
                       name="sumOnelt"
@@ -1687,7 +1810,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       value={sumOnelt}
                       readOnly
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="number"
@@ -1750,7 +1873,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       checked={checkboxState.svRightRule}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="checkbox"
                       name="ltRightRule"
@@ -1759,7 +1882,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeValue}
                       checked={checkboxStateLT.ltRightRule}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="checkbox"
@@ -1796,7 +1919,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       readOnly
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="number"
                       name="ltCitizen"
@@ -1804,7 +1927,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       value={values.svCitizen}
                       readOnly
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="number"
@@ -1846,7 +1969,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       checked={checkboxState.svNoFullStudy}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="checkbox"
                       name="ltNoFullStudy"
@@ -1855,7 +1978,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeValue}
                       checked={checkboxStateLT.ltNoFullStudy}
                     />
-                  </td>
+                  </td> */}
 
                   <td>
                     <input
@@ -1891,7 +2014,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       })}
                     </select>
                   </td>
-                  <td>
+                  {/* <td>
                     <select
                       name="ltNoCard"
                       id="ltNoCard"
@@ -1907,7 +2030,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                         );
                       })}
                     </select>
-                  </td>
+                  </td> */}
                   <td>
                     <select
                       name="gvNoCard"
@@ -1948,7 +2071,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       ))}
                     </select>
                   </td>
-                  <td>
+                  {/* <td>
                     <select
                       name="ltNoAtivities"
                       id="ltNoAtivities"
@@ -1962,7 +2085,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                         </option>
                       ))}
                     </select>
-                  </td>
+                  </td> */}
                   <td>
                     <select
                       name="gvNoAtivities"
@@ -1994,7 +2117,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       checked={checkboxState.svNoPayFee}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="checkbox"
                       name="ltNoPayFee"
@@ -2002,7 +2125,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeValue}
                       checked={checkboxStateLT.ltNoPayFee}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="checkbox"
@@ -2027,7 +2150,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       readOnly
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="number"
                       name="sumTwolt"
@@ -2035,7 +2158,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       value={sumTwolt}
                       readOnly
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="number"
@@ -2092,7 +2215,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       checked={checkboxState.svFullActive}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="checkbox"
                       name="ltFullActive"
@@ -2101,7 +2224,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeValue}
                       checked={checkboxStateLT.ltFullActive}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="checkbox"
@@ -2138,7 +2261,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeInput}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="number"
                       name="ltAchievementSchool"
@@ -2148,7 +2271,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       value={valuesLT.ltAchievementSchool}
                       onChange={handleChangeInput}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="number"
@@ -2178,7 +2301,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeInput}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="number"
                       name="ltAchievementCity"
@@ -2188,7 +2311,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       max="5"
                       onChange={handleChangeInput}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="number"
@@ -2222,7 +2345,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       ))}
                     </select>
                   </td>
-                  <td>
+                  {/* <td>
                     <select
                       name="ltAdvise"
                       id="ltAdvise"
@@ -2236,7 +2359,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                         </option>
                       ))}
                     </select>
-                  </td>
+                  </td> */}
                   <td>
                     <select
                       name="gvAdvise"
@@ -2284,7 +2407,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       ))}
                     </select>
                   </td>
-                  <td>
+                  {/* <td>
                     <select
                       name="ltIrresponsible"
                       id="ltIrresponsible"
@@ -2298,7 +2421,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                         </option>
                       ))}
                     </select>
-                  </td>
+                  </td> */}
 
                   <td>
                     <select
@@ -2337,7 +2460,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       ))}
                     </select>
                   </td>
-                  <td>
+                  {/* <td>
                     <select
                       name="ltNoCultural"
                       id="ltNoCultural"
@@ -2351,7 +2474,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                         </option>
                       ))}
                     </select>
-                  </td>
+                  </td> */}
 
                   <td>
                     <select
@@ -2383,7 +2506,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       readOnly
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="number"
                       class="sum_three sum_item"
@@ -2391,7 +2514,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       name="sumThreelt"
                       readOnly
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="number"
@@ -2446,7 +2569,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       checked={checkboxState.svPositiveStudy}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="checkbox"
                       name="ltPositiveStudy"
@@ -2455,7 +2578,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeValue}
                       checked={checkboxStateLT.ltPositiveStudy}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="checkbox"
@@ -2485,7 +2608,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       checked={checkboxState.svPositiveLove}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="checkbox"
                       name="ltPositiveLove"
@@ -2494,7 +2617,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeValue}
                       checked={checkboxStateLT.ltPositiveLove}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="checkbox"
@@ -2532,7 +2655,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       checked={checkboxState.svWarn}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="checkbox"
                       name="ltWarn"
@@ -2541,7 +2664,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeValue}
                       checked={checkboxStateLT.ltWarn}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="checkbox"
@@ -2569,7 +2692,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       checked={checkboxState.svNoProtect}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="checkbox"
                       name="ltNoProtect"
@@ -2578,7 +2701,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeValue}
                       checked={checkboxStateLT.ltNoProtect}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="checkbox"
@@ -2604,7 +2727,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       readOnly
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="number"
                       class="sum_four sum_item"
@@ -2612,7 +2735,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       name="sumFourlt"
                       readOnly
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="number"
@@ -2673,7 +2796,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       readOnly
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="radio"
                       name="ltMonitor"
@@ -2682,13 +2805,13 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       value="7"
                       readOnly
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="radio"
                       name="gvMonitor"
                       id=""
-                      checked={valuesGV?.gvMonitor === 7}
+                      checked={values?.svMonitor === 7}
                       value="7"
                       readOnly
                     />
@@ -2710,7 +2833,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       readOnly
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="radio"
                       name="ltMonitor"
@@ -2719,14 +2842,14 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       checked={valuesLT?.ltMonitor === 5}
                       readOnly
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="radio"
                       name="gvMonitor"
                       id=""
                       value="5"
-                      checked={valuesGV?.gvMonitor === 5}
+                      checked={values?.svMonitor === 5}
                       readOnly
                     />
                   </td>
@@ -2746,7 +2869,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       checked={checkboxState.svBonus}
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="checkbox"
                       name="ltBonus"
@@ -2755,7 +2878,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       onChange={handleChangeValue}
                       checked={checkboxStateLT.ltBonus}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="checkbox"
@@ -2799,7 +2922,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       ))}
                     </select>
                   </td>
-                  <td>
+                  {/* <td>
                     <select
                       name="ltIrresponsibleMonitor"
                       id="ltIrresponsibleMonitor"
@@ -2813,7 +2936,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                         </option>
                       ))}
                     </select>
-                  </td>
+                  </td> */}
                   <td>
                     <select
                       name="gvIrresponsibleMonitor"
@@ -2844,7 +2967,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       readOnly
                     />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="number"
                       class="sum_five sum_item"
@@ -2852,7 +2975,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                       name="sumFivelt"
                       readOnly
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="number"
@@ -2871,13 +2994,13 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                   <td>
                     <input type="number" class="sum_mark-student" value={sum} />
                   </td>
-                  <td>
+                  {/* <td>
                     <input
                       type="number"
                       class="sum_mark-student"
                       value={sumlt}
                     />
-                  </td>
+                  </td> */}
                   <td>
                     <input
                       type="number"
@@ -2925,7 +3048,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
               color="secondary"
               style={{
                 position: "fixed",
-                bottom: "170px",
+                bottom: "120px",
                 right: "15px",
                 cursor: "default",
                 padding: "9px 23px",
@@ -2933,7 +3056,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
             >
               Tổng:{sum}
             </Button>
-            <Button
+            {/* <Button
               disableElevation={true}
               variant="contained"
               color="secondary"
@@ -2946,7 +3069,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
               }}
             >
               TổngLT:{sumlt}
-            </Button>
+            </Button> */}
             <Button
               disableElevation={true}
               variant="contained"
@@ -2959,8 +3082,21 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
                 padding: "9px 15px",
               }}
             >
-              TổngGV:{sumgv}
+              TổngAD:{sumgv}
             </Button>
+            <input
+              type="checkbox"
+              name="svPositiveStudy"
+              onClick={(e) => handleClickDuyet(e)}
+              style={{
+                position: "fixed",
+                bottom: "180px",
+                right: "15px",
+                cursor: "default",
+                padding: "9px 15px",
+                width: "auto",
+              }}
+            />
             <div
               className={`flex justify-end bg-[#191f4589] px-4 py-3 w-full absolute bottom-0`}
             >
@@ -2980,7 +3116,7 @@ const DuyetDiemRenLuyenAdmin = ({ sinhVienItem, fetchData, setOpen }) => {
               multiline
               maxRows={4}
               fullWidth
-              value={note}
+              value={note ? note : ""}
               onChange={(e) => setNote(e.target.value)}
             />
           </form>

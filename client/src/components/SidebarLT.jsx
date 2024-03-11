@@ -81,7 +81,7 @@ const SidebarLT = ({
       setTimeEndStudentMark(res.end_time_student);
       setTimeEndMonitorMark(res.end_time_monitor);
       setTimeEndMonitorMark(res.end_time_monitor);
-      if (resAdmin?.end_time_student) {
+      if (formatDay(curDate) <= formatDay(resAdmin?.end_time_student)) {
         setTimeEndStudentMark(resAdmin?.end_time_student);
       }
       setTimeStartStudentMarkAdmin(resAdmin?.start_time_student);

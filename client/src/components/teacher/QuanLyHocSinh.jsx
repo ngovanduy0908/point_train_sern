@@ -434,7 +434,7 @@ export const CreateUploadFileSV = ({
       await axios.post(`${DOMAIN}/excel/students/${maLop}`, formData, {
         withCredentials: true,
       });
-      getAllClass();
+      await getAllClass();
       onClose();
       // console.log("value: ", res);
     } catch (error) {

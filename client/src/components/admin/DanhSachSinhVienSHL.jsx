@@ -24,7 +24,7 @@ const DanhSachSinhVienSHL = ({ maHK }) => {
   const fetchData = async () => {
     try {
       const res = await getListPointStudentAdmin(`${maHK}`);
-      console.log("res: ", res);
+      // console.log("res: ", res);
       const newData = res.map((item, idx) => ({
         STT: idx + 1,
         ...item,

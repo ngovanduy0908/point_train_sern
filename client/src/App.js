@@ -4,7 +4,6 @@ import Login from "./pages/login/Login";
 import ChangeInfoOne from "./pages/login/ChangeInfoOne";
 // import Khoa from './pages/khoa/Khoa';
 import { useContext, useEffect, useMemo, useState } from "react";
-import SV from "./pages/sv/SV";
 import { themeSettings } from "./theme.js";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -51,12 +50,20 @@ import ExportExcelLT from "pages/lt/ExportExcelLT";
 import QuanLyChuyenNganh from "components/admin/QuanLyChuyenNganh";
 import SinhHoatBoSung from "pages/admin/SinhHoatBoSung";
 import SinhHoatBoSungDetail from "pages/admin/SinhHoatBoSungDetail";
+import SV from "./pages/sv/SV";
 const IO = process.env.REACT_APP_IO;
 function App() {
+  // const navigate = useNavigate();
   const mode = useSelector((state) => state.global.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   const { currentUser } = useContext(AuthContext);
   const [socket, setSocket] = useState();
+  // const [checkLogged, setCheckLogged] = useState(null);
+  // // console.log("alo");
+  // const checkLogin = () => {};
+  // useEffect(() => {
+  //   checkLogin();
+  // }, []);
 
   useEffect(() => {
     const socketIo = io(`${IO}`);

@@ -445,15 +445,18 @@ export const getPointTeacherByMa = (req, res) => {
   });
 };
 
-export const insertOrUpdatePointTeacher = (req, res) => {
+export const insertOrUpdatePointTeacher = async (req, res) => {
   const { maHK, maSv } = req.query;
   // console.log("mahk va masv: ", maHK, maSv);
   const values = req.body;
-  console.log("value: ", values);
+  // console.log("value: ", values.note);
+
   const checkExisPointTeacher = `select maSv from point_teacher where maSv = '${maSv}' and maHK = '${maHK}'`;
-  db.query(checkExisPointTeacher, (err, data) => {
+  db.query(checkExisPointTeacher, async (err, data) => {
     if (err) return res.status(500).json(err);
     // console.log("data: ", data);
+    const gvNote = values.note ? values.note : "";
+    // console.log("gv note: ", gvNote);
     if (data.length) {
       const q = `
       update point_teacher set
@@ -489,85 +492,151 @@ export const insertOrUpdatePointTeacher = (req, res) => {
                             gvBonus = '${values.gvBonus}',
                             gvIrresponsibleMonitor = '${values.gvIrresponsibleMonitor}'
                             where maSv = '${maSv}' and maHK = '${maHK}'`;
-      const q1 = `update point set point_teacher = '${values.sum}', gvNote='${values.note}', status_teacher = 1 where maSv = '${maSv}' and maHK = '${maHK}'`;
-      db.query(q, (err, data) => {
-        if (err) return res.status(500).json(err);
+      const q1 = `update point set 
+      point_teacher = '${values.sum}', 
+      point_monitor = '${values.sum}', 
+      gvNote='${values.note ? values?.note : ""}', 
+      status_teacher = 1, 
+      status_admin = ${values?.status_admin === 1 ? 1 : 0} 
+      where maSv = '${maSv}' and maHK = '${maHK}'`;
+      const q2 = `
+      update point_monitor set
+                            ltDiemTBHK = '${values.gvDiemTBHK}',
+                            ltNCKH1  = '${values.gvNCKH1}',
+                            ltNCKH2 = '${values.gvNCKH2}',
+                            ltNCKH3 = '${values.gvNCKH3}',
+                            ltOlympic1 = '${values.gvOlympic1}',
+                            ltOlympic2 = '${values.gvOlympic2}',
+                            ltOlympic3 = '${values.gvOlympic3}',
+                            ltOlympic4 = '${values.gvOlympic4}',
+                            ltNoRegulation = '${values.gvNoRegulation}',
+                            ltOnTime = '${values.gvOnTime}',
+                            ltAbandon = '${values.gvAbandon}',
+                            ltUnTrueTime = '${values.gvUnTrueTime}',
+                            ltRightRule = '${values.gvRightRule}',
+                            ltCitizen = '${values.gvCitizen}',
+                            ltNoFullStudy = '${values.gvNoFullStudy}',
+                            ltNoCard = '${values.gvNoCard}',
+                            ltNoAtivities = '${values.gvNoAtivities}',
+                            ltNoPayFee = '${values.gvNoPayFee}',
+                            ltFullActive = '${values.gvFullActive}',
+                            ltAchievementSchool = '${values.gvAchievementSchool}',
+                            ltAchievementCity = '${values.gvAchievementCity}',
+                            ltAdvise = '${values.gvAdvise}',
+                            ltIrresponsible = '${values.gvIrresponsible}',
+                            ltNoCultural = '${values.gvNoCultural}',
+                            ltPositiveStudy = '${values.gvPositiveStudy}',
+                            ltPositiveLove = '${values.gvPositiveLove}',
+                            ltWarn = '${values.gvWarn}',
+                            ltNoProtect = '${values.gvNoProtect}',
+                            ltMonitor = '${values.gvMonitor}',
+                            ltBonus = '${values.gvBonus}',
+                            ltIrresponsibleMonitor = '${values.gvIrresponsibleMonitor}'
+                            where maSv = '${maSv}' and maHK = '${maHK}'`;
 
-        db.query(q1, (err, data) => {
-          if (err) return res.status(500).json(err);
+      // db.query(q, (err, data) => {
+      //   if (err) return res.status(500).json(err);
 
-          return res.status(200).json("Giáo viên cập nhật điểm thành công");
+      //   db.query(q1, (err, data) => {
+      //     if (err) return res.status(500).json(err);
+
+      //     return res.status(200).json("Giáo viên cập nhật điểm thành công");
+      //   });
+      // });
+      try {
+        await new Promise((resolve, reject) => {
+          db.query(q, (err, data) => {
+            if (err) reject(err);
+            resolve();
+          });
         });
-      });
+
+        await new Promise((resolve, reject) => {
+          db.query(q1, (err, data) => {
+            if (err) reject(err);
+            resolve();
+          });
+        });
+        await new Promise((resolve, reject) => {
+          db.query(q2, (err, data) => {
+            if (err) reject(err);
+            resolve();
+          });
+        });
+
+        return res.status(200).json("Cập nhật điểm thành công");
+      } catch (error) {
+        return error;
+      }
     } else {
       const q = `
-      INSERT INTO point_teacher 
-                                (maSv, 
-                                gvDiemTBHK, 
-                                gvCitizen, 
-                                gvMonitor, 
-                                gvNCKH1, 
-                                gvNCKH2, 
-                                gvNCKH3, 
-                                gvOlympic1, 
-                                gvOlympic2, 
-                                gvOlympic3, 
-                                gvOlympic4, 
-                                gvNoRegulation, 
-                                gvOnTime, 
-                                gvAbandon, 
-                                gvUnTrueTime, 
-                                gvNoFullStudy, 
-                                gvNoCard, 
-                                gvNoAtivities, 
-                                gvNoPayFee, 
-                                gvFullActive, 
-                                gvAchievementSchool, 
-                                gvAchievementCity, 
-                                gvAdvise, 
-                                gvIrresponsible, 
-                                gvNoCultural, 
-                                gvPositiveStudy, 
-                                gvPositiveLove, 
-                                gvWarn, 
-                                gvNoProtect, 
-                                gvBonus, 
-                                gvIrresponsibleMonitor, 
-                                maHK, 
+      INSERT INTO point_teacher
+                                (maSv,
+                                gvDiemTBHK,
+                                gvCitizen,
+                                gvMonitor,
+                                gvNCKH1,
+                                gvNCKH2,
+                                gvNCKH3,
+                                gvOlympic1,
+                                gvOlympic2,
+                                gvOlympic3,
+                                gvOlympic4,
+                                gvNoRegulation,
+                                gvOnTime,
+                                gvAbandon,
+                                gvUnTrueTime,
+                                gvNoFullStudy,
+                                gvNoCard,
+                                gvNoAtivities,
+                                gvNoPayFee,
+                                gvFullActive,
+                                gvAchievementSchool,
+                                gvAchievementCity,
+                                gvAdvise,
+                                gvIrresponsible,
+                                gvNoCultural,
+                                gvPositiveStudy,
+                                gvPositiveLove,
+                                gvWarn,
+                                gvNoProtect,
+                                gvBonus,
+                                gvIrresponsibleMonitor,
+                                maHK,
                                 gvRightRule)
-                            VALUES 
-                                ('${maSv}', 
-                                '${values.gvDiemTBHK}', 
-                                '${values.gvCitizen}', 
-                                '${values.gvMonitor}', 
-                                '${values.gvNCKH1}', 
-                                '${values.gvNCKH2}', 
-                                '${values.gvNCKH3}', 
-                                '${values.gvOlympic1}', 
-                                '${values.gvOlympic2}', 
-                                '${values.gvOlympic3}', 
-                                '${values.gvOlympic4}', 
-                                '${values.gvNoRegulation}', 
-                                '${values.gvOnTime}', 
-                                '${values.gvAbandon}', 
-                                '${values.gvUnTrueTime}', 
-                                '${values.gvNoFullStudy}', 
-                                '${values.gvNoCard}', 
-                                '${values.gvNoAtivities}', 
-                                '${values.gvNoPayFee}', 
-                                '${values.gvFullActive}', 
-                                '${values.gvAchievementSchool}', 
-                                '${values.gvAchievementCity}', 
-                                '${values.gvAdvise}', 
-                                '${values.gvIrresponsible}', 
-                                '${values.gvNoCultural}', 
-                                '${values.gvPositiveStudy}', 
-                                '${values.gvPositiveLove}', 
-                                '${values.gvWarn}', 
-                                '${values.gvNoProtect}', 
-                                '${values.gvBonus}', 
-                                '${values.gvIrresponsibleMonitor}', 
-                                '${maHK}', 
+                            VALUES
+                                ('${maSv}',
+                                '${values.gvDiemTBHK}',
+                                '${values.gvCitizen}',
+                                '${values.gvMonitor}',
+                                '${values.gvNCKH1}',
+                                '${values.gvNCKH2}',
+                                '${values.gvNCKH3}',
+                                '${values.gvOlympic1}',
+                                '${values.gvOlympic2}',
+                                '${values.gvOlympic3}',
+                                '${values.gvOlympic4}',
+                                '${values.gvNoRegulation}',
+                                '${values.gvOnTime}',
+                                '${values.gvAbandon}',
+                                '${values.gvUnTrueTime}',
+                                '${values.gvNoFullStudy}',
+                                '${values.gvNoCard}',
+                                '${values.gvNoAtivities}',
+                                '${values.gvNoPayFee}',
+                                '${values.gvFullActive}',
+                                '${values.gvAchievementSchool}',
+                                '${values.gvAchievementCity}',
+                                '${values.gvAdvise}',
+                                '${values.gvIrresponsible}',
+                                '${values.gvNoCultural}',
+                                '${values.gvPositiveStudy}',
+                                '${values.gvPositiveLove}',
+                                '${values.gvWarn}',
+                                '${values.gvNoProtect}',
+                                '${values.gvBonus}',
+                                '${values.gvIrresponsibleMonitor}',
+                                '${maHK}',
                                 '${values.gvRightRule}')`;
       const q1 = `update point set point_teacher = '${values.sum}', gvNote='${values.note}', status_teacher = 1 where maSv = '${maSv}' and maHK = '${maHK}'`;
 
@@ -705,15 +774,15 @@ export const updatePointTeacherZero = async (req, res) => {
       status_admin = ${status_admin === 1 ? 1 : 0}
       where 
       maSv = '${maSv}' and maHK = '${maHK}'`;
-      db.query(q, (err, data) => {
-        if (err) return res.status(500).json(err);
+      // db.query(q, (err, data) => {
+      //   if (err) return res.status(500).json(err);
 
-        db.query(q1, (err, data) => {
-          if (err) return res.status(500).json(err);
+      //   db.query(q1, (err, data) => {
+      //     if (err) return res.status(500).json(err);
 
-          return res.status(200).json("Giáo viên cập nhật điểm thành công");
-        });
-      });
+      //     return res.status(200).json("Giáo viên cập nhật điểm thành công");
+      //   });
+      // });
       try {
         await new Promise((resolve, reject) => {
           db.query(q, (err, data) => {
@@ -740,12 +809,12 @@ export const updatePointTeacherZero = async (req, res) => {
             resolve();
           });
         });
-        await new Promise((resolve, reject) => {
-          db.query(q3, (err, data) => {
-            if (err) reject(err);
-            resolve();
-          });
-        });
+        // await new Promise((resolve, reject) => {
+        //   db.query(q3, (err, data) => {
+        //     if (err) reject(err);
+        //     resolve();
+        //   });
+        // });
 
         return res.status(200).json("Giáo viên cập nhật điểm thành công");
       } catch (error) {

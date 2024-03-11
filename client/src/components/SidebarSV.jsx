@@ -62,7 +62,7 @@ const SidebarSV = ({
   const [checkTimePoint, setCheckTimePoint] = useState(false);
   // const [maHKAdmin, setMaHKAdmin] = useState(null);
   const curDate = new Date();
-  // console.log("a nho: ", handleSetMaHKAdmin);
+  // console.log("a nho: ", maHKAdmin);
   useEffect(() => {
     setActive(pathname.substring(1));
   }, [pathname]);
@@ -80,9 +80,11 @@ const SidebarSV = ({
       setTimeStartStudentMark(res.start_time_student);
       setTimeEndStudentMark(res.end_time_student);
       setTimeEndMonitorMark(res.end_time_monitor);
-      if (resAdmin?.end_time_student) {
+      if (formatDay(curDate) <= formatDay(resAdmin?.end_time_student)) {
         setTimeEndStudentMark(resAdmin?.end_time_student);
       }
+      // if (resAdmin?.end_time_student) {
+      // }
       setTimeStartStudentMarkAdmin(resAdmin?.start_time_student);
       setTimeEndStudentMarkAdmin(resAdmin?.end_time_student);
       // setMaHKAdmin(resAdmin?.maHK);
@@ -100,7 +102,7 @@ const SidebarSV = ({
   //     console.log("error: ", error);
   //   }
   // };
-
+  // console.log("wondown : ", []);
   useEffect(() => {
     getDeadlineByMaLop();
     // getDeadlineAdmin();

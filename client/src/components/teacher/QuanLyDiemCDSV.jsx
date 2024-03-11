@@ -20,6 +20,7 @@ import SwipeLeftIcon from "@mui/icons-material/SwipeLeft";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { downloadFile } from "utils/postDetails/handleDataExportExcelGV";
+import { toast } from "react-toastify";
 const url =
   "https://wxutuelmzidfloowaugx.supabase.co/storage/v1/object/public/files/excel/DS-diem-tuan-cdsv-template.xlsx";
 const QuanLyDiemCDSV = () => {
@@ -98,11 +99,7 @@ const QuanLyDiemCDSV = () => {
 
   const handleDeleteRow = useCallback(
     async (row) => {
-      if (
-        !window.confirm(
-          `Are you sure you want to delete ${row.getValue("name")}`
-        )
-      ) {
+      if (!window.confirm(`Bạn có chắc muốn xóa ${row.getValue("name")}?`)) {
         return;
       }
       // console.log(row);
@@ -182,7 +179,7 @@ const QuanLyDiemCDSV = () => {
     <Box m="1.5rem 2.5rem">
       <Header
         title={currentUser.name}
-        subtitle={`Danh sách Diem CDSV Lop: ${maLop} ---- HK: ${maHK}`}
+        subtitle={`Danh sách Điểm CDSV Lớp: ${maLop} - HK: ${maHK}`}
       />
       <Box mt="40px">
         <MaterialReactTable
@@ -237,7 +234,7 @@ const QuanLyDiemCDSV = () => {
                 onClick={() => setCreateUploadFileStudent(true)}
                 variant="contained"
               >
-                Upload file Diem CDSV
+                Upload file Điểm tuần CDSV
               </Button>
             </>
           )}
@@ -324,7 +321,7 @@ export const CreateNewAccountModal = ({
       </DialogContent>
       <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
-          Cancel
+          Thoát
         </Button>
         <Button color="secondary" onClick={handleSubmit} variant="contained">
           Thêm Mới
@@ -365,7 +362,8 @@ export const CreateUploadFileSV = ({
         }
       );
       await getAllClass();
-      onClose();
+      await onClose();
+      toast.success("Cập nhật điểm thành công.");
     } catch (error) {
       console.log(error);
     }
@@ -373,7 +371,7 @@ export const CreateUploadFileSV = ({
 
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign="center">Upload file Diem Tuan CDSV</DialogTitle>
+      <DialogTitle textAlign="center">Upload file Điểm Tuần CDSV</DialogTitle>
       <DialogContent>
         <Button
           variant="text"
@@ -392,7 +390,7 @@ export const CreateUploadFileSV = ({
       </DialogContent>
       <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
-          Cancel
+          Thoát
         </Button>
       </DialogActions>
     </Dialog>

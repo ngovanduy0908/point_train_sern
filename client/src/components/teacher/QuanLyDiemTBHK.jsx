@@ -20,6 +20,7 @@ import SwipeLeftIcon from "@mui/icons-material/SwipeLeft";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { downloadFile } from "utils/postDetails/handleDataExportExcelGV";
+import { toast } from "react-toastify";
 const url =
   "https://wxutuelmzidfloowaugx.supabase.co/storage/v1/object/public/files/excel/DS-kqht-template.xlsx";
 const QuanLyDiemTBHK = () => {
@@ -97,11 +98,7 @@ const QuanLyDiemTBHK = () => {
 
   const handleDeleteRow = useCallback(
     async (row) => {
-      if (
-        !window.confirm(
-          `Are you sure you want to delete ${row.getValue("name")}`
-        )
-      ) {
+      if (!window.confirm(`Bạn có chắc muốn xóa ${row.getValue("name")}?`)) {
         return;
       }
       // console.log(row);
@@ -181,7 +178,7 @@ const QuanLyDiemTBHK = () => {
     <Box m="1.5rem 2.5rem">
       <Header
         title={currentUser.name}
-        subtitle={`Danh sách Diem TBHK Lop: ${maLop} ---- HK: ${maHK}`}
+        subtitle={`Danh sách Điểm TBHK Lớp: ${maLop} - HK: ${maHK}`}
       />
       <Box mt="40px">
         <MaterialReactTable
@@ -316,7 +313,7 @@ export const CreateNewAccountModal = ({ err, open, onClose, onSubmit }) => {
       </DialogContent>
       <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
-          Cancel
+          Thoát
         </Button>
         <Button color="secondary" onClick={handleSubmit} variant="contained">
           Thêm Mới
@@ -356,8 +353,9 @@ export const CreateUploadFileSV = ({
           withCredentials: true,
         }
       );
-      getAllClass();
-      onClose();
+      await getAllClass();
+      await onClose();
+      toast.success("Cập nhật điểm thành công.");
     } catch (error) {
       console.log(error);
     }
@@ -390,7 +388,7 @@ export const CreateUploadFileSV = ({
       </DialogContent>
       <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
-          Cancel
+          Thoát
         </Button>
       </DialogActions>
     </Dialog>

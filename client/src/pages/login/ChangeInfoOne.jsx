@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./login.css";
 import Header from "../../components/header/Header";
-import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
 import Footer from "../../components/footer/Footer";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";

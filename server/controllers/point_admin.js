@@ -10,9 +10,10 @@ export const getPointStudent = (req, res) => {
     where 
     students.maSv = point.maSv and 
     point.maHK = '${maHK}' and 
-    point.status_teacher = '1' and 
+    (point.status_teacher = '1' and 
     point.point_teacher >= 0 and 
-    point.point_teacher < 50`;
+    point.point_teacher < 50 or 
+    point.status_admin = '1')`;
   db.query(q, (err, data) => {
     if (err) return res.status(500).json(err);
     return res.status(200).json(data);

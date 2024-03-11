@@ -64,6 +64,14 @@ export const generateOptionsListDanhSach = () => [
     },
   },
   {
+    label: "Sinh Viên DRL < 50",
+    value: {
+      title: "BẢNG TỔNG HỢP ĐIỂM RÈN LUYỆN SINH VIÊN CÓ ĐIỂM RÈN LUYỆN < 50",
+      min: 0,
+      max: 49,
+    },
+  },
+  {
     label: "Sinh Viên DRL >= 70 và <= 79",
     value: {
       title: "BẢNG TỔNG HỢP ĐIỂM RÈN LUYỆN SINH VIÊN CÓ ĐIỂM RÈN LUYỆN >= 70",
