@@ -407,6 +407,66 @@ const DuyetDiemRenLuyenLT = ({
         // ltMonitor: res.ltMonitor === 7 ? true : false,
         ltBonus: res.ltBonus === 3 ? true : false,
       }));
+    } else {
+      setValuesLT((prev) => ({
+        ...prev,
+        // muc 1
+        // ltDiemTBHK: res.ltDiemTBHK,
+        ltNCKH1: 0,
+        ltNCKH2: 0,
+        ltNCKH3: 0,
+        ltOlympic1: 0,
+        ltOlympic2: 0,
+        ltOlympic3: 0,
+        ltOlympic4: 0,
+        ltNoRegulation: 0,
+        ltOnTime: 0,
+        ltAbandon: 0,
+        ltUnTrueTime: 0,
+
+        // muc 2
+        ltRightRule: 0,
+        // ltCitizen: res.ltCitizen,
+        ltNoFullStudy: 0,
+        ltNoCard: 0,
+        ltNoAtivities: 0,
+        ltNoPayFee: 0,
+
+        // muc 3
+        ltFullActive: 0,
+        ltAchievementCity: 0,
+        ltAchievementSchool: 0,
+        ltAdvise: 0,
+        ltIrresponsible: 0,
+        ltNoCultural: 0,
+
+        // muc 4
+        ltPositiveStudy: 0,
+        ltPositiveLove: 0,
+        ltWarn: 0,
+        ltNoProtect: 0,
+
+        // muc 5
+        // ltMonitor: res.ltMonitor,
+        ltBonus: 0,
+        ltIrresponsibleMonitor: 0,
+      }));
+
+      setCheckboxStateLT((prev) => ({
+        ...prev,
+        ltNoRegulation: false,
+        ltOnTime: false,
+        ltRightRule: false,
+        ltNoFullStudy: false,
+        ltNoPayFee: false,
+        ltFullActive: false,
+        ltPositiveStudy: false,
+        ltPositiveLove: false,
+        ltWarn: false,
+        ltNoProtect: false,
+        // ltMonitor:  false,
+        ltBonus: false,
+      }));
     }
   };
   useEffect(() => {
@@ -760,6 +820,72 @@ const DuyetDiemRenLuyenLT = ({
         autoClose: 2000,
       });
       console.log(error.message);
+    }
+  };
+
+  const handleClickDuyet = async (e) => {
+    if (e.target.checked) {
+      setValuesLT((prev) => ({
+        ...prev,
+        // muc 1
+        ltDiemTBHK: values.svDiemTBHK,
+        ltNCKH1: values.svNCKH1,
+        ltNCKH2: values.svNCKH2,
+        ltNCKH3: values.svNCKH3,
+        ltOlympic1: values.svOlympic1,
+        ltOlympic2: values.svOlympic2,
+        ltOlympic3: values.svOlympic3,
+        ltOlympic4: values.svOlympic4,
+        ltNoRegulation: values.svNoRegulation,
+        ltOnTime: values.svOnTime,
+        ltAbandon: values.svAbandon,
+        ltUnTrueTime: values.svUnTrueTime,
+
+        // muc 2
+        ltRightRule: values.svRightRule,
+        ltCitizen: values.svCitizen,
+        ltNoFullStudy: values.svNoFullStudy,
+        ltNoCard: values.svNoCard,
+        ltNoAtivities: values.svNoAtivities,
+        ltNoPayFee: values.svNoPayFee,
+
+        // muc 3
+        ltFullActive: values.svFullActive,
+        ltAchievementCity: values.svAchievementCity,
+        ltAchievementSchool: values.svAchievementSchool,
+        ltAdvise: values.svAdvise,
+        ltIrresponsible: values.svIrresponsible,
+        ltNoCultural: values.svNoCultural,
+
+        // muc 4
+        ltPositiveStudy: values.svPositiveStudy,
+        ltPositiveLove: values.svPositiveLove,
+        ltWarn: values.svWarn,
+        ltNoProtect: values.svNoProtect,
+
+        // muc 5
+        ltMonitor: values.svMonitor,
+        ltBonus: values.svBonus,
+        ltIrresponsibleMonitor: values.svIrresponsibleMonitor,
+      }));
+
+      setCheckboxStateLT((prev) => ({
+        ...prev,
+        ltNoRegulation: setValues.svNoRegulation === 3 ? true : false,
+        ltOnTime: setValues.svOnTime === 2 ? true : false,
+        ltRightRule: setValues.svRightRule === 10 ? true : false,
+        ltNoFullStudy: setValues.svNoFullStudy === -10 ? true : false,
+        ltNoPayFee: setValues.svNoPayFee === -10 ? true : false,
+        ltFullActive: setValues.svFullActive === 13 ? true : false,
+        ltPositiveStudy: setValues.svPositiveStudy === 10 ? true : false,
+        ltPositiveLove: setValues.svPositiveLove === 5 ? true : false,
+        ltWarn: setValues.svWarn === -5 ? true : false,
+        ltNoProtect: setValues.svNoProtect === -20 ? true : false,
+        // svMonitor: setValues.svMonitor === 7 ? true : false,
+        ltBonus: setValues.svBonus === 3 ? true : false,
+      }));
+    } else {
+      getPointMonitor();
     }
   };
 
@@ -2281,6 +2407,19 @@ const DuyetDiemRenLuyenLT = ({
             >
               TổngLT:{sumlt}
             </Button>
+            <input
+              type="checkbox"
+              name="svPositiveStudy"
+              onClick={(e) => handleClickDuyet(e)}
+              style={{
+                position: "fixed",
+                bottom: "180px",
+                right: "15px",
+                cursor: "default",
+                padding: "9px 15px",
+                width: "auto",
+              }}
+            />
             <div
               className={`flex justify-end bg-[#191f4589] px-4 py-3 w-full absolute bottom-0`}
             >

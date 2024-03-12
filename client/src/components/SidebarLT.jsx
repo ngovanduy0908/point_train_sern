@@ -197,16 +197,15 @@ const SidebarLT = ({
                       <ListItemIcon
                         sx={{
                           ml: "1rem",
-                          color:
-                            active === path
-                              ? theme.palette.primary[600]
-                              : theme.palette.secondary[200],
+                          color: active.includes(path)
+                            ? theme.palette.primary[600]
+                            : theme.palette.secondary[200],
                         }}
                       >
                         {icon}
                       </ListItemIcon>
                       <ListItemText primary={text} />
-                      {active === path && (
+                      {active.includes(path) && (
                         <ChevronRightOutlined sx={{ ml: "auto" }} />
                       )}
                     </ListItemButton>
