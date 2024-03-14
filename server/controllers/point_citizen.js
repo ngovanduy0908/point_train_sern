@@ -22,21 +22,33 @@ export const addPointCitizen = (req, res) => {
   if (!token) return res.status(401).json("Not authenticated");
   const maHK = req.params.maHK;
   const newData = req.body;
-  const q = "select maSv from point_citizen where maHK=? and maSv=?";
-  db.query(q, [maHK, newData.maSv], (err, data) => {
-    if (err) return res.status(500).json(err);
-
-    if (data.length) return res.status(409).json("Diem tuan CDSV da ton tai");
-
-    const q = "insert into point_citizen(maSv, maHK, point) values(?)";
-
-    const values = [newData.maSv, maHK, newData.point];
-
-    db.query(q, [values], (err, data) => {
+  const q = `
+  select point_citizen.maSv from point_citizen, students
+   where point_citizen.maSv = students.maSv 
+   and (point_citizen.maHK=? 
+   and point_citizen.maSv=? or students.maSv=? and students.maLop!=?)
+  `;
+  db.query(
+    q,
+    [maHK, newData.maSv, newData.maSv, newData.maLop],
+    (err, data) => {
       if (err) return res.status(500).json(err);
-      return res.status(200).json("Diem tuan CDSV da thanh cong");
-    });
-  });
+
+      if (data.length)
+        return res
+          .status(409)
+          .json("Mã sinh viên này đã tồn tại điểm Tuần CDSV");
+
+      const q = "insert into point_citizen(maSv, maHK, point) values(?)";
+
+      const values = [newData.maSv, maHK, newData.point];
+
+      db.query(q, [values], (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.status(200).json("Diem tuan CDSV da thanh cong");
+      });
+    }
+  );
 };
 
 export const editPointCitizen = (req, res) => {

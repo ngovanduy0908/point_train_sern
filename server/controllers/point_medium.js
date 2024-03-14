@@ -20,21 +20,32 @@ export const addPointMedium = (req, res) => {
   if (!token) return res.status(401).json("Not authenticated");
   const maHK = req.params.maHK;
   const newData = req.body;
-  const q = "select maSv from point_medium where maHK=? and maSv=?";
-  db.query(q, [maHK, newData.maSv], (err, data) => {
-    if (err) return res.status(500).json(err);
-
-    if (data.length) return res.status(409).json("Diem TBHK da ton tai");
-
-    const q = "insert into point_medium(maSv, maHK, point_average) values(?)";
-
-    const values = [newData.maSv, maHK, newData.point_average];
-
-    db.query(q, [values], (err, data) => {
+  // console.log("newdara: ", newData);
+  // const q1 = `SELECT maSv FROM students WHERE maLop != '${newData.maLop}'`
+  const q = `select point_medium.maSv from point_medium, students
+   where point_medium.maSv = students.maSv 
+   and (point_medium.maHK=? 
+   and point_medium.maSv=? or students.maSv=? and students.maLop!=?)
+   `;
+  db.query(
+    q,
+    [maHK, newData.maSv, newData.maSv, newData.maLop],
+    (err, data) => {
       if (err) return res.status(500).json(err);
-      return res.status(200).json("Diem TBHK da thanh cong");
-    });
-  });
+
+      if (data.length)
+        return res.status(409).json("Mã sinh viên này đã tồn tại điểm TBHK");
+
+      const q = "insert into point_medium(maSv, maHK, point_average) values(?)";
+
+      const values = [newData.maSv, maHK, newData.point];
+
+      db.query(q, [values], (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.status(200).json("Diem TBHK da thanh cong");
+      });
+    }
+  );
 };
 
 export const editPointMedium = (req, res) => {

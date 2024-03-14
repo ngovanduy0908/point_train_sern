@@ -826,7 +826,7 @@ const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
 
   const handleChangeInput = (e) => {
     const { name, value } = e.target;
-    console.log("name: ", name);
+    // console.log("name: ", name);
     setValuesGV((prevValues) => ({
       ...prevValues,
       [name]: value ? value : 0,
@@ -1018,7 +1018,70 @@ const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
       console.log(error);
     }
   };
+  const handleClickDuyet = async (e) => {
+    if (e.target.checked) {
+      setValuesGV((prev) => ({
+        ...prev,
+        // muc 1
+        gvDiemTBHK: valuesLT.ltDiemTBHK,
+        gvNCKH1: valuesLT.ltNCKH1,
+        gvNCKH2: valuesLT.ltNCKH2,
+        gvNCKH3: valuesLT.ltNCKH3,
+        gvOlympic1: valuesLT.ltOlympic1,
+        gvOlympic2: valuesLT.ltOlympic2,
+        gvOlympic3: valuesLT.ltOlympic3,
+        gvOlympic4: valuesLT.ltOlympic4,
+        gvNoRegulation: valuesLT.ltNoRegulation,
+        gvOnTime: valuesLT.ltOnTime,
+        gvAbandon: valuesLT.ltAbandon,
+        gvUnTrueTime: valuesLT.ltUnTrueTime,
 
+        // muc 2
+        gvRightRule: valuesLT.ltRightRule,
+        gvCitizen: valuesLT.ltCitizen,
+        gvNoFullStudy: valuesLT.ltNoFullStudy,
+        gvNoCard: valuesLT.ltNoCard,
+        gvNoAtivities: valuesLT.ltNoAtivities,
+        gvNoPayFee: valuesLT.ltNoPayFee,
+
+        // muc 3
+        gvFullActive: valuesLT.ltFullActive,
+        gvAchievementCity: valuesLT.ltAchievementCity,
+        gvAchievementSchool: valuesLT.ltAchievementSchool,
+        gvAdvise: valuesLT.ltAdvise,
+        gvIrresponsible: valuesLT.ltIrresponsible,
+        gvNoCultural: valuesLT.ltNoCultural,
+
+        // muc 4
+        gvPositiveStudy: valuesLT.ltPositiveStudy,
+        gvPositiveLove: valuesLT.ltPositiveLove,
+        gvWarn: valuesLT.ltWarn,
+        gvNoProtect: valuesLT.ltNoProtect,
+
+        // muc 5
+        gvMonitor: valuesLT.ltMonitor,
+        gvBonus: valuesLT.ltBonus,
+        gvIrresponsibleMonitor: valuesLT.ltIrresponsibleMonitor,
+      }));
+
+      setCheckboxStateGV((prev) => ({
+        ...prev,
+        gvNoRegulation: valuesLT.ltNoRegulation === 3 ? true : false,
+        gvOnTime: valuesLT.ltOnTime === 2 ? true : false,
+        gvRightRule: valuesLT.ltRightRule === 10 ? true : false,
+        gvNoFullStudy: valuesLT.ltNoFullStudy === -10 ? true : false,
+        gvNoPayFee: valuesLT.ltNoPayFee === -10 ? true : false,
+        gvFullActive: valuesLT.ltFullActive === 13 ? true : false,
+        gvPositiveStudy: valuesLT.ltPositiveStudy === 10 ? true : false,
+        gvPositiveLove: valuesLT.ltPositiveLove === 5 ? true : false,
+        gvWarn: valuesLT.ltWarn === -5 ? true : false,
+        gvNoProtect: valuesLT.ltNoProtect === -20 ? true : false,
+        gvBonus: valuesLT.ltBonus === 3 ? true : false,
+      }));
+    } else {
+      checkExisPointTeacher();
+    }
+  };
   return (
     <Box m="1.5rem 2.5rem">
       <Header
@@ -2930,7 +2993,7 @@ const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
                 bottom: "170px",
                 right: "15px",
                 cursor: "default",
-                padding: "9px 23px",
+                padding: "9px 18px",
               }}
             >
               Tổng:{sum}
@@ -2944,7 +3007,7 @@ const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
                 bottom: "120px",
                 right: "15px",
                 cursor: "default",
-                padding: "9px 15px",
+                padding: "9px 10px",
               }}
             >
               TổngLT:{sumlt}
@@ -2958,11 +3021,24 @@ const DuyetDiemRenLuyenGV = ({ sinhVienItem, fetchData, setOpen }) => {
                 bottom: "70px",
                 right: "15px",
                 cursor: "default",
-                padding: "9px 15px",
+                padding: "9px 10px",
               }}
             >
               TổngGV:{sumgv}
             </Button>
+            <input
+              type="checkbox"
+              name="svPositiveStudy"
+              onClick={(e) => handleClickDuyet(e)}
+              style={{
+                position: "fixed",
+                bottom: "250px",
+                right: "15px",
+                cursor: "default",
+                padding: "9px 15px",
+                width: "auto",
+              }}
+            />
             <div
               className={`flex justify-end bg-[#191f4589] px-4 py-3 w-full absolute bottom-0`}
             >

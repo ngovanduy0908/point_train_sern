@@ -10,22 +10,26 @@ export const getDeadline = (req, res) => {
   db.query(q, [maGv], (err, data) => {
     if (err) return res.status(500).json(err);
 
-    return res.status(200).json([
-      {
-        start_time_student: moment
-          .utc(data[0].start_time_student)
-          .utcOffset("+0700")
-          .format("YYYY-MM-DD"),
-        end_time_student: moment
-          .utc(data[0].end_time_student)
-          .utcOffset("+0700")
-          .format("YYYY-MM-DD"),
-        end_time_monitor: moment
-          .utc(data[0].end_time_monitor)
-          .utcOffset("+0700")
-          .format("YYYY-MM-DD"),
-      },
-    ]);
+    return res.status(200).json(
+      data.length > 0
+        ? [
+            {
+              start_time_student: moment
+                .utc(data[0].start_time_student)
+                .utcOffset("+0700")
+                .format("YYYY-MM-DD"),
+              end_time_student: moment
+                .utc(data[0].end_time_student)
+                .utcOffset("+0700")
+                .format("YYYY-MM-DD"),
+              end_time_monitor: moment
+                .utc(data[0].end_time_monitor)
+                .utcOffset("+0700")
+                .format("YYYY-MM-DD"),
+            },
+          ]
+        : []
+    );
   });
 };
 

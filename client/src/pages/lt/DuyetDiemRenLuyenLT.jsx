@@ -871,18 +871,18 @@ const DuyetDiemRenLuyenLT = ({
 
       setCheckboxStateLT((prev) => ({
         ...prev,
-        ltNoRegulation: setValues.svNoRegulation === 3 ? true : false,
-        ltOnTime: setValues.svOnTime === 2 ? true : false,
-        ltRightRule: setValues.svRightRule === 10 ? true : false,
-        ltNoFullStudy: setValues.svNoFullStudy === -10 ? true : false,
-        ltNoPayFee: setValues.svNoPayFee === -10 ? true : false,
-        ltFullActive: setValues.svFullActive === 13 ? true : false,
-        ltPositiveStudy: setValues.svPositiveStudy === 10 ? true : false,
-        ltPositiveLove: setValues.svPositiveLove === 5 ? true : false,
-        ltWarn: setValues.svWarn === -5 ? true : false,
-        ltNoProtect: setValues.svNoProtect === -20 ? true : false,
-        // svMonitor: setValues.svMonitor === 7 ? true : false,
-        ltBonus: setValues.svBonus === 3 ? true : false,
+        ltNoRegulation: values.svNoRegulation === 3 ? true : false,
+        ltOnTime: values.svOnTime === 2 ? true : false,
+        ltRightRule: values.svRightRule === 10 ? true : false,
+        ltNoFullStudy: values.svNoFullStudy === -10 ? true : false,
+        ltNoPayFee: values.svNoPayFee === -10 ? true : false,
+        ltFullActive: values.svFullActive === 13 ? true : false,
+        ltPositiveStudy: values.svPositiveStudy === 10 ? true : false,
+        ltPositiveLove: values.svPositiveLove === 5 ? true : false,
+        ltWarn: values.svWarn === -5 ? true : false,
+        ltNoProtect: values.svNoProtect === -20 ? true : false,
+        // svMonitor: values.svMonitor === 7 ? true : false,
+        ltBonus: values.svBonus === 3 ? true : false,
       }));
     } else {
       getPointMonitor();

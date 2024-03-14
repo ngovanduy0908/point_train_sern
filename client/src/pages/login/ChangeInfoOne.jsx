@@ -128,6 +128,10 @@ function ResponsiveAppBar() {
 }
 
 const ChangeInfoOne = () => {
+  const [currentUser, setCurrentUser] = useState(
+    JSON.parse(localStorage.getItem("user")) || null
+  );
+  // console.log("curent chảng: ", currentUser);
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
@@ -157,7 +161,7 @@ const ChangeInfoOne = () => {
       if (!inputs.password) {
         return toast.warn("Vui lòng nhập mật khẩu");
       }
-      if (inputs.password === "123456") {
+      if (!currentUser?.tk?.includes("-") && inputs.password === "123456") {
         return toast.warn("Vui lòng nhập mật khẩu khác mật khẩu mặc định");
       }
 

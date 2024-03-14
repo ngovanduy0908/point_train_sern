@@ -8,7 +8,7 @@ import { generateOptionsListDanhSach } from "utils/define";
 import { getListCourse } from "utils/getMany/getListCourse";
 import { getListClass } from "utils/getMany/getListClass";
 import { handleDataExportExcelKhoa } from "utils/postDetails/handleDataExportExcelKhoa";
-import { getListMajor } from "utils/getMany/getListMajor";
+// import { getListMajor } from "utils/getMany/getListMajor";
 import ModalV2 from "components/modal/ModalV2";
 import Progress from "components/Progress";
 import {
@@ -18,6 +18,7 @@ import {
 import { toast } from "react-toastify";
 import { isCheckSomeFieldEmpty } from "utils/function/validateValue";
 import ViewTable from "components/viewPointTable/ViewTable";
+import { getListMajorByMaKhoa } from "utils/getMany/getListMajorByMaKhoa";
 
 const optionsListDanhSach = generateOptionsListDanhSach();
 
@@ -70,7 +71,7 @@ const ThongKeDRL = () => {
       getListSemester(),
       getListCourse(),
       getListClass(`${currentUser.maKhoa}`),
-      getListMajor(),
+      getListMajorByMaKhoa(`${currentUser.maKhoa}`),
     ]);
     const formatDataHK = resSemester.map((item) => ({
       value: {

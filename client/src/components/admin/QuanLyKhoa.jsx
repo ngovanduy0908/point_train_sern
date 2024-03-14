@@ -140,7 +140,7 @@ const QuanLyKhoa = () => {
         header: "Mã Khoa",
         enableColumnOrdering: false,
         enableEditing: false, //disable editing on this column
-        enableSorting: false,
+        // enableSorting: false,
         size: 80,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),

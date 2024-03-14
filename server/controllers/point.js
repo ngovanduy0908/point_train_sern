@@ -890,7 +890,152 @@ export const updatePointTeacherZero = async (req, res) => {
                                 0, 
                                 '${maHK}', 
                                 0)`;
-      const q1 = `update point set point_teacher = 0, gvNote='Không sinh hoạt lớp', status_teacher = 1 where maSv = '${maSv}' and maHK = '${maHK}'`;
+      const q2 = `
+      INSERT INTO point_monitor 
+                                (maSv, 
+                                ltDiemTBHK, 
+                                ltCitizen, 
+                                ltMonitor, 
+                                ltNCKH1, 
+                                ltNCKH2, 
+                                ltNCKH3, 
+                                ltOlympic1, 
+                                ltOlympic2, 
+                                ltOlympic3, 
+                                ltOlympic4, 
+                                ltNoRegulation, 
+                                ltOnTime, 
+                                ltAbandon, 
+                                ltUnTrueTime, 
+                                ltNoFullStudy, 
+                                ltNoCard, 
+                                ltNoAtivities, 
+                                ltNoPayFee, 
+                                ltFullActive, 
+                                ltAchievementSchool, 
+                                ltAchievementCity, 
+                                ltAdvise, 
+                                ltIrresponsible, 
+                                ltNoCultural, 
+                                ltPositiveStudy, 
+                                ltPositiveLove, 
+                                ltWarn, 
+                                ltNoProtect, 
+                                ltBonus, 
+                                ltIrresponsibleMonitor, 
+                                maHK, 
+                                ltRightRule)
+                            VALUES 
+                                ('${maSv}', 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                0, 
+                                '${maHK}', 
+                                0)`;
+      const q3 = `
+                                INSERT INTO point_student 
+                                                          (maSv, 
+                                                          svDiemTBHK, 
+                                                          svCitizen, 
+                                                          svMonitor, 
+                                                          svNCKH1, 
+                                                          svNCKH2, 
+                                                          svNCKH3, 
+                                                          svOlympic1, 
+                                                          svOlympic2, 
+                                                          svOlympic3, 
+                                                          svOlympic4, 
+                                                          svNoRegulation, 
+                                                          svOnTime, 
+                                                          svAbandon, 
+                                                          svUnTrueTime, 
+                                                          svNoFullStudy, 
+                                                          svNoCard, 
+                                                          svNoAtivities, 
+                                                          svNoPayFee, 
+                                                          svFullActive, 
+                                                          svAchievementSchool, 
+                                                          svAchievementCity, 
+                                                          svAdvise, 
+                                                          svIrresponsible, 
+                                                          svNoCultural, 
+                                                          svPositiveStudy, 
+                                                          svPositiveLove, 
+                                                          svWarn, 
+                                                          svNoProtect, 
+                                                          svBonus, 
+                                                          svIrresponsibleMonitor, 
+                                                          maHK, 
+                                                          svRightRule)
+                                                      VALUES 
+                                                          ('${maSv}', 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          0, 
+                                                          '${maHK}', 
+                                                          0)`;
+      const q1 = `update point set 
+      point_teacher = 0, 
+      point_monitor = 0, 
+      point_student = 0, 
+      gvNote='Không sinh hoạt lớp', 
+      status_teacher = 1 
+      where 
+      maSv = '${maSv}' and maHK = '${maHK}'`;
 
       // db.query(q, (err, data) => {
       //   if (err) return res.status(500).json(err);
@@ -908,7 +1053,18 @@ export const updatePointTeacherZero = async (req, res) => {
             resolve();
           });
         });
-
+        await new Promise((resolve, reject) => {
+          db.query(q2, (err, data) => {
+            if (err) reject(err);
+            resolve();
+          });
+        });
+        await new Promise((resolve, reject) => {
+          db.query(q3, (err, data) => {
+            if (err) reject(err);
+            resolve();
+          });
+        });
         await new Promise((resolve, reject) => {
           db.query(q1, (err, data) => {
             if (err) reject(err);

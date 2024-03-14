@@ -92,7 +92,7 @@ const QuanLyHocSinh = () => {
       await axios.post(`${DOMAIN}/students/${maLop}`, values, {
         withCredentials: true,
       });
-      getAllClass();
+      await getAllClass();
       tableData.push(values);
       setTableData([...tableData]);
       toast.success("Thêm mới sinh viên thành công");
@@ -194,6 +194,7 @@ const QuanLyHocSinh = () => {
               value={row.original.role_id}
               onChange={(e) => handleChangeChucVu(e, row.original)}
               placeholder="Sinh Viên"
+              defaultValue={4}
             >
               {roleData.map(
                 (item) =>

@@ -58,7 +58,7 @@ const QuanLyThoiGian = () => {
 
   const handleCreateNewRow = async (values) => {
     try {
-      console.log("value ne: ", values);
+      // console.log("value ne: ", values);
       await axios.post(`${DOMAIN}/deadlines/${currentUser.maGv}`, values, {
         withCredentials: true,
       });
@@ -142,50 +142,50 @@ const QuanLyThoiGian = () => {
     <Box m="1.5rem 2.5rem">
       <Header title={currentUser.name} subtitle="Thời Gian Chấm, Duyệt Điểm" />
       <Box mt="40px">
-        <MaterialReactTable
-          displayColumnDefOptions={{
-            "mrt-row-actions": {
-              muiTableHeadCellProps: {
-                align: "center",
+        {tableData.length > 0 ? (
+          <MaterialReactTable
+            displayColumnDefOptions={{
+              "mrt-row-actions": {
+                muiTableHeadCellProps: {
+                  align: "center",
+                },
+                size: 120,
               },
-              size: 120,
-            },
-          }}
-          columns={columns}
-          data={tableData}
-          editingMode="modal" //default
-          enableColumnOrdering
-          enableEditing
-          onEditingRowSave={handleSaveRowEdits}
-          onEditingRowCancel={handleCancelRowEdits}
-          renderRowActions={({ row, table }) => (
-            <Box sx={{ display: "flex", gap: "1rem" }}>
-              <Tooltip arrow placement="left" title="Sửa Thời Gian">
-                <IconButton onClick={handleClickOpen}>
-                  <Edit />
-                </IconButton>
-              </Tooltip>
-              <Tooltip arrow placement="right" title="Xóa Thời Gian">
-                <IconButton color="error" onClick={() => handleDeleteRow(row)}>
-                  <Delete />
-                </IconButton>
-              </Tooltip>
-            </Box>
-          )}
-          renderTopToolbarCustomActions={() =>
-            tableData.length > 0 ? (
-              <ChangeCircleIcon />
-            ) : (
-              <Button
-                color="secondary"
-                onClick={() => setCreateModalOpen(true)}
-                variant="contained"
-              >
-                Thêm Mới
-              </Button>
-            )
-          }
-        />
+            }}
+            columns={columns}
+            data={tableData}
+            editingMode="modal" //default
+            enableColumnOrdering
+            enableEditing
+            onEditingRowSave={handleSaveRowEdits}
+            onEditingRowCancel={handleCancelRowEdits}
+            renderRowActions={({ row, table }) => (
+              <Box sx={{ display: "flex", gap: "1rem" }}>
+                <Tooltip arrow placement="left" title="Sửa Thời Gian">
+                  <IconButton onClick={handleClickOpen}>
+                    <Edit />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip arrow placement="right" title="Xóa Thời Gian">
+                  <IconButton
+                    color="error"
+                    onClick={() => handleDeleteRow(row)}
+                  >
+                    <Delete />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            )}
+          />
+        ) : (
+          <Button
+            color="secondary"
+            onClick={() => setCreateModalOpen(true)}
+            variant="contained"
+          >
+            Thêm Mới
+          </Button>
+        )}
 
         <CreateNewAccountModal
           err={err}

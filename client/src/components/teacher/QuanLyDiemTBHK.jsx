@@ -37,9 +37,7 @@ const QuanLyDiemTBHK = () => {
   const currentUser = getUserInLocalStorage();
 
   // get all class
-  useEffect(() => {
-    getAllClass();
-  }, []);
+
   const getAllClass = async () => {
     try {
       const allClass = await axios.get(
@@ -54,7 +52,9 @@ const QuanLyDiemTBHK = () => {
       console.log(error.response.data);
     }
   };
-
+  useEffect(() => {
+    getAllClass();
+  }, []);
   // console.log(semesterData);
   // console.log(tableData);
   const handleCreateNewRow = async (values) => {
@@ -62,19 +62,25 @@ const QuanLyDiemTBHK = () => {
     // console.log(maLop);
 
     try {
+      const newValues = {
+        ...values,
+        maLop: maLop,
+      };
       await axios.post(
         `http://localhost:8800/api/point_medium/${maHK}`,
-        values,
+        newValues,
         {
           withCredentials: true,
         }
       );
+      // console.log("res: ", res);
       tableData.push(values);
       setTableData([...tableData]);
       getAllClass();
       // window.location.href = `http://localhost:3000/quanlylopchunhiem/uploadfilecdsv/${maLop}/${maHK}`;
     } catch (error) {
-      setErr(error.response.data);
+      toast.error(error.response.data);
+      // setErr(error.response.data);
     }
   };
 
@@ -309,7 +315,7 @@ export const CreateNewAccountModal = ({ err, open, onClose, onSubmit }) => {
             />
           </Stack>
         </form>
-        {err && err}
+        {/* {err && err} */}
       </DialogContent>
       <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
@@ -384,7 +390,7 @@ export const CreateUploadFileSV = ({
             Upload
           </Button>
         </form>
-        {err && err}
+        {/* {err && err} */}
       </DialogContent>
       <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">

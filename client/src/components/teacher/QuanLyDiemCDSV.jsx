@@ -37,10 +37,6 @@ const QuanLyDiemCDSV = () => {
 
   const currentUser = getUserInLocalStorage();
 
-  // get all class
-  useEffect(() => {
-    getAllClass();
-  }, []);
   const getAllClass = async () => {
     try {
       const allClass = await axios.get(
@@ -49,24 +45,30 @@ const QuanLyDiemCDSV = () => {
           withCredentials: true,
         }
       );
-      console.log("allClass.data: ", allClass.data);
+      // console.log("allClass.data: ", allClass.data);
       setTableData(allClass.data);
       // console.log("call lai khong");
     } catch (error) {
       console.log(error.response.data);
     }
   };
-
+  // get all class
+  useEffect(() => {
+    getAllClass();
+  }, []);
   // console.log(semesterData);
   // console.log(tableData);
   const handleCreateNewRow = async (values) => {
     // console.log(values);
     // console.log(maLop);
-
+    const newValues = {
+      ...values,
+      maLop: maLop,
+    };
     try {
       await axios.post(
         `http://localhost:8800/api/point_citizen/${maHK}`,
-        values,
+        newValues,
         {
           withCredentials: true,
         }
@@ -76,7 +78,7 @@ const QuanLyDiemCDSV = () => {
       getAllClass();
       // window.location.href = `http://localhost:3000/quanlylopchunhiem/uploadfilecdsv/${maLop}/${maHK}`;
     } catch (error) {
-      setErr(error.response.data);
+      toast.error(error.response.data);
     }
   };
 
@@ -317,7 +319,7 @@ export const CreateNewAccountModal = ({
             />
           </Stack>
         </form>
-        {err && err}
+        {/* {err && err} */}
       </DialogContent>
       <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
@@ -386,7 +388,7 @@ export const CreateUploadFileSV = ({
           <TextField type="file" onChange={handleFileUpload} />
           <Button type="submit">Upload</Button>
         </form>
-        {err && err}
+        {/* {err && err} */}
       </DialogContent>
       <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose} color="secondary">
