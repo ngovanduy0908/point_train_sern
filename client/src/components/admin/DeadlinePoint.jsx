@@ -16,7 +16,6 @@ import {
 } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
 
-import axios from "axios";
 import { getUserInLocalStorage } from "context/getCurrentUser";
 import { toast } from "react-toastify";
 import { formatDay } from "utils/function/formatDay";
@@ -24,7 +23,6 @@ import { getAllDeadlinePoint } from "utils/getMany/getDeadlinePoint";
 import FormDialog from "./Dialog";
 import { insertDeadlinePoint } from "utils/postDetails/insertDeadlinePoint";
 import { deleteDeadlinePoint } from "utils/remove/removeDeadlinePoint";
-const DOMAIN = process.env.REACT_APP_DOMAIN;
 const DeadlinePoint = () => {
   // const theme = useTheme();
   const currentUser = getUserInLocalStorage();
@@ -47,7 +45,6 @@ const DeadlinePoint = () => {
   const getAllDeadline = async () => {
     try {
       const allDeadline = await getAllDeadlinePoint();
-      console.log("allDeadline: ", allDeadline);
       setTableData(allDeadline);
     } catch (error) {
       console.log(error.response.data);
@@ -67,18 +64,7 @@ const DeadlinePoint = () => {
     }
   };
 
-  const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
-    // if (!Object.keys(validationErrors).length) {
-    //   tableData[row.index] = values;
-    //   await axios.put(`${DOMAIN}/departments/${values.maKhoa}`, values, {
-    //     withCredentials: true,
-    //   });
-    //   console.log("values: ");
-    //   setTableData([...tableData]);
-    //   exitEditingMode(); //required to exit editing mode and close modal
-    //   toast.success("Sửa thời gian thành công");
-    // }
-  };
+  const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {};
 
   const handleCancelRowEdits = () => {
     setValidationErrors({});
@@ -90,11 +76,7 @@ const DeadlinePoint = () => {
       if (!window.confirm(`Bạn có chắc muốn xóa thời gian không?`)) {
         return;
       }
-      // console.log(row);
-      //send api delete request here, then refetch or update local table data for re-render
-      // await axios.delete(`${DOMAIN}/deadlines/${currentUser.maGv}`, {
-      //   withCredentials: true,
-      // });
+
       await deleteDeadlinePoint();
       tableData.splice(row.index, 1);
       setTableData([...tableData]);

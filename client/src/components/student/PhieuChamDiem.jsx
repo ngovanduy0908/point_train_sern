@@ -6,9 +6,8 @@ import { toast } from "react-toastify";
 import { getPointByMaAdmin } from "utils/getDetails/getPointByMaAdmin";
 
 const PhieuChamDiem = () => {
-  const location = useLocation();
   const { currentUser, maHKAdmin } = useContext(AuthContext);
-  console.log("currentUser: ", currentUser, maHKAdmin);
+  // console.log("currentUser: ", currentUser, maHKAdmin);
   // const searchParams = new URLSearchParams(location.search);
   // const maHK = searchParams.get("maHK");
   const { maHK } = useParams();
@@ -36,8 +35,8 @@ const PhieuChamDiem = () => {
       const res = await getPointByMaAdmin(
         `maSv=${currentUser?.maSv}&maHK=${value}`
       );
-      // console.log("res: ", res);
-      if (res?.point_teacher >= 50 && res?.maHK === value) {
+      console.log("res học kì: ", res?.maHK);
+      if (res?.point_teacher >= 50 && res?.maHK === maHKAdmin) {
         toast.warn(
           "Thời gian này dành cho các sinh viên sinh hoạt lớp bổ sung"
         );

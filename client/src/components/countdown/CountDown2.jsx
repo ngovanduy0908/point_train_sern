@@ -1,16 +1,13 @@
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 
-const Countdown = ({ timeEndStudentMark }) => {
+const Countdown2 = ({ timeEndStudentMark }) => {
   const [days, setDays] = useState("00");
   const [hours, setHours] = useState("00");
   const [minutes, setMinutes] = useState("00");
   const [seconds, setSeconds] = useState("00");
   // console.log("time Start StudentMark: ", timeStartStudentMark);
-  // console.log(
-  //   "time End StudentMark ne: ",
-  //   new Date(dayjs(timeEndStudentMark).format("YYYY-MM-DD"))
-  // );
+  console.log("time End StudentMark ne: ", timeEndStudentMark);
 
   useEffect(() => {
     const target_date =
@@ -34,7 +31,7 @@ const Countdown = ({ timeEndStudentMark }) => {
     return () => {
       clearInterval(countdownInterval);
     };
-  }, [timeEndStudentMark]);
+  }, []);
 
   const pad = (n) => {
     return (n < 10 ? "0" : "") + n;
@@ -58,4 +55,4 @@ const Countdown = ({ timeEndStudentMark }) => {
   );
 };
 
-export default Countdown;
+export default Countdown2;

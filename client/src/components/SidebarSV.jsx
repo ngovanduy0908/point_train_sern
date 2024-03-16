@@ -22,10 +22,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
 import { ChevronLeft, ChevronRightOutlined } from "@mui/icons-material";
 import CountDown from "./countdown/CountDown";
-import { getDeadlineBySinhVien } from "utils/getDetails/getDealineBySinhVien";
+// import { getDeadlineBySinhVien } from "utils/getDetails/getDealineBySinhVien";
 import { AuthContext } from "context/authContext";
 import { formatDay } from "utils/formatDay";
 import { getAllDeadlineAdmin } from "utils/getMany/getDealineAdmin";
+import { getDeadlinePointCheck } from "utils/getMany/getDeadlinePoint";
+import { getDeadlineBySinhVien } from "utils/getDetails/getDealineBySinhVien";
 const navItemsSV = [
   {
     text: "Trang Chủ",
@@ -70,17 +72,23 @@ const SidebarSV = ({
   const getDeadlineByMaLop = async () => {
     try {
       const [res, resAdmin] = await Promise.all([
-        getDeadlineBySinhVien(currentUser.maLop),
+        // getDeadlineBySinhVien(currentUser.maLop),
+        getDeadlinePointCheck(),
         getAllDeadlineAdmin(),
       ]);
 
       // console.log("a loi: ", res);
       // console.log("a loi admin: ", resAdmin);
-
-      setTimeStartStudentMark(res.start_time_student);
-      setTimeEndStudentMark(res.end_time_student);
-      setTimeEndMonitorMark(res.end_time_monitor);
+      if (res) {
+        // setTimeStartStudentMark(res.start_time_student);
+        // setTimeEndStudentMark(res.end_time_student);
+        // setTimeEndMonitorMark(res.end_time_monitor);
+        setTimeStartStudentMark(res.start_time_student_point);
+        setTimeEndStudentMark(res.end_time_student_point);
+        setTimeEndMonitorMark(res.end_time_monitor_point);
+      }
       if (formatDay(curDate) <= formatDay(resAdmin?.end_time_student)) {
+        // console.log("co vao day khong");
         setTimeEndStudentMark(resAdmin?.end_time_student);
       }
       // if (resAdmin?.end_time_student) {

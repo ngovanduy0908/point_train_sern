@@ -23,10 +23,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetween";
 import { ChevronLeft, ChevronRightOutlined } from "@mui/icons-material";
 import { formatDay } from "utils/formatDay";
-import { getDeadlineBySinhVien } from "utils/getDetails/getDealineBySinhVien";
 import { AuthContext } from "context/authContext";
 import Countdown from "./countdown/CountDown";
 import { getAllDeadlineAdmin } from "utils/getMany/getDealineAdmin";
+import { getDeadlinePointCheck } from "utils/getMany/getDeadlinePoint";
 
 const navItemsLT = [
   {
@@ -64,6 +64,8 @@ const SidebarLT = ({
     useState(null);
   const [timeEndStudentMarkAdmin, setTimeEndStudentMarkAdmin] = useState(null);
   const [checkTimePoint, setCheckTimePoint] = useState(false);
+  const [checkTimeBrowser, setCheckTimeBrowser] = useState(false);
+
   const [checkTimeMark, setCheckTimeMark] = useState(false);
   const curDate = new Date();
 
@@ -74,13 +76,22 @@ const SidebarLT = ({
   const getDeadlineByMaLop = async () => {
     try {
       const [res, resAdmin] = await Promise.all([
-        getDeadlineBySinhVien(currentUser.maLop),
+        getDeadlinePointCheck(),
         getAllDeadlineAdmin(),
       ]);
-      setTimeStartStudentMark(res.start_time_student);
-      setTimeEndStudentMark(res.end_time_student);
-      setTimeEndMonitorMark(res.end_time_monitor);
-      setTimeEndMonitorMark(res.end_time_monitor);
+      console.log("vao day: ", res);
+      if (res) {
+        // setTimeStartStudentMark(res.start_time_student);
+        // setTimeEndStudentMark(res.end_time_student);
+        // setTimeEndMonitorMark(res.end_time_monitor);
+        setTimeStartStudentMark(res.start_time_student_point);
+        setTimeEndStudentMark(res.end_time_student_point);
+        setTimeEndMonitorMark(res.end_time_monitor_point);
+      }
+      // setTimeStartStudentMark(res.start_time_student);
+      // setTimeEndStudentMark(res.end_time_student);
+      // setTimeEndMonitorMark(res.end_time_monitor);
+      // setTimeEndMonitorMark(res.end_time_monitor);
       if (formatDay(curDate) <= formatDay(resAdmin?.end_time_student)) {
         setTimeEndStudentMark(resAdmin?.end_time_student);
       }
@@ -104,13 +115,36 @@ const SidebarLT = ({
     const d = formatDay(curDate) <= formatDay(timeEndMonitorMark);
     const e = formatDay(curDate) >= formatDay(timeStartStudentMarkAdmin);
     const f = formatDay(curDate) <= formatDay(timeEndStudentMarkAdmin);
-    if (c && d) {
+    // if (b && d) {
+    //   // const isChamDiemRenLuyenExists = navItemsLT.some(
+    //   //   (item) => item.path === "xetdiemrenluyen"
+    //   // );
+    //   // console.log("hien thi ca 2: ", isChamDiemRenLuyenExists);
+    //   if (timeEndStudentMark) {
+    //     const newNavItem = [
+    //       {
+    //         text: "Xét Điểm Rèn Luyện",
+    //         icon: <PlaylistAddCheckIcon />,
+    //         path: "xetdiemrenluyen",
+    //       },
+    //       {
+    //         text: "Chấm Điểm Rèn Luyện",
+    //         icon: <BorderColorIcon />,
+    //         path: "chamdiemrenluyen",
+    //       },
+    //     ];
+    //     setNavList((prev) => [...prev, ...newNavItem]);
+    //   }
+    //   setCheckTimePoint(true);
+    //   // if (isChamDiemRenLuyenExists) {
+    //   // }
+    //   // console.log("navlisst: ", timeEndStudentMark, timeEndMonitorMark);
+    // }
+    console.log("a,b,c,d,e,f: ", a, b, c, d, e, f);
+    if (d) {
       setCheckTimeMark(true);
-      const isChamDiemRenLuyenExists = navItemsLT.some(
-        (item) => item.path === "xetdiemrenluyen"
-      );
 
-      if (!isChamDiemRenLuyenExists) {
+      if (timeEndStudentMark) {
         const newNavItem = {
           text: "Xét Điểm Rèn Luyện",
           icon: <PlaylistAddCheckIcon />,
@@ -119,16 +153,16 @@ const SidebarLT = ({
         setNavList((prev) => [...prev, newNavItem]);
       }
     } else {
-      setCheckTimePoint(false);
+      setCheckTimeMark(false);
       setNavList((prev) => [...prev]);
     }
     if ((a && b) || (e && f)) {
       setCheckTimePoint(true);
-      const isChamDiemRenLuyenExists = navItemsLT.some(
-        (item) => item.path === "chamdiemrenluyen"
-      );
+      // const isChamDiemRenLuyenExists = navItemsLT.some(
+      //   (item) => item.path === "chamdiemrenluyen"
+      // );
 
-      if (!isChamDiemRenLuyenExists) {
+      if (timeEndMonitorMark) {
         const newNavItem = {
           text: "Chấm Điểm Rèn Luyện",
           icon: <BorderColorIcon />,
@@ -140,7 +174,7 @@ const SidebarLT = ({
       setCheckTimePoint(false);
       setNavList((prev) => [...prev]);
     }
-  }, [timeStartStudentMark, timeEndStudentMark]);
+  }, [timeStartStudentMark]);
 
   return (
     <Box component="nav" className="z-0">
@@ -212,11 +246,31 @@ const SidebarLT = ({
                   </ListItem>
                 );
               })}
-              {user && checkTimePoint && (
+              {/* {user && checkTimePoint && (
                 <Countdown timeEndStudentMark={timeEndStudentMark} />
               )}
               {user && checkTimeMark && (
                 <Countdown timeEndStudentMark={timeEndMonitorMark} />
+              )} */}
+              {user && checkTimePoint && (
+                <>
+                  <div className="relative top-[200px]">
+                    <p className="absolute bottom-[270%] left-[10%]">
+                      Thời gian chấm
+                    </p>
+
+                    <Countdown timeEndStudentMark={timeEndStudentMark} />
+                  </div>
+                </>
+              )}
+
+              {user && checkTimeMark && (
+                <div className="relative top-[300px]">
+                  <p className="absolute bottom-[270%] left-[10%]">
+                    Thời gian duyệt
+                  </p>
+                  <Countdown timeEndStudentMark={timeEndMonitorMark} />
+                </div>
               )}
             </List>
           </Box>

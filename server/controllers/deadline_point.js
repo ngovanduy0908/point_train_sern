@@ -30,6 +30,17 @@ export const getDeadlinePoint = (req, res) => {
     );
   });
 };
+export const getDeadlineCheckPoint = (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not authenticated");
+  const q =
+    "select start_time_student_point, end_time_student_point, end_time_monitor_point from deadline_point";
+  db.query(q, (err, data) => {
+    if (err) return res.status(500).json(err);
+
+    return res.status(200).json(...data);
+  });
+};
 
 export const addDeadlinePoint = (req, res) => {
   const token = req.cookies.accessToken;
