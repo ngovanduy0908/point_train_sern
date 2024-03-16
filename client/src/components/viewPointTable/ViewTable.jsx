@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.css";
-const ViewTable = ({ dataTable, isLop }) => {
+const ViewTable = ({ dataTable, isLop, isToanKhoaHoc }) => {
   // console.log("data table: ", dataTable);
   const {
     dssv,
@@ -15,7 +15,7 @@ const ViewTable = ({ dataTable, isLop }) => {
     tenVaKhoa,
     title,
   } = dataTable;
-  console.log("xuong day:", isLop);
+  // console.log("xuong day:", isLop);
   return (
     <div className="bg-white p-2  text-[#000] h-full">
       <div className="p-3 border-shadow h-full overflow-auto">
@@ -55,7 +55,7 @@ const ViewTable = ({ dataTable, isLop }) => {
                 <th class="border border-slate-600 border-solid align-middle w-[18%]">
                   Họ và tên
                 </th>
-                {isLop === 1 && (
+                {(isLop === 1 || isToanKhoaHoc) && (
                   <th class="border border-slate-600 border-solid align-middle w-[10%]">
                     Lớp
                   </th>
@@ -112,7 +112,9 @@ const ViewTable = ({ dataTable, isLop }) => {
                       {item?.name}
                     </span>
                   </td>
-                  {isLop === 1 && (
+                  {(isLop === 1 ||
+                    isToanKhoaHoc === 3 ||
+                    isToanKhoaHoc === 1) && (
                     <td class="border border-slate-600 border-solid ">
                       <span className=" line-clamp-1 text-left px-2 text-base">
                         {item?.tenLop}

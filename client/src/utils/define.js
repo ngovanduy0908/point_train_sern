@@ -1,5 +1,39 @@
 export const generateOptionsListDanhSach = () => [
   {
+    label: "Sinh Viên DRL >= 70 và <= 79",
+    value: {
+      title:
+        "BẢNG TỔNG HỢP ĐIỂM RÈN LUYỆN SINH VIÊN CÓ ĐIỂM RÈN LUYỆN >= 70 VÀ < 80",
+      min: 70,
+      max: 79,
+    },
+  },
+  {
+    label: "Sinh Viên DRL >= 80",
+    value: {
+      title: "BẢNG TỔNG HỢP ĐIỂM RÈN LUYỆN SINH CÓ ĐIỂM RÈN LUYỆN >= 80",
+      min: 80,
+      max: 100,
+    },
+  },
+  {
+    label: "Sinh Viên DRL >= 70",
+    value: {
+      title: "BẢNG TỔNG HỢP ĐIỂM RÈN LUYỆN SINH VIÊN CÓ ĐIỂM RÈN LUYỆN >= 70",
+      min: 70,
+      max: 100,
+    },
+  },
+  {
+    label: "Sinh Viên DRL < 50",
+    value: {
+      title: "BẢNG TỔNG HỢP ĐIỂM RÈN LUYỆN SINH VIÊN CÓ ĐIỂM RÈN LUYỆN < 50",
+      min: 0,
+      max: 49,
+    },
+  },
+
+  {
     label: "Cả Lớp",
     value: {
       title: "BẢNG TỔNG HỢP ĐIỂM RÈN LUYỆN",
@@ -61,30 +95,6 @@ export const generateOptionsListDanhSach = () => [
       title: "BẢNG TỔNG HỢP ĐIỂM RÈN LUYỆN SINH VIÊN KÉM",
       min: 0,
       max: 29,
-    },
-  },
-  {
-    label: "Sinh Viên DRL < 50",
-    value: {
-      title: "BẢNG TỔNG HỢP ĐIỂM RÈN LUYỆN SINH VIÊN CÓ ĐIỂM RÈN LUYỆN < 50",
-      min: 0,
-      max: 49,
-    },
-  },
-  {
-    label: "Sinh Viên DRL >= 70 và <= 79",
-    value: {
-      title: "BẢNG TỔNG HỢP ĐIỂM RÈN LUYỆN SINH VIÊN CÓ ĐIỂM RÈN LUYỆN >= 70",
-      min: 70,
-      max: 79,
-    },
-  },
-  {
-    label: "Sinh Viên DRL >= 80",
-    value: {
-      title: "BẢNG TỔNG HỢP ĐIỂM RÈN LUYỆN SINH CÓ ĐIỂM RÈN LUYỆN >= 80",
-      min: 80,
-      max: 100,
     },
   },
 ];

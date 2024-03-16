@@ -78,7 +78,7 @@ const QuanLyDiemCDSV = () => {
       getAllClass();
       // window.location.href = `http://localhost:3000/quanlylopchunhiem/uploadfilecdsv/${maLop}/${maHK}`;
     } catch (error) {
-      toast.error(error.response.data);
+      toast.error("Lỗi");
     }
   };
 
@@ -386,7 +386,15 @@ export const CreateUploadFileSV = ({
         </Button>
         <form onSubmit={handleSubmit}>
           <TextField type="file" onChange={handleFileUpload} />
-          <Button type="submit">Upload</Button>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              marginTop: "5px",
+            }}
+          >
+            Upload
+          </Button>
         </form>
         {/* {err && err} */}
       </DialogContent>

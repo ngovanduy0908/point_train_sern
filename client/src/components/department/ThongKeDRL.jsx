@@ -34,11 +34,25 @@ const customStyles = {
 };
 const optionsOne = [
   {
+    label: "Danh Sách Theo Khoa",
+    value: 3,
+  },
+  {
     label: "Danh Sách Chuyên Ngành",
     value: 1,
   },
   {
     label: "Danh Sách Theo Lớp",
+    value: 2,
+  },
+];
+const optionsTwo = [
+  {
+    label: "Tất Cả khóa",
+    value: 1,
+  },
+  {
+    label: "Theo Khóa",
     value: 2,
   },
 ];
@@ -54,17 +68,22 @@ const ThongKeDRL = () => {
   const [url, setUrl] = useState();
   const [openModalFile, setOpenModaFile] = useState(false);
   const [showClass, setShowClass] = useState(false);
+  const [showChuyenNganh, setShowChuyenNganh] = useState(false);
+  const [danhSachKhoaHoc, setDanhSachKhoaHoc] = useState([]);
+
   const [loading, setLoading] = useState();
   const [initChoose, setInitChoose] = useState({
     maLop: "",
     maHK: "",
     danhSachSV: "",
     maCN: "",
-    maKhoaHoc: "",
-    isLop: 1,
+    maKhoaHoc: [],
+    isLop: 3,
+    isToanKhoaHoc: 1,
   });
   const selectRefClass = useRef(null);
   const selectRefMajor = useRef(null);
+  const selectRefKhoaHoc = useRef(null);
 
   const fetchData = async () => {
     const [resSemester, resCourse, resClass, resMajor] = await Promise.all([
@@ -117,31 +136,74 @@ const ThongKeDRL = () => {
     }));
   };
   const handleChangeOne = (value) => {
+    // setDanhSachKhoaHoc([]);
     if (value === 1) {
       // console.log("bang 1 ne");
       setShowClass(false);
       setInitChoose((prev) => ({
         ...prev,
+        isLop: value,
         maCN: "",
         maKhoaHoc: "",
+        isToanKhoaHoc: 2,
+      }));
+    } else if (value === 2) {
+      setShowClass(false);
+      setShowChuyenNganh(false);
+      setInitChoose((prev) => ({
+        ...prev,
+        isLop: value,
+        maCN: "",
+        maKhoaHoc: "",
+        isToanKhoaHoc: 1,
       }));
     } else {
       // console.log("bang 2 ne");
       setShowClass(true);
+
       setInitChoose((prev) => ({
         ...prev,
         maLop: "",
+        isToanKhoaHoc: 1,
       }));
     }
     selectRefClass?.current?.clearValue();
+    selectRefKhoaHoc?.current?.clearValue();
+  };
+
+  const handleChangeTwo = (value) => {
+    // if (value === 1) {
+    //   // setShowChuyenNganh(false);
+    //   // setDanhSachKhoaHoc()
+
+    // } else {
+    //   // setShowChuyenNganh(true);
+    // }
+    setInitChoose((prev) => ({
+      ...prev,
+      isToanKhoaHoc: value,
+    }));
+  };
+  const handleSelectChange = (selectedOptions) => {
+    // Lấy ra mảng các giá trị đã được chọn
+    setDanhSachKhoaHoc(selectedOptions);
+    // console.log(" vao day nao: ", selectedOptions);
   };
   const handleClickView = async () => {
-    const keyArrCheck = showClass
-      ? ["maLop", "maHK", "danhSachSV"]
-      : ["maCN", "maKhoaHoc", "maHK", "danhSachSV"];
+    // console.log("value choose: ", initChoose);
+    const dataKhoaHoc = danhSachKhoaHoc?.map((item) => item.value);
+    // console.log("data map: ", dataMap);
+    const keyArrCheck =
+      initChoose?.isLop === 3
+        ? ["maHK", "danhSachSV"]
+        : initChoose?.isLop === 2
+        ? ["maLop", "maHK", "danhSachSV"]
+        : ["maCN", "maHK", "danhSachSV"];
     if (isCheckSomeFieldEmpty(initChoose, keyArrCheck)) {
       // Hiển thị thông báo hoặc thực hiện logic nếu có trường bị trống
       return toast.warn("Vui lòng điền hết các trường");
+    } else if (initChoose?.isToanKhoaHoc === 2 && danhSachKhoaHoc.length <= 0) {
+      return toast.warn("Vui lòng chọn khóa học");
     } else {
       setOpenModaFile(true);
       setLoading(true);
@@ -150,20 +212,24 @@ const ThongKeDRL = () => {
         ...initChoose,
         tenKhoa: tenKhoa,
         isClass: showClass,
+        maKhoa: currentUser.maKhoa,
+        danhSachKhoaHoc: dataKhoaHoc,
       };
+      console.log("newValues: ", newValues);
       try {
+        // console.log("newValues: ", newValues);
         const res = await handleDataExportExcelKhoa(newValues);
         const res1 = await generateUrlExcel(res.dataBuffer.data, "excel_khoa");
         // console.log("ress: ", res);
         setData(res.data);
         setUrl(res1.filePath);
-
         setLoading(false);
       } catch (error) {
         console.log(error);
       }
     }
   };
+
   return (
     <Box m="2rem 2.5rem">
       <Header title={currentUser.name} subtitle="Xuất báo cáo" />
@@ -172,7 +238,7 @@ const ThongKeDRL = () => {
           <Select
             options={optionsOne}
             styles={customStyles}
-            placeholder="Danh Sách Chuyên Ngành"
+            placeholder="Danh Sách Theo"
             required
             onChange={(e) => {
               handleChangeOne(e.value);
@@ -180,7 +246,8 @@ const ThongKeDRL = () => {
             }}
           />
         </div>
-        {showClass ? (
+
+        {initChoose?.isLop === 2 ? (
           <div>
             <Select
               options={dataLop}
@@ -191,7 +258,18 @@ const ThongKeDRL = () => {
               onChange={(e) => handleChange("maLop", e?.value)}
             />
           </div>
-        ) : (
+        ) : initChoose?.isLop === 3 ? (
+          <Select
+            options={optionsTwo}
+            styles={customStyles}
+            placeholder="Tất Cả Khóa"
+            required
+            onChange={(e) => {
+              handleChangeTwo(e?.value);
+              handleChange("isToanKhoaHoc", e?.value);
+            }}
+          />
+        ) : initChoose?.isLop === 1 ? (
           <>
             <div>
               <Select
@@ -203,18 +281,31 @@ const ThongKeDRL = () => {
                 onChange={(e) => handleChange("maCN", e?.value)}
               />
             </div>
-            <div>
+            {/* <div>
               <Select
+                isMulti
                 options={dataCourse}
                 styles={customStyles}
-                placeholder="Chọn Khoá Học"
+                placeholder="Chọn Khóa Học"
                 required
-                onChange={(e) => handleChange("maKhoaHoc", e?.value)}
+                onChange={handleSelectChange}
               />
-            </div>
+            </div> */}
           </>
+        ) : null}
+        {initChoose.isToanKhoaHoc === 1 ? null : (
+          <div>
+            <Select
+              isMulti
+              options={dataCourse}
+              styles={customStyles}
+              placeholder="Chọn Khóa Học"
+              required
+              ref={selectRefKhoaHoc}
+              onChange={handleSelectChange}
+            />
+          </div>
         )}
-
         <div>
           <Select
             options={dataHocKi}
@@ -270,7 +361,11 @@ const ThongKeDRL = () => {
               </Grid>
             </Box>
             <div className="h-[560px]">
-              <ViewTable dataTable={data} isLop={initChoose.isLop} />
+              <ViewTable
+                dataTable={data}
+                isLop={initChoose.isLop}
+                isToanKhoaHoc={initChoose.isToanKhoaHoc}
+              />
             </div>
             {/* {url && (
               <DocViewer

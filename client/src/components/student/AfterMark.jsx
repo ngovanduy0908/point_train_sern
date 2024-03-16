@@ -269,7 +269,7 @@ const AfterMark = () => {
     const sum = sum1 + sum2 + sum3 + sum4 + sum5;
     setSum(sum);
   }, [pointStudentData]);
-  console.log("pointStudentData: ", pointStudentData);
+  // console.log("pointStudentData: ", pointStudentData);
   /*
 Ở đây, ta dùng destructuring để lấy ra các giá trị của name, checked và value của input element. 
 Sau đó, ta sử dụng setValues để cập nhật giá trị của values với name của checkbox hiện tại và giá trị của value nếu checkbox được checked, hoặc 0 nếu checkbox không được checked.

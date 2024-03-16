@@ -2417,7 +2417,8 @@ const DuyetDiemRenLuyenLT = ({
                 right: "15px",
                 cursor: "default",
                 padding: "9px 15px",
-                width: "auto",
+                width: "30px",
+                height: "30px",
               }}
             />
             <div
