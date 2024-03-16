@@ -17,6 +17,7 @@ import SchoolOutlinedIcon from "@mui/icons-material/SchoolOutlined";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
 import HouseIcon from "@mui/icons-material/House";
 import GroupsIcon from "@mui/icons-material/Groups";
+import EventIcon from "@mui/icons-material/Event";
 import { useEffect, useState } from "react";
 import BusinessIcon from "@mui/icons-material/Business";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -48,6 +49,11 @@ const navItems = [
     text: "Quản lý học kì",
     icon: <AssignmentOutlinedIcon />,
     path: "quanlyhocki",
+  },
+  {
+    text: "Quản lý thời gian",
+    icon: <EventIcon />,
+    path: "quanlythoigiancham",
   },
   {
     text: "Sinh hoạt bổ sung",

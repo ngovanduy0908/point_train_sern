@@ -32,5 +32,9 @@ async function remove(url, data, customHeaders) {
   return instance.delete(url, { data: { ...data }, withCredentials: true });
 }
 
-const ApiUtils = { get, post, put, postForm, remove };
+async function removeNoCondition(url, data, customHeaders) {
+  return instance.delete(url, { withCredentials: true });
+}
+
+const ApiUtils = { get, post, put, postForm, remove, removeNoCondition };
 export default ApiUtils;

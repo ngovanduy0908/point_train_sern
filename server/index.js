@@ -17,6 +17,7 @@ import proofMarkRouter from "./routes/proof_mark.js";
 import majorRouter from "./routes/major.js";
 import deadlineRouterAdmin from "./routes/deadlines_admin.js";
 import pointRouterAdmin from "./routes/point_admin.js";
+import deadlineRouterPoint from "./routes/deadlines_point.js";
 
 import { Server } from "socket.io";
 import multer from "multer";
@@ -53,6 +54,8 @@ app.use("/api/proof_mark", proofMarkRouter);
 app.use("/api/major", majorRouter);
 app.use("/api/major", majorRouter);
 app.use("/api/deadlines_admin", deadlineRouterAdmin);
+app.use("/api/deadlines_point", deadlineRouterPoint);
+
 app.use("/api/point_admin", pointRouterAdmin);
 
 const storage = multer.diskStorage({

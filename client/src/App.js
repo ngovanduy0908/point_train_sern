@@ -51,6 +51,7 @@ import QuanLyChuyenNganh from "components/admin/QuanLyChuyenNganh";
 import SinhHoatBoSung from "pages/admin/SinhHoatBoSung";
 import SinhHoatBoSungDetail from "pages/admin/SinhHoatBoSungDetail";
 import SV from "./pages/sv/SV";
+import DeadlinePoint from "components/admin/DeadlinePoint";
 const IO = process.env.REACT_APP_IO;
 function App() {
   // const navigate = useNavigate();
@@ -93,6 +94,8 @@ function App() {
               <Route path="/quanlykhoa" element={<QuanLyKhoa />} />
               <Route path="/quanlykhoahoc" element={<QuanLyKhoaHoc />} />
               <Route path="/quanlyhocki" element={<QuanLyHocKi />} />
+              <Route path="/quanlythoigiancham" element={<DeadlinePoint />} />
+
               <Route path="/sinhhoatbosung" element={<SinhHoatBoSung />} />
               <Route
                 path="/sinhhoatbosung/:maHK"
