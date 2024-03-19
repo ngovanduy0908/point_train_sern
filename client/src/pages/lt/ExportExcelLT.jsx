@@ -14,6 +14,7 @@ import {
   handleDataExportExcelGV,
 } from "utils/postDetails/handleDataExportExcelGV";
 import Progress from "components/Progress";
+import ViewTable from "components/viewPointTable/ViewTable";
 const optionsListDanhSach = generateOptionsListDanhSach();
 const customStyles = {
   option: (provided, state) => ({
@@ -30,6 +31,8 @@ const ExportExcelLT = () => {
   const [dataHocKi, setDataHocKi] = useState([]);
   const [url, setUrl] = useState();
   const [openModalFile, setOpenModaFile] = useState(false);
+  const [data, setData] = useState(null);
+
   const [initChoose, setInitChoose] = useState({
     maLop: "",
     maHK: "",
@@ -88,6 +91,8 @@ const ExportExcelLT = () => {
       const res1 = await generateUrlExcel(res.data, "text");
       setUrl(res1.filePath);
       setLoading(false);
+      setData(res.data);
+
       // console.log("res này là gì đấy: ", res);
     } catch (error) {
       console.log("error: ", error);
@@ -151,23 +156,9 @@ const ExportExcelLT = () => {
                 </Grid>
               </Grid>
             </Box>
-            <DocViewer
-              documents={[
-                {
-                  uri: url,
-                  fileType: "docx",
-                },
-              ]}
-              style={{ height: 560 }}
-              config={{
-                header: {
-                  disableHeader: false,
-                  disableFileName: false,
-                  retainURLParams: false,
-                },
-              }}
-              pluginRenderers={DocViewerRenderers}
-            />
+            <div className="h-[560px]">
+              <ViewTable dataTable={data} />
+            </div>
           </>
         )}
       </ModalV2>

@@ -73,7 +73,7 @@ const DanhSachSinhVienSHL = ({ maHK }) => {
         size: 120,
       },
       {
-        accessorKey: "status",
+        accessorKey: "status_admin",
         header: "Trạng Thái",
         size: 140,
         Cell: ({ cell, row }) => {

@@ -91,7 +91,7 @@ function App() {
             >
               <Route path="/" element={<Navigate to="/overview" />} />
               <Route path="/overview" element={<Overview />} />
-              <Route path="/quanlykhoa" element={<QuanLyKhoa />} />
+              <Route path="/qlk" element={<QuanLyKhoa />} />
               <Route path="/quanlykhoahoc" element={<QuanLyKhoaHoc />} />
               <Route path="/quanlyhocki" element={<QuanLyHocKi />} />
               <Route path="/quanlythoigiancham" element={<DeadlinePoint />} />

@@ -215,7 +215,7 @@ const QuanLyChuyenNganh = () => {
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Header title="KHOA" subtitle="Danh Sách Khoa" />
+      <Header title="Chuyên Ngành" subtitle="Danh Sách Chuyên Ngành" />
       <Box mt="40px">
         <MaterialReactTable
           displayColumnDefOptions={{

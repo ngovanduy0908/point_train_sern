@@ -33,7 +33,7 @@ const navItems = [
   {
     text: "Quản lý khoa",
     icon: <ApartmentOutlinedIcon />,
-    path: "quanlykhoa",
+    path: "qlk",
   },
   {
     text: "Quản lý chuyên ngành",

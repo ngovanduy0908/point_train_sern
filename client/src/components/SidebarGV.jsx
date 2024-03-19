@@ -32,11 +32,11 @@ const navItems = [
     icon: <FilePresentIcon />,
     path: "exportexcelgv",
   },
-  {
-    text: "Quản lý thời gian",
-    icon: <EventIcon />,
-    path: "quanlythoigian",
-  },
+  // {
+  //   text: "Quản lý thời gian",
+  //   icon: <EventIcon />,
+  //   path: "quanlythoigian",
+  // },
   {
     text: "Quản lý lớp học",
     icon: <SchoolOutlinedIcon />,
