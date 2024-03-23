@@ -774,15 +774,7 @@ export const updatePointTeacherZero = async (req, res) => {
       status_admin = ${status_admin === 1 ? 1 : 0}
       where 
       maSv = '${maSv}' and maHK = '${maHK}'`;
-      // db.query(q, (err, data) => {
-      //   if (err) return res.status(500).json(err);
 
-      //   db.query(q1, (err, data) => {
-      //     if (err) return res.status(500).json(err);
-
-      //     return res.status(200).json("Giáo viên cập nhật điểm thành công");
-      //   });
-      // });
       try {
         await new Promise((resolve, reject) => {
           db.query(q, (err, data) => {
@@ -809,12 +801,6 @@ export const updatePointTeacherZero = async (req, res) => {
             resolve();
           });
         });
-        // await new Promise((resolve, reject) => {
-        //   db.query(q3, (err, data) => {
-        //     if (err) reject(err);
-        //     resolve();
-        //   });
-        // });
 
         return res.status(200).json("Giáo viên cập nhật điểm thành công");
       } catch (error) {

@@ -269,18 +269,6 @@ export const changeInfoEmail = async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
   }
-  // let q;
-  // if (svOrGv === "1") {
-  //   q = `update students set email='${email}' where maSV='${maSv}'`;
-  // } else {
-  //   q = `update teacher set email='${email}' where maGv='${maGv}'`;
-  // }
-  // // const values = [req.body.maKhoa]
-
-  // db.query(q, (err, data) => {
-  //   if (err) return res.status(500).json(err);
-  //   return res.status(200).json("Thay doi sinh vien thanh cong");
-  // });
 };
 
 export const changeInfoPhone = (req, res) => {

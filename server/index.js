@@ -132,19 +132,29 @@ app.post(
       // console.log(record);
       if (record && record[1] !== undefined && record[1] !== null) {
         const point = record[4];
+        const maSv = record[1];
         db.query(
-          `SELECT maSv FROM point_citizen WHERE maSv = '${record[1]}' and maHK='${maHK}'`,
-          (err, data) => {
+          `select maSv from students where maSv = '${maSv}' and maLop = '${maLop}'`,
+          async (err, data) => {
             if (data.length > 0) {
               db.query(
-                "UPDATE point_citizen SET point = ?, maHK = ? WHERE maSv = ? and maHK = ?",
-                [point, maHK, data[0].maSv, maHK]
+                `SELECT maSv FROM point_citizen WHERE maSv = '${maSv}' and maHK='${maHK}'`,
+                (err, data) => {
+                  if (data.length > 0) {
+                    db.query(
+                      "UPDATE point_citizen SET point = ?, maHK = ? WHERE maSv = ? and maHK = ?",
+                      [point, maHK, data[0].maSv, maHK]
+                    );
+                  } else {
+                    db.query(
+                      "INSERT INTO point_citizen (maSv, maHK, point) VALUES (?, ?, ?)",
+                      [maSv, maHK, point]
+                    );
+                  }
+                }
               );
             } else {
-              db.query(
-                "INSERT INTO point_citizen (maSv, maHK, point) VALUES (?, ?, ?)",
-                [record[1], maHK, point]
-              );
+              console.log("handle skip");
             }
           }
         );
@@ -154,6 +164,674 @@ app.post(
   }
 );
 
+function generateQueryTBHK(tableName, field, maHK, maSv) {
+  return `
+    SELECT
+      ${tableName}.${field}NCKH1 + ${tableName}.${field}NCKH2 + ${tableName}.${field}NCKH3 + ${tableName}.${field}Olympic1 + ${tableName}.${field}Olympic2 
+      + ${tableName}.${field}Olympic3 + ${tableName}.${field}Olympic4 + ${tableName}.${field}NoRegulation + ${tableName}.${field}OnTime 
+      + ${tableName}.${field}Abandon + ${tableName}.${field}UnTrueTime + ${tableName}.${field}RightRule + ${tableName}.${field}Citizen 
+      + ${tableName}.${field}NoFullStudy + ${tableName}.${field}NoCard + ${tableName}.${field}NoAtivities + ${tableName}.${field}NoPayFee +
+      ${tableName}.${field}FullActive + ${tableName}.${field}AchievementSchool + ${tableName}.${field}AchievementCity 
+      + ${tableName}.${field}Advise + ${tableName}.${field}Irresponsible + ${tableName}.${field}NoCultural +
+      ${tableName}.${field}PositiveStudy + ${tableName}.${field}PositiveLove + ${tableName}.${field}Warn + ${tableName}.${field}NoProtect +
+      ${tableName}.${field}Monitor + ${tableName}.${field}Bonus + ${tableName}.${field}IrresponsibleMonitor AS 'sum'
+    FROM
+      ${tableName}
+    WHERE
+      maHK = '${maHK}' AND
+      maSv = '${maSv}'
+  `;
+}
+
+function updatePointTBHK(tableName, field, maHK, maSv, point) {
+  return `
+  update ${tableName} set ${field}DiemTBHK = '${point}' where maSv = '${maSv}' and maHK = '${maHK}'
+  `;
+}
+
+app.post(
+  "/api/excel/students/diemtbhk/:maLop/:maHK",
+  upload.single("file"),
+  async (req, res) => {
+    // if (err) return res.status(500).json(err);
+    const maLop = req.params.maLop;
+    const maHK = req.params.maHK;
+    const file = req.file.path;
+    const workbook = xlsx.readFile(file);
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const data = xlsx.utils.sheet_to_json(sheet, { header: 1, range: 1 });
+    // console.log(data);
+    // console.log(maLop);
+    for (let i = 1; i < data.length; i++) {
+      let point;
+      const record = data[i];
+      // console.log("record: ", record);
+      if (record && record[0] !== undefined && record[0] !== null) {
+        // console.log("record: ", typeof record[5]);
+        const diemTBHK = record[5];
+        const maSv = record[0];
+        point =
+          diemTBHK >= 3.6
+            ? 20
+            : diemTBHK >= 3.2
+            ? 18
+            : diemTBHK >= 2.5
+            ? 16
+            : diemTBHK >= 2.0
+            ? 12
+            : diemTBHK >= 1.5
+            ? 10
+            : diemTBHK >= 1.0
+            ? 8
+            : 0;
+        db.query(
+          `select maSv from students where maSv = '${maSv}' and maLop = '${maLop}'`,
+          async (err, data) => {
+            if (data.length > 0) {
+              db.query(
+                `SELECT maSv FROM point_medium WHERE maSv = '${maSv}' and maHK='${maHK}'`,
+                async (err, data) => {
+                  if (data.length > 0) {
+                    await new Promise((resolve, reject) => {
+                      db.query(
+                        `
+                      UPDATE point_medium SET point_average = ${diemTBHK} WHERE maSv = '${maSv}' and maHK = '${maHK}'
+                    `,
+                        (err, data) => {
+                          if (err) reject(err);
+                          else {
+                            // console.log("phai vao day chu nhi");
+                            resolve();
+                          }
+                        }
+                      );
+                    });
+
+                    const q = `select * from point where maHK='${maHK}' and maSv='${maSv}'`;
+
+                    try {
+                      // console.log("point: ", point);
+
+                      await new Promise((resolve, reject) => {
+                        db.query(q, async (err, data) => {
+                          if (err) reject(err);
+                          if (data.length > 0) {
+                            const { status, status_teacher } = data[0];
+                            if (status === 0) {
+                              // console.log("sv cham");
+                              const sumSV = generateQueryTBHK(
+                                "point_student",
+                                "sv",
+                                maHK,
+                                maSv
+                              );
+                              const sumSVOld = await new Promise(
+                                (resolve, reject) => {
+                                  db.query(sumSV, (err, data) => {
+                                    if (err) reject(err);
+                                    else resolve(data[0].sum);
+                                  });
+                                }
+                              );
+                              const sumSVNew = sumSVOld + point;
+                              // console.log("sumSVNew: ", sumSVNew);
+                              await new Promise((resolve, reject) => {
+                                db.query(
+                                  `UPDATE point SET point_student = '${sumSVNew}'
+                                WHERE maSv = '${maSv}' AND maHK = '${maHK}'`,
+                                  (err) => {
+                                    if (err) reject(err);
+                                    else resolve();
+                                  }
+                                );
+                              });
+                              const updatePointStudent = updatePointTBHK(
+                                "point_student",
+                                "sv",
+                                maHK,
+                                maSv,
+                                point
+                              );
+
+                              await new Promise((resolve, reject) => {
+                                db.query(updatePointStudent, (err, data) => {
+                                  if (err) reject(err);
+                                  else resolve();
+                                });
+                              });
+                            }
+
+                            if (status === 1 && status_teacher === 0) {
+                              const sumSV = generateQueryTBHK(
+                                "point_student",
+                                "sv",
+                                maHK,
+                                maSv
+                              );
+                              const sumLT = generateQueryTBHK(
+                                "point_monitor",
+                                "lt",
+                                maHK,
+                                maSv
+                              );
+                              const updatePointStudent = updatePointTBHK(
+                                "point_student",
+                                "sv",
+                                maHK,
+                                maSv,
+                                point
+                              );
+                              const updatePointMonitor = updatePointTBHK(
+                                "point_monitor",
+                                "lt",
+                                maHK,
+                                maSv,
+                                point
+                              );
+                              try {
+                                const [sumSVOld, sumLTOld] = await Promise.all([
+                                  new Promise((resolve, reject) => {
+                                    db.query(sumSV, (err, data) => {
+                                      if (err) reject(err);
+                                      else resolve(data[0].sum);
+                                    });
+                                  }),
+                                  new Promise((resolve, reject) => {
+                                    db.query(sumLT, (err, data) => {
+                                      if (err) reject(err);
+                                      else resolve(data[0].sum);
+                                    });
+                                  }),
+                                ]);
+
+                                const sumSVNew = sumSVOld + point;
+                                const sumLTNew = sumLTOld + point;
+
+                                // Tiến hành cập nhật điểm
+                                await new Promise((resolve, reject) => {
+                                  db.query(
+                                    `UPDATE point SET point_student = '${sumSVNew}',
+                                  point_monitor = '${sumLTNew}'
+                                  WHERE maSv = '${maSv}' AND maHK = '${maHK}'`,
+                                    (err) => {
+                                      if (err) reject(err);
+                                      else resolve();
+                                    }
+                                  );
+                                });
+                                await Promise.all([
+                                  new Promise((resolve, reject) => {
+                                    db.query(
+                                      updatePointStudent,
+                                      (err, data) => {
+                                        if (err) reject(err);
+                                        else resolve();
+                                      }
+                                    );
+                                  }),
+                                  new Promise((resolve, reject) => {
+                                    db.query(
+                                      updatePointMonitor,
+                                      (err, data) => {
+                                        if (err) reject(err);
+                                        else resolve();
+                                      }
+                                    );
+                                  }),
+                                ]);
+
+                                // Trả về kết quả nếu cần
+                                // return res.status(200).json("Thành công");
+                              } catch (error) {
+                                return res.status(500).json("Lỗi server");
+                              }
+                            }
+                            if (status_teacher === 1) {
+                              const sumSV = generateQueryTBHK(
+                                "point_student",
+                                "sv",
+                                maHK,
+                                maSv
+                              );
+                              const sumLT = generateQueryTBHK(
+                                "point_monitor",
+                                "lt",
+                                maHK,
+                                maSv
+                              );
+                              const sumGV = generateQueryTBHK(
+                                "point_teacher",
+                                "gv",
+                                maHK,
+                                maSv
+                              );
+                              const updatePointStudent = updatePointTBHK(
+                                "point_student",
+                                "sv",
+                                maHK,
+                                maSv,
+                                point
+                              );
+                              const updatePointMonitor = updatePointTBHK(
+                                "point_monitor",
+                                "lt",
+                                maHK,
+                                maSv,
+                                point
+                              );
+                              const updatePointTeacher = updatePointTBHK(
+                                "point_teacher",
+                                "gv",
+                                maHK,
+                                maSv,
+                                point
+                              );
+
+                              try {
+                                const [sumSVOld, sumLTOld, sumGVOld] =
+                                  await Promise.all([
+                                    new Promise((resolve, reject) => {
+                                      db.query(sumSV, (err, data) => {
+                                        if (err) reject(err);
+                                        else resolve(data[0].sum);
+                                      });
+                                    }),
+                                    new Promise((resolve, reject) => {
+                                      db.query(sumLT, (err, data) => {
+                                        if (err) reject(err);
+                                        else resolve(data[0].sum);
+                                      });
+                                    }),
+                                    new Promise((resolve, reject) => {
+                                      db.query(sumGV, (err, data) => {
+                                        if (err) reject(err);
+                                        else resolve(data[0].sum);
+                                      });
+                                    }),
+                                  ]);
+
+                                const sumSVNew = sumSVOld + point;
+                                const sumLTNew = sumLTOld + point;
+                                const sumGVNew = sumGVOld + point;
+
+                                // Tiến hành cập nhật điểm
+                                await new Promise((resolve, reject) => {
+                                  db.query(
+                                    `UPDATE point SET point_student = '${sumSVNew}',
+                                  point_monitor = '${sumLTNew}',
+                                  point_teacher = '${sumGVNew}'
+                                  WHERE maSv = '${maSv}' AND maHK = '${maHK}'`,
+                                    (err) => {
+                                      if (err) reject(err);
+                                      else resolve();
+                                    }
+                                  );
+                                });
+                                await Promise.all([
+                                  new Promise((resolve, reject) => {
+                                    db.query(
+                                      updatePointStudent,
+                                      (err, data) => {
+                                        if (err) reject(err);
+                                        else resolve();
+                                      }
+                                    );
+                                  }),
+                                  new Promise((resolve, reject) => {
+                                    db.query(
+                                      updatePointMonitor,
+                                      (err, data) => {
+                                        if (err) reject(err);
+                                        else resolve();
+                                      }
+                                    );
+                                  }),
+                                  new Promise((resolve, reject) => {
+                                    db.query(
+                                      updatePointTeacher,
+                                      (err, data) => {
+                                        if (err) reject(err);
+                                        else resolve();
+                                      }
+                                    );
+                                  }),
+                                ]);
+
+                                // Trả về kết quả nếu cần
+                                // return res.status(200).json("Thành công");
+                              } catch (error) {
+                                return res.status(500).json("Lỗi server");
+                              }
+                              // await new Promise((resolve, reject) => {
+                              //   db.query(sumSV, (err, data) => {
+                              //     if (err) reject(err);
+                              //     // resolve();
+                              //     const sumNew = data[0].sum + point;
+                              //     // console.log("sumnew: ", sumNew);
+                              //     db.query(
+                              //       `update point set point_student = '${sumNew}' where maSv = '${maSv}' and maHK = '${maHK}'`
+                              //     );
+                              //   });
+                              // });
+                            }
+                          }
+                          // resolve();
+                          // console.log("data: ", data[0]);
+                        });
+                      });
+                    } catch (error) {
+                      console.log(error);
+                    }
+                  } else {
+                    await new Promise((resolve, reject) => {
+                      db.query(
+                        `
+                    INSERT INTO point_medium (maSv, maHK, point_average) VALUES ('${maSv}', '${maHK}', ${diemTBHK})
+                    `,
+                        (err, data) => {
+                          if (err) reject(err);
+                          else {
+                            resolve();
+                          }
+                        }
+                      );
+                    });
+                    const q = `select * from point where maHK='${maHK}' and maSv='${maSv}'`;
+
+                    try {
+                      // console.log("point: ", point);
+
+                      await new Promise((resolve, reject) => {
+                        db.query(q, async (err, data) => {
+                          if (err) reject(err);
+                          if (data.length > 0) {
+                            const { status, status_teacher } = data[0];
+                            if (status === 0) {
+                              // console.log("sv cham");
+                              const sumSV = generateQueryTBHK(
+                                "point_student",
+                                "sv",
+                                maHK,
+                                maSv
+                              );
+                              const sumSVOld = await new Promise(
+                                (resolve, reject) => {
+                                  db.query(sumSV, (err, data) => {
+                                    if (err) reject(err);
+                                    else resolve(data[0].sum);
+                                  });
+                                }
+                              );
+                              const sumSVNew = sumSVOld + point;
+                              // console.log("sumSVNew: ", sumSVNew);
+                              await new Promise((resolve, reject) => {
+                                db.query(
+                                  `UPDATE point SET point_student = '${sumSVNew}'
+                                WHERE maSv = '${maSv}' AND maHK = '${maHK}'`,
+                                  (err) => {
+                                    if (err) reject(err);
+                                    else resolve();
+                                  }
+                                );
+                              });
+                              const updatePointStudent = updatePointTBHK(
+                                "point_student",
+                                "sv",
+                                maHK,
+                                maSv,
+                                point
+                              );
+
+                              await new Promise((resolve, reject) => {
+                                db.query(updatePointStudent, (err, data) => {
+                                  if (err) reject(err);
+                                  else resolve();
+                                });
+                              });
+                            }
+
+                            if (status === 1 && status_teacher === 0) {
+                              const sumSV = generateQueryTBHK(
+                                "point_student",
+                                "sv",
+                                maHK,
+                                maSv
+                              );
+                              const sumLT = generateQueryTBHK(
+                                "point_monitor",
+                                "lt",
+                                maHK,
+                                maSv
+                              );
+                              const updatePointStudent = updatePointTBHK(
+                                "point_student",
+                                "sv",
+                                maHK,
+                                maSv,
+                                point
+                              );
+                              const updatePointMonitor = updatePointTBHK(
+                                "point_monitor",
+                                "lt",
+                                maHK,
+                                maSv,
+                                point
+                              );
+                              try {
+                                const [sumSVOld, sumLTOld] = await Promise.all([
+                                  new Promise((resolve, reject) => {
+                                    db.query(sumSV, (err, data) => {
+                                      if (err) reject(err);
+                                      else resolve(data[0].sum);
+                                    });
+                                  }),
+                                  new Promise((resolve, reject) => {
+                                    db.query(sumLT, (err, data) => {
+                                      if (err) reject(err);
+                                      else resolve(data[0].sum);
+                                    });
+                                  }),
+                                ]);
+
+                                const sumSVNew = sumSVOld + point;
+                                const sumLTNew = sumLTOld + point;
+
+                                // Tiến hành cập nhật điểm
+                                await new Promise((resolve, reject) => {
+                                  db.query(
+                                    `UPDATE point SET point_student = '${sumSVNew}',
+                                  point_monitor = '${sumLTNew}'
+                                  WHERE maSv = '${maSv}' AND maHK = '${maHK}'`,
+                                    (err) => {
+                                      if (err) reject(err);
+                                      else resolve();
+                                    }
+                                  );
+                                });
+                                await Promise.all([
+                                  new Promise((resolve, reject) => {
+                                    db.query(
+                                      updatePointStudent,
+                                      (err, data) => {
+                                        if (err) reject(err);
+                                        else resolve();
+                                      }
+                                    );
+                                  }),
+                                  new Promise((resolve, reject) => {
+                                    db.query(
+                                      updatePointMonitor,
+                                      (err, data) => {
+                                        if (err) reject(err);
+                                        else resolve();
+                                      }
+                                    );
+                                  }),
+                                ]);
+
+                                // Trả về kết quả nếu cần
+                                // return res.status(200).json("Thành công");
+                              } catch (error) {
+                                return res.status(500).json("Lỗi server");
+                              }
+                            }
+                            if (status_teacher === 1) {
+                              const sumSV = generateQueryTBHK(
+                                "point_student",
+                                "sv",
+                                maHK,
+                                maSv
+                              );
+                              const sumLT = generateQueryTBHK(
+                                "point_monitor",
+                                "lt",
+                                maHK,
+                                maSv
+                              );
+                              const sumGV = generateQueryTBHK(
+                                "point_teacher",
+                                "gv",
+                                maHK,
+                                maSv
+                              );
+                              const updatePointStudent = updatePointTBHK(
+                                "point_student",
+                                "sv",
+                                maHK,
+                                maSv,
+                                point
+                              );
+                              const updatePointMonitor = updatePointTBHK(
+                                "point_monitor",
+                                "lt",
+                                maHK,
+                                maSv,
+                                point
+                              );
+                              const updatePointTeacher = updatePointTBHK(
+                                "point_teacher",
+                                "gv",
+                                maHK,
+                                maSv,
+                                point
+                              );
+
+                              try {
+                                const [sumSVOld, sumLTOld, sumGVOld] =
+                                  await Promise.all([
+                                    new Promise((resolve, reject) => {
+                                      db.query(sumSV, (err, data) => {
+                                        if (err) reject(err);
+                                        else resolve(data[0].sum);
+                                      });
+                                    }),
+                                    new Promise((resolve, reject) => {
+                                      db.query(sumLT, (err, data) => {
+                                        if (err) reject(err);
+                                        else resolve(data[0].sum);
+                                      });
+                                    }),
+                                    new Promise((resolve, reject) => {
+                                      db.query(sumGV, (err, data) => {
+                                        if (err) reject(err);
+                                        else resolve(data[0].sum);
+                                      });
+                                    }),
+                                  ]);
+
+                                const sumSVNew = sumSVOld + point;
+                                const sumLTNew = sumLTOld + point;
+                                const sumGVNew = sumGVOld + point;
+
+                                // Tiến hành cập nhật điểm
+                                await new Promise((resolve, reject) => {
+                                  db.query(
+                                    `UPDATE point SET point_student = '${sumSVNew}',
+                                  point_monitor = '${sumLTNew}',
+                                  point_teacher = '${sumGVNew}'
+                                  WHERE maSv = '${maSv}' AND maHK = '${maHK}'`,
+                                    (err) => {
+                                      if (err) reject(err);
+                                      else resolve();
+                                    }
+                                  );
+                                });
+                                await Promise.all([
+                                  new Promise((resolve, reject) => {
+                                    db.query(
+                                      updatePointStudent,
+                                      (err, data) => {
+                                        if (err) reject(err);
+                                        else resolve();
+                                      }
+                                    );
+                                  }),
+                                  new Promise((resolve, reject) => {
+                                    db.query(
+                                      updatePointMonitor,
+                                      (err, data) => {
+                                        if (err) reject(err);
+                                        else resolve();
+                                      }
+                                    );
+                                  }),
+                                  new Promise((resolve, reject) => {
+                                    db.query(
+                                      updatePointTeacher,
+                                      (err, data) => {
+                                        if (err) reject(err);
+                                        else resolve();
+                                      }
+                                    );
+                                  }),
+                                ]);
+
+                                // Trả về kết quả nếu cần
+                                // return res.status(200).json("Thành công");
+                              } catch (error) {
+                                return res.status(500).json("Lỗi server");
+                              }
+                              // await new Promise((resolve, reject) => {
+                              //   db.query(sumSV, (err, data) => {
+                              //     if (err) reject(err);
+                              //     // resolve();
+                              //     const sumNew = data[0].sum + point;
+                              //     // console.log("sumnew: ", sumNew);
+                              //     db.query(
+                              //       `update point set point_student = '${sumNew}' where maSv = '${maSv}' and maHK = '${maHK}'`
+                              //     );
+                              //   });
+                              // });
+                            }
+                          }
+                          // resolve();
+                          // console.log("data: ", data[0]);
+                        });
+                      });
+                    } catch (error) {
+                      console.log(error);
+                    }
+                    // db.query(q, (err, data) => {
+                    //   if (err) return res.status(500).json(err);
+
+                    //   console.log("data: ", data);
+                    // });
+                  }
+                }
+              );
+            } else {
+              console.log("handle skip here");
+            }
+          }
+        );
+      }
+    }
+    return res.status(200).json("Thanh cong");
+  }
+);
+
+/*
 app.post(
   "/api/excel/students/diemtbhk/:maLop/:maHK",
   upload.single("file"),
@@ -195,6 +873,7 @@ app.post(
     return res.status(200).json("Thanh cong");
   }
 );
+*/
 
 app.post("/api/upload", upload.array("images", 10), (req, res) => {
   // const currentTime = new Date().getTime();

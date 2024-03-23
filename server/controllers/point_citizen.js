@@ -22,33 +22,41 @@ export const addPointCitizen = (req, res) => {
   if (!token) return res.status(401).json("Not authenticated");
   const maHK = req.params.maHK;
   const newData = req.body;
-  const q = `
-  select point_citizen.maSv from point_citizen, students
-   where point_citizen.maSv = students.maSv 
-   and (point_citizen.maHK=? 
-   and point_citizen.maSv=? or students.maSv=? and students.maLop!=?)
-  `;
-  db.query(
-    q,
-    [maHK, newData.maSv, newData.maSv, newData.maLop],
-    (err, data) => {
-      if (err) return res.status(409).json(err);
+  const q1 = `SELECT maSv FROM students WHERE maSv = '${newData.maSv}'`;
+  db.query(q1, (err, data) => {
+    if (err) return res.status(409).json(err);
+    if (data.length > 0) {
+      const q = `
+      select point_citizen.maSv from point_citizen, students
+       where point_citizen.maSv = students.maSv 
+       and (point_citizen.maHK=? 
+       and point_citizen.maSv=? or students.maSv=? and students.maLop!=?)
+      `;
+      db.query(
+        q,
+        [maHK, newData.maSv, newData.maSv, newData.maLop],
+        (err, data) => {
+          if (err) return res.status(409).json(err);
 
-      if (data.length)
-        return res
-          .status(409)
-          .json("Mã sinh viên này đã tồn tại điểm Tuần CDSV");
+          if (data.length)
+            return res
+              .status(409)
+              .json("Mã sinh viên này đã tồn tại điểm Tuần CDSV");
 
-      const q = "insert into point_citizen(maSv, maHK, point) values(?)";
+          const q = "insert into point_citizen(maSv, maHK, point) values(?)";
 
-      const values = [newData.maSv, maHK, newData.point];
+          const values = [newData.maSv, maHK, newData.point];
 
-      db.query(q, [values], (err, data) => {
-        if (err) return res.status(409).json(err);
-        return res.status(200).json("Diem tuan CDSV da thanh cong");
-      });
+          db.query(q, [values], (err, data) => {
+            if (err) return res.status(409).json(err);
+            return res.status(200).json("Diem tuan CDSV da thanh cong");
+          });
+        }
+      );
+    } else {
+      return res.status(409).json("Không tồn tại sinh viên");
     }
-  );
+  });
 };
 
 export const editPointCitizen = (req, res) => {

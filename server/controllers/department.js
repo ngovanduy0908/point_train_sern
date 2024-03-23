@@ -23,7 +23,7 @@ export const getNameDepartmentByMa = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not authenticated");
   const { maKhoa } = req.params;
-  console.log("maKhoa: ", maKhoa);
+  // console.log("maKhoa: ", maKhoa);
   const q = `
   SELECT 
   name as 'tenKhoa'
@@ -152,7 +152,7 @@ function joinArrayWithComma(arr) {
 export const viewExcelBC = async (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not authenticated");
-  console.log("req: ", req.body);
+  // console.log("req: ", req.body);
   const {
     maLop,
     maHK,
@@ -185,7 +185,7 @@ export const viewExcelBC = async (req, res) => {
   const year = currentDate.getFullYear();
   // let q;
   if (isLop === 2) {
-    // console.log("trng nay: ", req.body);
+    // console.log("trng nay theo lop: ");
     const q = `
     select
   students.name,
@@ -300,6 +300,7 @@ export const viewExcelBC = async (req, res) => {
     point.point_teacher >= '${danhSachSV.min}' and point.point_teacher <= '${danhSachSV.max}' and
     point.status_teacher = 1
     `;
+    // console.log("vao day chuyen nganh");
     db.query(q, (err, data) => {
       if (err) return res.status(500).json(err);
       const handleData = data?.map((item, idx) => ({

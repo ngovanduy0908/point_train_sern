@@ -219,6 +219,7 @@ const ThongKeDRL = () => {
       try {
         // console.log("newValues: ", newValues);
         const res = await handleDataExportExcelKhoa(newValues);
+        // console.log("vao trong nay ne: ", res);
         const res1 = await generateUrlExcel(res.dataBuffer.data, "excel_khoa");
         // console.log("ress: ", res);
         setData(res.data);

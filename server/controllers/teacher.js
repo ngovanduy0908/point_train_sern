@@ -89,6 +89,7 @@ export const viewExcelBC = async (req, res) => {
   students.phone_number as "phone",
   point.gvNote,
   semester.name as "tenHK", 
+  students.maLop as "tenLop",
   point_teacher.gvDiemTBHK + point_teacher.gvNCKH1 + point_teacher.gvNCKH2 + point_teacher.gvNCKH3 + point_teacher.gvOlympic1 + point_teacher.gvOlympic2 + point_teacher.gvOlympic3 + point_teacher.gvOlympic4 + point_teacher.gvNoRegulation + point_teacher.gvOnTime + point_teacher.gvAbandon + point_teacher.gvUnTrueTime as 'sum1', 
   point_teacher.gvRightRule + point_teacher.gvCitizen + point_teacher.gvNoFullStudy + point_teacher.gvNoCard + point_teacher.gvNoAtivities + point_teacher.gvNoPayFee as 'sum2',
   point_teacher.gvFullActive + point_teacher.gvAchievementSchool + point_teacher.gvAchievementCity + point_teacher.gvAdvise + point_teacher.gvIrresponsible + point_teacher.gvNoCultural as 'sum3',

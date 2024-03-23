@@ -105,7 +105,7 @@ const ExportExcelGV = () => {
       };
       // console.log("click vao day khong nao: ", valuePost);
       const res = await handleDataExportExcelGV(valuePost);
-      // console.log("res: ", res);
+      console.log("res: ", res);
       const res1 = await generateUrlExcel(res.dataBuffer.data, "excel_gv");
       setData(res.data);
       // console.log("vao day: ", res1);

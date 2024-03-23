@@ -224,6 +224,7 @@ const Mark = () => {
           withCredentials: true,
         }
       );
+      // console.log("vao day nao: ", getCitizenMediumPoint);
       setCitizenMediumPointData(getCitizenMediumPoint.data);
     } catch (error) {
       console.log(error.response.data);

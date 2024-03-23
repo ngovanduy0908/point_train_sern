@@ -55,11 +55,10 @@ const ViewTable = ({ dataTable, isLop, isToanKhoaHoc }) => {
                 <th class="border border-slate-600 border-solid align-middle w-[18%]">
                   Họ và tên
                 </th>
-                {(isLop === 1 || isToanKhoaHoc) && (
-                  <th class="border border-slate-600 border-solid align-middle w-[10%]">
-                    Lớp
-                  </th>
-                )}
+
+                <th class="border border-slate-600 border-solid align-middle w-[10%]">
+                  Lớp
+                </th>
 
                 <th class="border border-slate-600 border-solid text-center w-[25%] h-full">
                   ĐRL được đánh giá
@@ -112,15 +111,15 @@ const ViewTable = ({ dataTable, isLop, isToanKhoaHoc }) => {
                       {item?.name}
                     </span>
                   </td>
-                  {(isLop === 1 ||
+                  {/* {(isLop === 1 ||
                     isToanKhoaHoc === 3 ||
-                    isToanKhoaHoc === 1) && (
-                    <td class="border border-slate-600 border-solid ">
-                      <span className=" line-clamp-1 text-left px-2 text-base">
-                        {item?.tenLop}
-                      </span>
-                    </td>
-                  )}
+                    isToanKhoaHoc === 1) && ( */}
+                  <td class="border border-slate-600 border-solid ">
+                    <span className=" line-clamp-1 text-left px-2 text-base">
+                      {item?.tenLop}
+                    </span>
+                  </td>
+                  {/* )} */}
                   <td class="border border-slate-600 border-solid border-t-0">
                     <tr className="flex">
                       <td class="border border-slate-600 border-solid  w-[30%] py-1 border-b-0 border-t-0 border-l-0">
@@ -162,6 +161,10 @@ const ViewTable = ({ dataTable, isLop, isToanKhoaHoc }) => {
               <tr className="text-[15px]">
                 <td class="border border-slate-600 border-solid"></td>
                 <td class="border border-slate-600 border-solid"></td>
+                <td class="border border-slate-600 border-solid ">
+                  <span className=" line-clamp-1 text-left px-2 text-base"></span>
+                </td>
+
                 <td class="border border-slate-600 border-solid ">
                   <span className=" line-clamp-1 text-left px-2 text-base"></span>
                 </td>

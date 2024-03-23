@@ -21,31 +21,37 @@ export const addPointMedium = (req, res) => {
   const maHK = req.params.maHK;
   const newData = req.body;
   // console.log("newdara: ", newData);
-  // const q1 = `SELECT maSv FROM students WHERE maLop != '${newData.maLop}'`
-  const q = `select point_medium.maSv from point_medium, students
-   where point_medium.maSv = students.maSv 
-   and (point_medium.maHK=? 
-   and point_medium.maSv=? or students.maSv=? and students.maLop!=?)
-   `;
-  db.query(
-    q,
-    [maHK, newData.maSv, newData.maSv, newData.maLop],
-    (err, data) => {
-      if (err) return res.status(500).json(err);
+  const q1 = `SELECT maSv FROM students WHERE maSv = '${newData.maSv}'`;
+  db.query(q1, (err, data) => {
+    if (err) return res.status(409).json(err);
+    if (data.length > 0) {
+      const q = `select point_medium.maSv from point_medium, students
+      where point_medium.maSv = students.maSv 
+      and (point_medium.maHK=? 
+      and point_medium.maSv=? or students.maSv=? and students.maLop!=?)
+      `;
+      db.query(
+        q,
+        [maHK, newData.maSv, newData.maSv, newData.maLop],
+        (err, data) => {
+          if (err) return res.status(409).json(err);
 
-      if (data.length)
-        return res.status(409).json("Mã sinh viên này đã tồn tại điểm TBHK");
+          if (data.length) return res.status(409).json("Không hợp lệ");
+          const q =
+            "insert into point_medium(maSv, maHK, point_average) values(?)";
 
-      const q = "insert into point_medium(maSv, maHK, point_average) values(?)";
+          const values = [newData.maSv, maHK, newData.point];
 
-      const values = [newData.maSv, maHK, newData.point];
-
-      db.query(q, [values], (err, data) => {
-        if (err) return res.status(500).json(err);
-        return res.status(200).json("Diem TBHK da thanh cong");
-      });
+          db.query(q, [values], (err, data) => {
+            if (err) return res.status(500).json(err);
+            return res.status(200).json("Diem TBHK da thanh cong");
+          });
+        }
+      );
+    } else {
+      return res.status(409).json("Không tồn tại sinh viên");
     }
-  );
+  });
 };
 
 export const editPointMedium = (req, res) => {

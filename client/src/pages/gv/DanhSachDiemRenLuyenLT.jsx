@@ -78,7 +78,7 @@ const DanhSachDiemRenLuyenLT = () => {
         size: 120,
       },
       {
-        accessorKey: "status",
+        accessorKey: "status_teacher",
         header: "Trạng Thái",
         size: 140,
         Cell: ({ cell, row }) => {
