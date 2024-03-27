@@ -56,6 +56,7 @@ const QuanLyGiaoVien = () => {
       tableData.push(values);
       setTableData([...tableData]);
       toast.success("Thêm giáo viên thành công");
+      setCreateModalOpen(false);
     } catch (error) {
       // setErr(error.response.data);
       toast.error(error.response.data);
@@ -63,19 +64,23 @@ const QuanLyGiaoVien = () => {
   };
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
-    if (!Object.keys(validationErrors).length) {
-      tableData[row.index] = values;
-      await axios.put(
-        `http://localhost:8800/api/teachers/${currentUser.maKhoa}/${values.maGv}`,
-        values,
-        {
-          withCredentials: true,
-        }
-      );
-      //send/receive api updates here, then refetch or update local table data for re-render
-      setTableData([...tableData]);
-      exitEditingMode(); //required to exit editing mode and close modal
-      toast.success("Sửa giáo viên thành công");
+    try {
+      if (!Object.keys(validationErrors).length) {
+        tableData[row.index] = values;
+        await axios.put(
+          `http://localhost:8800/api/teachers/${currentUser.maKhoa}/${row.original.maGv}`,
+          values,
+          {
+            withCredentials: true,
+          }
+        );
+        //send/receive api updates here, then refetch or update local table data for re-render
+        setTableData([...tableData]);
+        exitEditingMode(); //required to exit editing mode and close modal
+        toast.success("Sửa giáo viên thành công");
+      }
+    } catch (error) {
+      toast.error("Mã giáo viên đã tồn tại");
     }
   };
 
@@ -218,7 +223,6 @@ export const CreateNewAccountModal = ({
   const handleSubmit = () => {
     //put your validation logic here
     onSubmit(values);
-    onClose();
   };
 
   return (

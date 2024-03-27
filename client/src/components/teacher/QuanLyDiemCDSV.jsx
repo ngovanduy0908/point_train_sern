@@ -60,12 +60,13 @@ const QuanLyDiemCDSV = () => {
   // console.log(tableData);
   const handleCreateNewRow = async (values) => {
     // console.log(values);
-    // console.log(maLop);
     const newValues = {
       ...values,
       maLop: maLop,
     };
     try {
+      // console.log("?");
+
       await axios.post(
         `http://localhost:8800/api/point_citizen/${maHK}`,
         newValues,
@@ -75,6 +76,7 @@ const QuanLyDiemCDSV = () => {
       );
       tableData.push(values);
       setTableData([...tableData]);
+      // console.log("talble data: ", tableData);
       getAllClass();
       // window.location.href = `http://localhost:3000/quanlylopchunhiem/uploadfilecdsv/${maLop}/${maHK}`;
     } catch (error) {
@@ -363,6 +365,7 @@ export const CreateUploadFileSV = ({
           withCredentials: true,
         }
       );
+      // console.log("vao day xem nao: ", res);
       await getAllClass();
       await onClose();
       toast.success("Cập nhật điểm thành công.");

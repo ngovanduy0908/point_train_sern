@@ -97,20 +97,24 @@ const QuanLyLopHoc = () => {
   };
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
-    if (!Object.keys(validationErrors).length) {
-      tableData[row.index] = values;
-      // console.log(values);
-      await axios.put(
-        `http://localhost:8800/api/class/${row.original.maLop}`,
-        values,
-        {
-          withCredentials: true,
-        }
-      );
-      //send/receive api updates here, then refetch or update local table data for re-render
-      setTableData([...tableData]);
-      exitEditingMode(); //required to exit editing mode and close modal
-      toast.success("Sửa lớp học thành công");
+    try {
+      if (!Object.keys(validationErrors).length) {
+        tableData[row.index] = values;
+        // console.log(values);
+        await axios.put(
+          `http://localhost:8800/api/class/${row.original.maLop}`,
+          values,
+          {
+            withCredentials: true,
+          }
+        );
+        //send/receive api updates here, then refetch or update local table data for re-render
+        setTableData([...tableData]);
+        exitEditingMode(); //required to exit editing mode and close modal
+        toast.success("Sửa lớp học thành công");
+      }
+    } catch (error) {
+      toast.error("Mã lớp đã tồn tại.");
     }
   };
 

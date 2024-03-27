@@ -12,7 +12,7 @@ export const getAllPointCitizenByMa = (req, res) => {
   `;
   db.query(q, (err, data) => {
     if (err) return res.status(err).json(err);
-    console.log("data: ", data);
+    // console.log("data: ", data);
     return res.status(200).json(data);
   });
 };
@@ -34,8 +34,8 @@ export const addPointCitizen = (req, res) => {
       `;
       db.query(
         q,
-        [maHK, newData.maSv, newData.maSv, newData.maLop],
-        (err, data) => {
+        [maHK, newData.maHK, newData.maSv, newData.maLop],
+        async (err, data) => {
           if (err) return res.status(409).json(err);
 
           if (data.length)

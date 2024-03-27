@@ -95,7 +95,7 @@ export const addStudent = (req, res) => {
   const values = [newData.maSv, newData.name, maLop];
 
   db.query(q, [values], (err, data) => {
-    if (err) return res.status(500).json(err);
+    if (err) return res.status(409).json(err);
     return res.status(200).json("Student da tao thanh cong");
   });
 };

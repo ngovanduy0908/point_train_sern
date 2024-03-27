@@ -95,10 +95,15 @@ export const editClass = (req, res) => {
   const maLop = req.params.maLop;
 
   const updatedData = req.body;
-  const q = `update class set maLop='${updatedData.maLop}', class_name='${updatedData.class_name}', maCN='${updatedData.maCN}' where maLop='${maLop}'`;
+  let q;
+  if (updatedData?.maCN) {
+    q = `update class set maLop='${updatedData.maLop}', class_name='${updatedData.class_name}', maCN='${updatedData?.maCN}' where maLop='${maLop}'`;
+  } else {
+    q = `update class set maLop='${updatedData.maLop}', class_name='${updatedData.class_name}' where maLop='${maLop}'`;
+  }
   // const values = [req.body.maKhoa]
   db.query(q, (err, data) => {
-    if (err) return res.status(500).json(err);
+    if (err) return res.status(409).json(err);
     return res.status(200).json(data);
   });
   // const ma = req.body.maKhoa;

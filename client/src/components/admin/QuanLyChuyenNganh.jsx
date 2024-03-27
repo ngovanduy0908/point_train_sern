@@ -79,16 +79,23 @@ const QuanLyChuyenNganh = () => {
   };
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
-    if (!Object.keys(validationErrors).length) {
-      tableData[row.index] = values;
-      //   console.log("row: ", row);
-      //   console.log("values: ", values);
-      axios.put(`${DOMAIN}/major/${row.original.maCN}`, values, {
-        withCredentials: true,
-      });
-      setTableData([...tableData]);
-      exitEditingMode();
-      toast.success("Sửa thông tin thành công.");
+    try {
+      if (!Object.keys(validationErrors).length) {
+        tableData[row.index] = values;
+        //   console.log("row: ", row);
+        //   console.log("values: ", values);
+        await axios.put(`${DOMAIN}/major/${row.original.maCN}`, values, {
+          withCredentials: true,
+        });
+        // if(res)
+        // console.log(res);
+        setTableData([...tableData]);
+        exitEditingMode();
+        toast.success("Sửa thông tin thành công.");
+      }
+    } catch (error) {
+      // console.log("tại sao ta");
+      toast.error("Mã chuyên ngành đã tồn tại");
     }
   };
 

@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import MaterialReactTable from 'material-react-table';
+import React, { useCallback, useMemo, useState } from "react";
+import MaterialReactTable from "material-react-table";
 import {
   Box,
   Button,
@@ -12,9 +12,9 @@ import {
   Stack,
   TextField,
   Tooltip,
-} from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
-import { data, states } from './makeData';
+} from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
+import { data, states } from "./makeData";
 
 const Example = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -41,11 +41,7 @@ const Example = () => {
 
   const handleDeleteRow = useCallback(
     (row) => {
-      if (
-        !window.confirm(
-          `Are you sure you want to delete ${row.getValue('firstName')}`
-        )
-      ) {
+      if (!window.confirm(`Bạn có chắc muốn xóa${row.getValue("firstName")}`)) {
         return;
       }
       //send api delete request here, then refetch or update local table data for re-render
@@ -62,9 +58,9 @@ const Example = () => {
         helperText: validationErrors[cell.id],
         onBlur: (event) => {
           const isValid =
-            cell.column.id === 'email'
+            cell.column.id === "email"
               ? validateEmail(event.target.value)
-              : cell.column.id === 'age'
+              : cell.column.id === "age"
               ? validateAge(+event.target.value)
               : validateRequired(event.target.value);
           if (!isValid) {
@@ -89,49 +85,49 @@ const Example = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'id',
-        header: 'ID',
+        accessorKey: "id",
+        header: "ID",
         enableColumnOrdering: false,
         enableEditing: false, //disable editing on this column
         enableSorting: false,
         size: 80,
       },
       {
-        accessorKey: 'firstName',
-        header: 'First Name',
+        accessorKey: "firstName",
+        header: "First Name",
         size: 140,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
         }),
       },
       {
-        accessorKey: 'lastName',
-        header: 'Last Name',
+        accessorKey: "lastName",
+        header: "Last Name",
         size: 140,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
         }),
       },
       {
-        accessorKey: 'email',
-        header: 'Email',
+        accessorKey: "email",
+        header: "Email",
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
-          type: 'email',
+          type: "email",
         }),
       },
       {
-        accessorKey: 'age',
-        header: 'Age',
+        accessorKey: "age",
+        header: "Age",
         size: 80,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
-          type: 'number',
+          type: "number",
         }),
       },
       {
-        accessorKey: 'state',
-        header: 'State',
+        accessorKey: "state",
+        header: "State",
         muiTableBodyCellEditTextFieldProps: {
           select: true, //change to select for a dropdown
           children: states.map((state) => (
@@ -149,9 +145,9 @@ const Example = () => {
     <>
       <MaterialReactTable
         displayColumnDefOptions={{
-          'mrt-row-actions': {
+          "mrt-row-actions": {
             muiTableHeadCellProps: {
-              align: 'center',
+              align: "center",
             },
             size: 120,
           },
@@ -164,7 +160,7 @@ const Example = () => {
         onEditingRowSave={handleSaveRowEdits}
         onEditingRowCancel={handleCancelRowEdits}
         renderRowActions={({ row, table }) => (
-          <Box sx={{ display: 'flex', gap: '1rem' }}>
+          <Box sx={{ display: "flex", gap: "1rem" }}>
             <Tooltip arrow placement="left" title="Edit">
               <IconButton onClick={() => table.setEditingRow(row)}>
                 <Edit />
@@ -201,7 +197,7 @@ const Example = () => {
 export const CreateNewAccountModal = ({ open, columns, onClose, onSubmit }) => {
   const [values, setValues] = useState(() =>
     columns.reduce((acc, column) => {
-      acc[column.accessorKey ?? ''] = '';
+      acc[column.accessorKey ?? ""] = "";
       return acc;
     }, {})
   );
@@ -219,9 +215,9 @@ export const CreateNewAccountModal = ({ open, columns, onClose, onSubmit }) => {
         <form onSubmit={(e) => e.preventDefault()}>
           <Stack
             sx={{
-              width: '100%',
-              minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
+              width: "100%",
+              minWidth: { xs: "300px", sm: "360px", md: "400px" },
+              gap: "1.5rem",
             }}
           >
             {columns.map((column) => (
@@ -237,7 +233,7 @@ export const CreateNewAccountModal = ({ open, columns, onClose, onSubmit }) => {
           </Stack>
         </form>
       </DialogContent>
-      <DialogActions sx={{ p: '1.25rem' }}>
+      <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose}>Cancel</Button>
         <Button color="secondary" onClick={handleSubmit} variant="contained">
           Create New Account

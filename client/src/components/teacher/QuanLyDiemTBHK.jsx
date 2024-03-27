@@ -156,7 +156,7 @@ const QuanLyDiemTBHK = () => {
     () => [
       {
         accessorKey: "maSv",
-        header: "Ma Sinh Vien",
+        header: "Mã Sinh Viên",
         enableColumnOrdering: false,
         enableEditing: false, //disable editing on this column
         enableSorting: false,
@@ -164,7 +164,7 @@ const QuanLyDiemTBHK = () => {
       },
       {
         accessorKey: "name",
-        header: "Ho Va Ten",
+        header: "Họ Và Tên",
         size: 140,
         enableEditing: false,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
@@ -173,7 +173,7 @@ const QuanLyDiemTBHK = () => {
       },
       {
         accessorKey: "point_average",
-        header: "Diem TBHK",
+        header: "Điểm TBHK",
         size: 140,
       },
     ],

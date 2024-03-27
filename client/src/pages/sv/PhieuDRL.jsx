@@ -265,7 +265,7 @@ const PhieuDRL = ({ hkItem }) => {
     <Box m="1rem 1.2rem">
       <Box sx={{ flexGrow: 1 }} mb="10px">
         <Grid container spacing={2}>
-          <Grid item xs={1}>
+          {/* <Grid item xs={1}>
             <Button
               color="secondary"
               variant="contained"
@@ -276,7 +276,7 @@ const PhieuDRL = ({ hkItem }) => {
             >
               Tải file
             </Button>
-          </Grid>
+          </Grid> */}
           <Grid item xs={1}>
             <Button
               color="secondary"

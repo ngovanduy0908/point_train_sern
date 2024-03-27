@@ -34,7 +34,7 @@ export const addTeacher = (req, res) => {
   db.query(q, [maGv], (err, data) => {
     if (err) return res.status(500).json(err);
 
-    if (data.length) return res.status(409).json("Giao vien da ton tai");
+    if (data.length) return res.status(409).json("Mã giáo viên đã tồn tại");
 
     const q = "insert into teacher(maGv, name, maKhoa) values(?)";
 
@@ -50,12 +50,12 @@ export const addTeacher = (req, res) => {
 export const editTeacher = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not authenticated");
-  const maKhoa = req.params.maKhoa;
-  const maGv = req.params.maGv;
+
+  const { maKhoa, maGv } = req.params;
   const updatedData = req.body;
   const q = `update teacher set maGv='${updatedData.maGv}', name='${updatedData.name}', email='${updatedData.email}', password='${updatedData.password}' where maGv='${maGv}' and maKhoa='${maKhoa}'`;
   db.query(q, (err, data) => {
-    if (err) return res.status(500).json(err);
+    if (err) return res.status(409).json(err);
     return res.status(200).json(data);
   });
 };

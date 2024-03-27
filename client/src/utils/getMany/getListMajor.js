@@ -12,7 +12,7 @@ export const getListMajor = async () => {
 export const getListDepartment = async () => {
   try {
     const res = await ApiUtils.get(`/departments`);
-    console.log("vao day: ", res);
+    // console.log("vao day: ", res);
     return res.data;
   } catch (error) {
     console.log(error);

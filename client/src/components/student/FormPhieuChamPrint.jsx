@@ -368,49 +368,49 @@ const FormPhieuChamPrint = ({ maHK }) => {
           ltBonus: pointMonitor.ltBonus,
           ltIrresponsibleMonitor: pointMonitor.ltIrresponsibleMonitor,
         }));
-        setValuesGV((prev) => ({
-          ...prev,
-          // muc 1
-          gvDiemTBHK: pointMonitor.ltDiemTBHK,
-          gvNCKH1: pointMonitor.ltNCKH1,
-          gvNCKH2: pointMonitor.ltNCKH2,
-          gvNCKH3: pointMonitor.ltNCKH3,
-          gvOlympic1: pointMonitor.ltOlympic1,
-          gvOlympic2: pointMonitor.ltOlympic2,
-          gvOlympic3: pointMonitor.ltOlympic3,
-          gvOlympic4: pointMonitor.ltOlympic4,
-          gvNoRegulation: pointMonitor.ltNoRegulation,
-          gvOnTime: pointMonitor.ltOnTime,
-          gvAbandon: pointMonitor.ltAbandon,
-          gvUnTrueTime: pointMonitor.ltUnTrueTime,
+        // setValuesGV((prev) => ({
+        //   ...prev,
+        //   // muc 1
+        //   gvDiemTBHK: pointMonitor.ltDiemTBHK,
+        //   gvNCKH1: pointMonitor.ltNCKH1,
+        //   gvNCKH2: pointMonitor.ltNCKH2,
+        //   gvNCKH3: pointMonitor.ltNCKH3,
+        //   gvOlympic1: pointMonitor.ltOlympic1,
+        //   gvOlympic2: pointMonitor.ltOlympic2,
+        //   gvOlympic3: pointMonitor.ltOlympic3,
+        //   gvOlympic4: pointMonitor.ltOlympic4,
+        //   gvNoRegulation: pointMonitor.ltNoRegulation,
+        //   gvOnTime: pointMonitor.ltOnTime,
+        //   gvAbandon: pointMonitor.ltAbandon,
+        //   gvUnTrueTime: pointMonitor.ltUnTrueTime,
 
-          // muc 2
-          gvRightRule: pointMonitor.ltRightRule,
-          gvCitizen: pointMonitor.ltCitizen,
-          gvNoFullStudy: pointMonitor.ltNoFullStudy,
-          gvNoCard: pointMonitor.ltNoCard,
-          gvNoAtivities: pointMonitor.ltNoAtivities,
-          gvNoPayFee: pointMonitor.ltNoPayFee,
+        //   // muc 2
+        //   gvRightRule: pointMonitor.ltRightRule,
+        //   gvCitizen: pointMonitor.ltCitizen,
+        //   gvNoFullStudy: pointMonitor.ltNoFullStudy,
+        //   gvNoCard: pointMonitor.ltNoCard,
+        //   gvNoAtivities: pointMonitor.ltNoAtivities,
+        //   gvNoPayFee: pointMonitor.ltNoPayFee,
 
-          // muc 3
-          gvFullActive: pointMonitor.ltFullActive,
-          gvAchievementCity: pointMonitor.ltAchievementCity,
-          gvAchievementSchool: pointMonitor.ltAchievementSchool,
-          gvAdvise: pointMonitor.ltAdvise,
-          gvIrresponsible: pointMonitor.ltIrresponsible,
-          gvNoCultural: pointMonitor.ltNoCultural,
+        //   // muc 3
+        //   gvFullActive: pointMonitor.ltFullActive,
+        //   gvAchievementCity: pointMonitor.ltAchievementCity,
+        //   gvAchievementSchool: pointMonitor.ltAchievementSchool,
+        //   gvAdvise: pointMonitor.ltAdvise,
+        //   gvIrresponsible: pointMonitor.ltIrresponsible,
+        //   gvNoCultural: pointMonitor.ltNoCultural,
 
-          // muc 4
-          gvPositiveStudy: pointMonitor.ltPositiveStudy,
-          gvPositiveLove: pointMonitor.ltPositiveLove,
-          gvWarn: pointMonitor.ltWarn,
-          gvNoProtect: pointMonitor.ltNoProtect,
+        //   // muc 4
+        //   gvPositiveStudy: pointMonitor.ltPositiveStudy,
+        //   gvPositiveLove: pointMonitor.ltPositiveLove,
+        //   gvWarn: pointMonitor.ltWarn,
+        //   gvNoProtect: pointMonitor.ltNoProtect,
 
-          // muc 5
-          gvMonitor: pointMonitor.ltMonitor,
-          gvBonus: pointMonitor.ltBonus,
-          gvIrresponsibleMonitor: pointMonitor.ltIrresponsibleMonitor,
-        }));
+        //   // muc 5
+        //   gvMonitor: pointMonitor.ltMonitor,
+        //   gvBonus: pointMonitor.ltBonus,
+        //   gvIrresponsibleMonitor: pointMonitor.ltIrresponsibleMonitor,
+        // }));
       }
     } catch (error) {
       console.log(error);
@@ -513,12 +513,12 @@ const FormPhieuChamPrint = ({ maHK }) => {
       ? 5
       : 0;
 
-    setValuesGV((prev) => ({
-      ...prev,
-      gvDiemTBHK: changeValueTBHK,
-      gvCitizen: changeValueCitizen,
-      gvMonitor: changeSvMonitor,
-    }));
+    // setValuesGV((prev) => ({
+    //   ...prev,
+    //   gvDiemTBHK: changeValueTBHK,
+    //   gvCitizen: changeValueCitizen,
+    //   gvMonitor: changeSvMonitor,
+    // }));
   }, [pointCitizenMediumData, studentData]);
 
   // start sum diem sinh vien
@@ -975,7 +975,7 @@ const FormPhieuChamPrint = ({ maHK }) => {
                 type="number"
                 name="ltDiemTBHK"
                 id=""
-                value={values.svDiemTBHK}
+                value={valuesLT.ltDiemTBHK}
                 readOnly
               />
             </td>
@@ -984,7 +984,7 @@ const FormPhieuChamPrint = ({ maHK }) => {
                 type="number"
                 name="gvDiemTBHK"
                 id=""
-                value={valuesLT.ltDiemTBHK}
+                value={valuesGV.gvDiemTBHK}
                 readOnly
               />
             </td>

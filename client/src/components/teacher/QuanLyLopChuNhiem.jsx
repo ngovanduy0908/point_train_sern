@@ -15,9 +15,7 @@ const QuanLyLopChuNhiem = () => {
 
   const [tableData, setTableData] = useState([]);
   const navigate = useNavigate();
-  useEffect(() => {
-    getAllDeadline();
-  }, []);
+
   // useEffect(() => {
   const getAllDeadline = async () => {
     try {
@@ -32,6 +30,9 @@ const QuanLyLopChuNhiem = () => {
       console.log(error.response.data);
     }
   };
+  useEffect(() => {
+    getAllDeadline();
+  }, []);
   // }, []);
 
   // console.log(tableData);

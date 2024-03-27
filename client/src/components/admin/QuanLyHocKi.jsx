@@ -80,11 +80,7 @@ const QuanLyHocKi = () => {
 
   const handleDeleteRow = useCallback(
     async (row) => {
-      if (
-        !window.confirm(
-          `Are you sure you want to delete ${row.getValue("name")}`
-        )
-      ) {
+      if (!window.confirm(`Bạn có chắc muốn xóa${row.getValue("name")}`)) {
         return;
       }
       // console.log(row);

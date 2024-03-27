@@ -96,9 +96,10 @@ const QuanLyHocSinh = () => {
       tableData.push(values);
       setTableData([...tableData]);
       toast.success("Thêm mới sinh viên thành công");
+      setCreateModalOpen(false);
     } catch (error) {
       // setErr(error.response.data);
-      toast.error("Thêm mới sinh viên thất bại");
+      toast.error("Thêm mới sinh viên thất bại. Kiểm tra các trường nhập liệu");
     }
   };
 
@@ -366,7 +367,7 @@ export const CreateNewAccountModal = ({ err, open, onClose, onSubmit }) => {
   const handleSubmit = () => {
     //put your validation logic here
     onSubmit(values);
-    onClose();
+    // onClose();
   };
 
   return (

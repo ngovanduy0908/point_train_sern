@@ -58,19 +58,23 @@ const QuanLyKhoa = () => {
   };
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
-    if (!Object.keys(validationErrors).length) {
-      tableData[row.index] = values;
+    try {
+      if (!Object.keys(validationErrors).length) {
+        tableData[row.index] = values;
 
-      axios.put(
-        `http://localhost:8800/api/departments/${values.maKhoa}`,
-        values,
-        {
-          withCredentials: true,
-        }
-      );
-      setTableData([...tableData]);
-      exitEditingMode();
-      toast.success("Sửa thông tin khoa thành công.");
+        await axios.put(
+          `http://localhost:8800/api/departments/${row.original.maKhoa}`,
+          values,
+          {
+            withCredentials: true,
+          }
+        );
+        setTableData([...tableData]);
+        exitEditingMode();
+        toast.success("Sửa thông tin khoa thành công.");
+      }
+    } catch (error) {
+      toast.error("Mã khoa đã tồn tại");
     }
   };
 
@@ -80,11 +84,7 @@ const QuanLyKhoa = () => {
 
   const handleDeleteRow = useCallback(
     async (row) => {
-      if (
-        !window.confirm(
-          `Are you sure you want to delete ${row.getValue("name")}`
-        )
-      ) {
+      if (!window.confirm(`Bạn có chắc muốn xóa ${row.getValue("name")}`)) {
         return;
       }
       // console.log(row);
@@ -139,7 +139,7 @@ const QuanLyKhoa = () => {
         accessorKey: "maKhoa",
         header: "Mã Khoa",
         enableColumnOrdering: false,
-        enableEditing: false, //disable editing on this column
+        // enableEditing: false, //disable editing on this column
         // enableSorting: false,
         size: 80,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({

@@ -46,13 +46,9 @@ const QuanLyKhoaHoc = () => {
 
   const handleCreateNewRow = async (values) => {
     try {
-      const res = await axios.post(
-        "http://localhost:8800/api/courses",
-        values,
-        {
-          withCredentials: true,
-        }
-      );
+      await axios.post("http://localhost:8800/api/courses", values, {
+        withCredentials: true,
+      });
       tableData.push(values);
       setTableData([...tableData]);
       toast.success("Thêm khóa học thành công");
@@ -62,20 +58,24 @@ const QuanLyKhoaHoc = () => {
   };
 
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
-    if (!Object.keys(validationErrors).length) {
-      tableData[row.index] = values;
+    try {
+      if (!Object.keys(validationErrors).length) {
+        tableData[row.index] = values;
 
-      axios.put(
-        `http://localhost:8800/api/courses/${values.maKhoaHoc}`,
-        values,
-        {
-          withCredentials: true,
-        }
-      );
-      //send/receive api updates here, then refetch or update local table data for re-render
-      setTableData([...tableData]);
-      exitEditingMode(); //required to exit editing mode and close modal
-      toast.success("Sửa khóa học thành công");
+        await axios.put(
+          `http://localhost:8800/api/courses/${row.original.maKhoaHoc}`,
+          values,
+          {
+            withCredentials: true,
+          }
+        );
+        //send/receive api updates here, then refetch or update local table data for re-render
+        setTableData([...tableData]);
+        exitEditingMode(); //required to exit editing mode and close modal
+        toast.success("Sửa khóa học thành công");
+      }
+    } catch (error) {
+      toast.error("Mã khóa học đã tồn tại");
     }
   };
 
@@ -85,11 +85,7 @@ const QuanLyKhoaHoc = () => {
 
   const handleDeleteRow = useCallback(
     async (row) => {
-      if (
-        !window.confirm(
-          `Are you sure you want to delete ${row.getValue("name")}`
-        )
-      ) {
+      if (!window.confirm(`Bạn có chắc muốn xóa ${row.getValue("name")} ?`)) {
         return;
       }
       // console.log(row);
@@ -144,7 +140,7 @@ const QuanLyKhoaHoc = () => {
         accessorKey: "maKhoaHoc",
         header: "Mã Khóa Học",
         enableColumnOrdering: false,
-        enableEditing: false, //disable editing on this column
+        // enableEditing: false, //disable editing on this column
         enableSorting: false,
         size: 80,
       },

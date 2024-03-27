@@ -221,6 +221,9 @@ const DanhSachDRLSinhVien = ({ socket }) => {
 
   const handleMarkZero = async () => {
     try {
+      if (!window.confirm(`Bạn có chắc muốn xét điểm bằng 0?`)) {
+        return;
+      }
       if (!danhSachSinhVienNoMark.length) {
         return toast.warn("Không có sinh viên nào chưa chấm điểm.");
       }
@@ -228,6 +231,7 @@ const DanhSachDRLSinhVien = ({ socket }) => {
         maHK,
         maSv: item.maSv,
       }));
+      // console.log("cllick vao day duoc khong");
 
       await axios
         .post(`${DOMAIN}/points/mark_zero`, newData, {
@@ -235,6 +239,7 @@ const DanhSachDRLSinhVien = ({ socket }) => {
         })
         .then(() => {
           fetchData();
+          getDanhSachSinhVienNoMark();
           setOpenDSSVNoMark(false);
           toast.success("Chấm điểm rèn luyện thành công", {
             autoClose: 2000,

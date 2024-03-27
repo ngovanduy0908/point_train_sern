@@ -73,10 +73,11 @@ export const editDepartment = (req, res) => {
   if (!token) return res.status(401).json("Not authenticated");
   const maKhoa = req.params.maKhoa;
   const updatedData = req.body;
+  console.log("vao day: ", maKhoa, updatedData.maKhoa);
   const q = `update department set maKhoa='${updatedData.maKhoa}', name='${updatedData.name}', account='${updatedData.account}', password='${updatedData.password}' where maKhoa='${maKhoa}'`;
   // const values = [req.body.maKhoa]
   db.query(q, (err, data) => {
-    if (err) return res.status(500).json(err);
+    if (err) return res.status(409).json(err);
     return res.status(200).json(data);
   });
   // const ma = req.body.maKhoa;

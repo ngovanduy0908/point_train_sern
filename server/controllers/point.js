@@ -384,13 +384,14 @@ export const getPointStudentNoMark = (req, res) => {
   });
 };
 
-export const markZero = (req, res) => {
-  // console.log("vao day: ", req.body);
+export const markZero = async (req, res) => {
+  // console.log("vao day: ");
   const danhSachSinhVienNoMark = req.body;
-  danhSachSinhVienNoMark.forEach((element) => {
+  danhSachSinhVienNoMark.forEach(async (element) => {
     // console.log("vao day: ", element.maSv);
-    const maSv = element.maSv;
-    const maHK = element.maHK;
+    // const maSv = element.maSv;
+    // const maHK = element.maHK;
+    const { maSv, maHK } = element;
 
     const sql_point = `insert into point
                       (maSv, maHK, status, status_teacher, point_student, point_monitor, point_teacher)
@@ -400,18 +401,44 @@ export const markZero = (req, res) => {
     const sql_point_student = `insert into point_student (maSv, maHK) values('${maSv}', '${maHK}')`;
     const sql_point_monitor = `insert into point_monitor (maSv, maHK) values('${maSv}', '${maHK}')`;
     const sql_point_teacher = `insert into point_teacher (maSv, maHK) values('${maSv}', '${maHK}')`;
-    db.query(sql_point, (err, data) => {
-      if (err) return res.status(500).json(err);
-    });
-    db.query(sql_point_student, (err, data) => {
-      if (err) return res.status(500).json(err);
-    });
-    db.query(sql_point_monitor, (err, data) => {
-      if (err) return res.status(500).json(err);
-    });
-    db.query(sql_point_teacher, (err, data) => {
-      if (err) return res.status(500).json(err);
-    });
+    await Promise.all([
+      new Promise((resolve, reject) => {
+        db.query(sql_point, (err, data) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      }),
+      new Promise((resolve, reject) => {
+        db.query(sql_point_student, (err, data) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      }),
+      new Promise((resolve, reject) => {
+        db.query(sql_point_monitor, (err, data) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      }),
+      new Promise((resolve, reject) => {
+        db.query(sql_point_teacher, (err, data) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      }),
+    ]);
+    // db.query(sql_point, (err, data) => {
+    //   if (err) return res.status(500).json(err);
+    // });
+    // db.query(sql_point_student, (err, data) => {
+    //   if (err) return res.status(500).json(err);
+    // });
+    // db.query(sql_point_monitor, (err, data) => {
+    //   if (err) return res.status(500).json(err);
+    // });
+    // db.query(sql_point_teacher, (err, data) => {
+    //   if (err) return res.status(500).json(err);
+    // });
   });
   return res.status(200).json("Thành Công");
 };
@@ -1274,7 +1301,7 @@ export const getPointByMaAdmin = (req, res) => {
   if (!token) return res.status(401).json("Not authenticated");
 
   const { maSv, maHK } = req.query;
-  console.log("xuong day: ", req.query);
+  // console.log("xuong day: ", req.query);
   const q = `
   SELECT * FROM point WHERE maSv = '${maSv}' and maHK = '${maHK}'
     `;
