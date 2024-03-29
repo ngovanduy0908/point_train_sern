@@ -1,6 +1,6 @@
 import React from "react";
 
-const CardChildChart = ({ icon, value, text, bg }) => {
+const CardChildChart = ({ icon, value = 0, text, bg }) => {
   return (
     <div
       className={`p-[12px] rounded-lg col-span-1 h-full flex justify-start items-center gap-3`}

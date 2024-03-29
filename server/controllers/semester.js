@@ -1,7 +1,7 @@
 import { db } from "../db.js";
 
 export const getAllListSemester = (req, res) => {
-  const q = "select * from semester order by rank asc";
+  const q = "select * from `semester` order by `rank` asc";
   db.query(q, (err, data) => {
     if (err) return res.status(500).json(err);
 
@@ -13,7 +13,7 @@ export const getSemesterOpen = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not authenticated");
 
-  const q = "select * from semester where status=1 order by rank asc";
+  const q = "select * from `semester` where status=1 order by `rank` asc";
   db.query(q, (err, data) => {
     if (err) return res.status(500).json(err);
 

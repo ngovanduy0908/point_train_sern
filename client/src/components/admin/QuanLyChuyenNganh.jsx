@@ -345,7 +345,7 @@ export const CreateNewAccountModal = ({
                 name="maKhoa"
                 onChange={handleChange}
               >
-                {listKhoa.map((item) => (
+                {listKhoa?.map((item) => (
                   <MenuItem key={item.maKhoa} value={item.maKhoa}>
                     {item.name}
                   </MenuItem>

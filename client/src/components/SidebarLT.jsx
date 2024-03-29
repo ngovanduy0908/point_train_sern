@@ -144,7 +144,8 @@ const SidebarLT = ({
     if (d) {
       setCheckTimeMark(true);
 
-      if (timeEndStudentMark) {
+      if (timeStartStudentMark) {
+        // console.log('????????');
         const newNavItem = {
           text: "Xét Điểm Rèn Luyện",
           icon: <PlaylistAddCheckIcon />,

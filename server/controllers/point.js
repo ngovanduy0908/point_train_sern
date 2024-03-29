@@ -522,7 +522,7 @@ export const insertOrUpdatePointTeacher = async (req, res) => {
       const q1 = `update point set 
       point_teacher = '${values.sum}', 
       point_monitor = '${values.sum}', 
-      gvNote='${values.note ? values?.note : ""}', 
+      gvNote='${values.note ? values.note : ""}', 
       status_teacher = 1, 
       status_admin = ${values?.status_admin === 1 ? 1 : 0} 
       where maSv = '${maSv}' and maHK = '${maHK}'`;
@@ -665,7 +665,7 @@ export const insertOrUpdatePointTeacher = async (req, res) => {
                                 '${values.gvIrresponsibleMonitor}',
                                 '${maHK}',
                                 '${values.gvRightRule}')`;
-      const q1 = `update point set point_teacher = '${values.sum}', gvNote='${values.note}', status_teacher = 1 where maSv = '${maSv}' and maHK = '${maHK}'`;
+      const q1 = `update point set point_teacher = '${values.sum}', gvNote='${values?.note ? values.note : null}', status_teacher = 1 where maSv = '${maSv}' and maHK = '${maHK}'`;
 
       db.query(q, (err, data) => {
         if (err) return res.status(500).json(err);

@@ -123,7 +123,7 @@ const DeadlinePoint = () => {
     <Box m="1.5rem 2.5rem">
       <Header title={currentUser.name} subtitle="Thời Gian Chấm, Duyệt Điểm" />
       <Box mt="40px">
-        {tableData.length > 0 ? (
+        {tableData?.length > 0 ? (
           <MaterialReactTable
             displayColumnDefOptions={{
               "mrt-row-actions": {
